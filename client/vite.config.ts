@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { compression } from 'vite-plugin-compression2'
+import { fileURLToPath } from 'node:url'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -10,7 +11,7 @@ export default defineConfig({
     alias: {
       // react-plotly.js 默认引用完整 bundle（含 3D/gl/financial 等全部 trace），
       // 重定向到项目自定义的精简内核，仅注册实际用到的图表类型，大幅减小体积
-      'plotly.js/dist/plotly': new URL('./src/lib/plotly-custom.ts', import.meta.url).pathname,
+      'plotly.js/dist/plotly': fileURLToPath(new URL('./src/lib/plotly-custom.ts', import.meta.url)),
       // Node.js polyfills for plotly.js
       'buffer/': 'buffer/',
       buffer: 'buffer',

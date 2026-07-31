@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import experimentsRouter from './routes/experiments.js'
 import bugsRouter from './routes/bugs.js'
+import agentRouter from './routes/agent.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -14,6 +15,7 @@ app.use(express.json())
 
 app.use('/api/experiments', experimentsRouter)
 app.use('/api/bugs', bugsRouter)
+app.use('/api/agent', agentRouter)
 
 // 管理员认证接口
 app.post('/api/admin/login', (req, res) => {

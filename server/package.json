@@ -1,11 +1,14 @@
 {
   "name": "math-lab-server",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test": "tsx --test \"src/**/*.test.ts\"",
+    "test:intent": "tsx --test src/agent/intentClassifier.test.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",

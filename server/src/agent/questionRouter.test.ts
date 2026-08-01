@@ -138,3 +138,16 @@ test('无关问题产生 no-match 决策', () => {
     'no-match',
   )
 })
+
+test('分数核心词产生分数实验建议', () => {
+  const result = routeQuestion('分数')
+
+  assert.equal(
+    result.experiments[0]?.id,
+    'fractions',
+  )
+  assert.equal(
+    result.routeDecision.decision,
+    'suggest',
+  )
+})

@@ -46,6 +46,22 @@ interface EvaluationRow {
 const SEMANTIC_SEARCH_CASES:
   readonly SemanticSearchCase[] = [
     {
+      id: 'fractions-core-title',
+      expectedPath: '/fractions',
+      query: '分数',
+    },
+    {
+      id: 'fractions-numerator-denominator',
+      expectedPath: '/fractions',
+      query: '怎么理解分子和分母',
+    },
+    {
+      id: 'fractions-pie',
+      expectedPath: '/fractions',
+      query: '用饼图表示几分之几',
+    },
+
+    {
       id: 'matrix-decomposition-meaning',
       expectedPath:
         '/matrix-decomposition',

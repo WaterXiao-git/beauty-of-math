@@ -117,6 +117,57 @@ test('默认只返回最多三个候选', () => {
   )
 })
 
+test('核心标题可以匹配带可视化后缀的实验', () => {
+  const result = classifyAndMatch('分数')
+
+  assert.equal(
+    result.candidates[0]?.id,
+    'fractions',
+  )
+
+  assert.ok(
+    result.candidates[0]
+      ?.matchedSignals.some((signal) =>
+        signal === '别名:分数' ||
+        signal === '核心标题:分数可视化',
+      ),
+  )
+})
+
+test('分数的自然语言说法可以匹配分数实验', () => {
+  const questions = [
+    '怎么理解分子和分母',
+    '用饼图表示几分之几',
+    '两个分数谁更大',
+  ]
+
+  for (const question of questions) {
+    const result = classifyAndMatch(question)
+
+    assert.equal(
+      result.candidates[0]?.id,
+      'fractions',
+      question,
+    )
+  }
+})
+
+test('核心词不完整时仍然返回相近候选', () => {
+  const result = classifyAndMatch('偏微分')
+
+  assert.equal(
+    result.candidates[0]?.id,
+    'pde',
+  )
+
+  assert.ok(
+    result.candidates[0]
+      ?.matchedSignals.includes(
+        '核心标题:偏微分方程',
+      ),
+  )
+})
+
 test('优先匹配更长的完整实验标题', () => {
   const pdeResult = classifyAndMatch(
     '打开偏微分方程实验',

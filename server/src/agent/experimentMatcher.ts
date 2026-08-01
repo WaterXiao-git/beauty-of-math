@@ -35,6 +35,18 @@ interface RawExperimentScore {
 const OPTIONAL_SEMANTIC_WORDS =
   /(?:相关的|对应的|其中的|一下|一个|一种|一条|一组|一些|这个|这种|这条|这些|那些|请|帮我|的)/g
 
+/**
+ * 这些词主要描述页面形态或用户操作，
+ * 不是实验知识点本身。
+ *
+ * 去掉它们后，“分数”和“分数可视化”
+ * 会得到相同的核心搜索词“分数”。
+ */
+const GENERIC_SEARCH_WORDS =
+  /(?:数学|知识点|相关内容|相关|内容|概念|原理|实验页面|实验|页面|模块|可视化|动态图|动画|动态|演示|展示|模拟|打开|查找|搜索|推荐|学习|介绍|讲解|解释|计算|比较|观察|看看|想学|想看|我想|如何|怎么|怎样|什么是|请|帮我|一下)/g
+
+const MIN_SEMANTIC_TERM_LENGTH = 2
+
 function escapeRegularExpression(
   value: string,
 ): string {
@@ -109,6 +121,169 @@ function includesSearchTerm(
   )
 }
 
+function compactSemanticText(
+  value: string,
+): string {
+  return normalizeQuestion(value)
+    .replace(/\s+/g, '')
+    .replace(OPTIONAL_SEMANTIC_WORDS, '')
+    .replace(GENERIC_SEARCH_WORDS, '')
+}
+
+function createCharacterBigrams(
+  value: string,
+): string[] {
+  const bigrams: string[] = []
+
+  for (let index = 0; index < value.length - 1; index += 1) {
+    bigrams.push(value.slice(index, index + 2))
+  }
+
+  return bigrams
+}
+
+/**
+ * 使用字符二元组 Dice 系数处理轻微错字、漏字和近似表达。
+ *
+ * 这里只做低权重兜底；完整标题、别名和关键词仍然拥有更高优先级。
+ */
+function calculateTextSimilarity(
+  left: string,
+  right: string,
+): number {
+  if (left === right) {
+    return 1
+  }
+
+  if (
+    left.length < MIN_SEMANTIC_TERM_LENGTH ||
+    right.length < MIN_SEMANTIC_TERM_LENGTH
+  ) {
+    return 0
+  }
+
+  const leftBigrams = createCharacterBigrams(left)
+  const rightBigrams = createCharacterBigrams(right)
+
+  if (leftBigrams.length === 0 || rightBigrams.length === 0) {
+    return 0
+  }
+
+  const remainingRightBigrams = [...rightBigrams]
+  let intersections = 0
+
+  for (const bigram of leftBigrams) {
+    const matchedIndex = remainingRightBigrams.indexOf(bigram)
+
+    if (matchedIndex < 0) {
+      continue
+    }
+
+    intersections += 1
+    remainingRightBigrams.splice(matchedIndex, 1)
+  }
+
+  return (
+    (2 * intersections) /
+    (leftBigrams.length + rightBigrams.length)
+  )
+}
+
+interface SemanticTermScore {
+  score: number
+  signal: string | null
+}
+
+/**
+ * 当规则没有完整命中时，比较用户问题与实验名称、别名和关键词的
+ * 核心文本，为“意思接近但写法不完全一致”的输入提供候选。
+ */
+function scoreSemanticTerms(
+  text: string,
+  definition: ExperimentRouteDefinition,
+): SemanticTermScore {
+  const queryCore = compactSemanticText(text)
+
+  if (
+    queryCore.length < MIN_SEMANTIC_TERM_LENGTH ||
+    isShadowedByLongerTitle(text, definition)
+  ) {
+    return { score: 0, signal: null }
+  }
+
+  const terms = [
+    { label: '核心标题', value: definition.title, exactScore: 35 },
+    ...definition.aliases.map((value) => ({
+      label: '相近别名',
+      value,
+      exactScore: 28,
+    })),
+    ...definition.keywords.map((value) => ({
+      label: '相近关键词',
+      value,
+      exactScore: 18,
+    })),
+  ]
+
+  let best: SemanticTermScore = {
+    score: 0,
+    signal: null,
+  }
+
+  for (const term of terms) {
+    const termCore = compactSemanticText(term.value)
+
+    if (termCore.length < MIN_SEMANTIC_TERM_LENGTH) {
+      continue
+    }
+
+    let score = 0
+
+    if (queryCore === termCore) {
+      score = term.exactScore
+    } else if (queryCore.includes(termCore)) {
+      const containmentRatio =
+        termCore.length / queryCore.length
+
+      score = Math.round(14 + containmentRatio * 12)
+    } else if (
+      termCore.includes(queryCore) &&
+      (
+        term.label === '核心标题' ||
+        queryCore.length >= 3
+      )
+    ) {
+      const containmentRatio =
+        queryCore.length / termCore.length
+
+      if (containmentRatio >= 0.5) {
+        score = Math.round(14 + containmentRatio * 12)
+      }
+    } else {
+      const similarity = calculateTextSimilarity(
+        queryCore,
+        termCore,
+      )
+
+      if (
+        Math.min(queryCore.length, termCore.length) >= 3 &&
+        similarity >= 0.58
+      ) {
+        score = Math.round(8 + similarity * 12)
+      }
+    }
+
+    if (score > best.score) {
+      best = {
+        score,
+        signal: `${term.label}:${term.value}`,
+      }
+    }
+  }
+
+  return best
+}
+
 /**
  * 如果一个短标题只作为更长标题的一部分出现，
  * 不把短标题视为独立标题命中。
@@ -170,6 +345,28 @@ function hasIndependentTitleMatch(
 
   return textWithoutLongerTitles.includes(
     title,
+  )
+}
+
+/**
+ * “偏微分方程”已经完整命中时，不再把其中的“微分方程”
+ * 作为独立的相近候选；快速傅里叶变换与傅里叶变换同理。
+ */
+function isShadowedByLongerTitle(
+  text: string,
+  definition: ExperimentRouteDefinition,
+): boolean {
+  const title = normalizeQuestion(
+    definition.title,
+  )
+
+  if (!title || !text.includes(title)) {
+    return false
+  }
+
+  return !hasIndependentTitleMatch(
+    text,
+    definition,
   )
 }
 
@@ -255,6 +452,22 @@ function scoreExperiment(
       score += 6
       matchedSignals.add(`关键词:${keyword}`)
     }
+  }
+
+  /**
+   * 通用语义兜底只采用最高的一项，避免多个相似词重复叠分。
+   */
+  const semanticTermScore = scoreSemanticTerms(
+    text,
+    definition,
+  )
+
+  if (
+    semanticTermScore.score > 0 &&
+    semanticTermScore.signal
+  ) {
+    score += semanticTermScore.score
+    matchedSignals.add(semanticTermScore.signal)
   }
 
   const intentSupported = supportsIntent(

@@ -145,3 +145,14 @@ test('无关问题返回 no-match', () => {
 
   assert.equal(result.target, null)
 })
+
+test('相近但不唯一的实验候选也作为建议返回', () => {
+  const result = decide('函数')
+
+  assert.equal(result.decision, 'suggest')
+  assert.equal(
+    result.reason,
+    'ambiguous-experiment',
+  )
+  assert.ok(result.target)
+})

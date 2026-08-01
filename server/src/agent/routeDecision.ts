@@ -233,9 +233,9 @@ export function decideRoute(
    */
   if (!experimentIsClear) {
     return {
-      decision: 'ai',
+      decision: 'suggest',
       reason: 'ambiguous-experiment',
-      message: '存在多个相近实验候选，需要进一步判断。',
+      message: '未找到完全一致的实验，已按相近含义为你推荐候选。',
       target,
       alternatives,
       scoreGap,

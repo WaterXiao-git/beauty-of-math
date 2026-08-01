@@ -41,6 +41,33 @@ export const MANUAL_EXPERIMENT_AGENT_OVERRIDES:
       ExperimentAgentOverride
     >
   > = {
+    '/fractions': {
+      aliases: [
+        '分数',
+        '分数概念',
+        '分数比较',
+        '分数运算',
+        '几分之几',
+      ],
+
+      strongPhrases: [
+        '理解分子和分母',
+        '用饼图表示几分之几',
+        '比较两个分数的大小',
+        '分数的加减乘除',
+      ],
+
+      keywords: [
+        '分子',
+        '分母',
+        '几分之几',
+        '分数大小',
+        '通分',
+        '约分',
+        '饼图表示',
+      ],
+    },
+
     '/matrix-decomposition': {
       aliases: [
         '矩阵拆分',

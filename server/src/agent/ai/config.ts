@@ -54,7 +54,7 @@ export function loadAgentAIConfig(
           'deepseek-v4-flash',
         timeoutMs: readPositiveInteger(
           environment.DEEPSEEK_TIMEOUT_MS,
-          8_000,
+          4_500,
         ),
       }
     : null
@@ -71,7 +71,7 @@ export function loadAgentAIConfig(
           'qwen3.7-plus',
         timeoutMs: readPositiveInteger(
           environment.QWEN_TIMEOUT_MS,
-          8_000,
+          4_500,
         ),
       }
     : null

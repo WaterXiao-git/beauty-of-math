@@ -183,7 +183,7 @@ const INTENT_RULES: IntentRule[] = [
       },
       {
         label: '算一下',
-        pattern: /算(?:一下)?/,
+        pattern: /(?:^|[^计运])算(?:一下)?(?!法)/,
       },
       {
         label: '求导',

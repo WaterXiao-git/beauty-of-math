@@ -16,6 +16,10 @@ import type {
 } from '../routeDecision.js'
 
 import {
+  isLikelyMathRoutingRequest,
+} from '../mathDomainGuard.js'
+
+import {
   loadAgentAIConfig,
 } from './config.js'
 
@@ -299,13 +303,31 @@ function applyProposal(
   previousCandidates:
     readonly ExperimentMatchCandidate[] = [],
 ): QuestionRouteResult {
-  const expandedCandidates = uniqueCandidates([
+  const allExpandedCandidates = uniqueCandidates([
     ...previousCandidates,
     ...expandCandidates(
       result,
       proposal.rewrittenQuery,
     ),
   ]).slice(0, 6)
+
+  /**
+   * 原问题完全没有候选时，模型改写只能用强匹配或完整标题召回。
+   * 弱相似度不足以证明“新需求”属于某个已有实验，避免为了推荐
+   * 而把四维投影之类的问题硬塞给旋转体等页面。
+   */
+  const hasTrustedOriginalCandidate =
+    result.experiments.some(
+      (candidate) =>
+        candidate.matchQuality !== 'related',
+    )
+  const expandedCandidates =
+    !hasTrustedOriginalCandidate
+      ? allExpandedCandidates.filter(
+          (candidate) =>
+            candidate.matchQuality !== 'related',
+        )
+      : allExpandedCandidates
 
   const candidates = orderCandidates(
     expandedCandidates,
@@ -322,7 +344,16 @@ function applyProposal(
     )
   ) {
     if (candidates.length === 0) {
-      return result
+      return {
+        ...result,
+        experiments: [],
+        routeDecision: createDecision(
+          'no-match',
+          'ai-confirmed-no-match',
+          '已完成语义检索，但没有找到足够接近的预设实验。',
+          [],
+        ),
+      }
     }
 
     return {
@@ -392,13 +423,43 @@ function metadata(
 function shouldReview(
   result: QuestionRouteResult,
   proposal: AgentAIProposal,
+  expandedCandidates:
+    readonly ExperimentMatchCandidate[],
 ): boolean {
-  return (
-    result.routeDecision.decision === 'no-match' ||
-    proposal.confidence < REVIEW_CONFIDENCE_THRESHOLD ||
-    proposal.rewrittenQuery !== null ||
+  const hasTrustedOriginalCandidate =
+    result.experiments.some(
+      (candidate) =>
+        candidate.matchQuality !== 'related',
+    )
+
+  /**
+   * 没有可靠原始候选时，模型结果最多只会形成“请用户确认”的建议，
+   * 不会自动跳转或创建代码；此时串行调用第二模型只会增加等待。
+   * 副模型仍负责主模型失败兜底，以及已有可靠候选上的低置信度复核。
+   */
+  if (!hasTrustedOriginalCandidate) {
+    return false
+  }
+
+  const requiresUserConfirmation =
     proposal.action === 'clarify' ||
     proposal.action === 'request-tool'
+  const hasStrongRewrittenCandidate =
+    expandedCandidates.some(
+      (candidate) =>
+        candidate.matchQuality !== 'related',
+    )
+
+  return (
+    (
+      proposal.confidence < 0.72 &&
+      !requiresUserConfirmation
+    ) ||
+    (
+      proposal.rewrittenQuery !== null &&
+      hasStrongRewrittenCandidate &&
+      proposal.confidence < REVIEW_CONFIDENCE_THRESHOLD
+    )
   )
 }
 
@@ -468,6 +529,21 @@ export async function routeQuestionWithAI(
       ai: metadata({
         status: 'skipped',
         message: '规则结果已经足够明确。',
+      }),
+    }
+  }
+
+  if (
+    !isLikelyMathRoutingRequest(
+      question,
+      result.experiments,
+    )
+  ) {
+    return {
+      ...result,
+      ai: metadata({
+        status: 'skipped',
+        message: '未检测到数学知识点，已跳过模型调用。',
       }),
     }
   }
@@ -544,7 +620,11 @@ export async function routeQuestionWithAI(
     !usedFallback &&
     reviewer &&
     reviewer !== primary &&
-    shouldReview(result, proposal)
+    shouldReview(
+      result,
+      proposal,
+      proposalCandidates,
+    )
   ) {
     try {
       proposal = await requestProposal(

@@ -104,3 +104,15 @@ test('空输入返回 unknown', () => {
   assert.equal(result.confidence, 0)
   assert.equal(result.needsAI, true)
 })
+
+test('算法一词不被误识别为计算意图', () => {
+  const result = classifyIntent('演示最短路径算法')
+
+  assert.equal(result.primaryIntent, 'visualize')
+  assert.equal(
+    result.candidates.some(
+      (candidate) => candidate.intent === 'calculate',
+    ),
+    false,
+  )
+})

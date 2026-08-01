@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 
 import {
   isGeneratableMathExperimentRequest,
+  isLikelyMathRoutingRequest,
 } from './mathDomainGuard.js'
 
 test('允许数学术语和表达式进入实验生成', () => {
@@ -10,6 +11,7 @@ test('允许数学术语和表达式进入实验生成', () => {
     '画出心形线 r=a(1-cos(theta))',
     '观察 y=x^2 的参数变化',
     '演示 23 - 8',
+    '画一个四维超立方体的三维投影',
   ]
 
   for (const question of questions) {
@@ -53,5 +55,16 @@ test('已有实验候选仍需同时具备可视化意图', () => {
       [{} as never],
     ),
     false,
+  )
+})
+
+test('路由领域判断快速排除普通闲聊', () => {
+  assert.equal(
+    isLikelyMathRoutingRequest('今天天气怎么样'),
+    false,
+  )
+  assert.equal(
+    isLikelyMathRoutingRequest('画出四维超立方体的三维投影'),
+    true,
   )
 })

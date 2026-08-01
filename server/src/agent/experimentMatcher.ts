@@ -18,6 +18,11 @@ import type {
   ExperimentInitialParameters,
 } from './parameterExtractor.js'
 
+import {
+  inferStructuralExperimentHints,
+  type StructuralExperimentHint,
+} from './structuralExperimentHints.js'
+
 export const EXPERIMENT_MATCH_QUALITIES = [
   'exact',
   'strong',
@@ -460,6 +465,7 @@ function scoreExperiment(
   intent: MathIntent,
   definition: ExperimentRouteDefinition,
   titleMatched: boolean,
+  structuralHint: StructuralExperimentHint | undefined,
 ): RawExperimentScore {
   let score = 0
   const matchedSignals = new Set<string>()
@@ -504,12 +510,18 @@ function scoreExperiment(
     }
   }
 
+  if (structuralHint) {
+    score += structuralHint.score
+    matchedSignals.add(structuralHint.signal)
+  }
+
   /**
    * 已有高精度信号时不再叠加相似度分，
    * 避免标题或别名被重复计分。
    */
   const highPrecisionMatched =
     titleMatched ||
+    structuralHint !== undefined ||
     Array.from(matchedSignals).some(
       (signal) =>
         signal.startsWith('强短语:') ||
@@ -595,6 +607,9 @@ export function matchExperiments(
     ...questionAnalysis.knowledgeTerms,
   ].filter(Boolean)
 
+  const structuralHints =
+    inferStructuralExperimentHints(question)
+
   const candidates = EXPERIMENT_REGISTRY
     .map((definition): ExperimentMatchCandidate => {
       const titleMatched =
@@ -609,6 +624,7 @@ export function matchExperiments(
         intent,
         definition,
         titleMatched,
+        structuralHints.get(definition.id),
       )
 
       return {

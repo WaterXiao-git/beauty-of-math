@@ -42,12 +42,32 @@ export interface AgentRouteDecisionResult {
   scoreGap: number
 }
 
+export interface AgentToolRequest {
+  name: 'search-experiments' | 'create-experiment'
+  input: Record<string, unknown>
+}
+
+export interface AgentAIRouteMetadata {
+  attempted: boolean
+  status:
+    | 'skipped'
+    | 'disabled'
+    | 'enhanced'
+    | 'fallback'
+    | 'failed'
+  models: string[]
+  reviewed: boolean
+  message: string
+  toolRequest: AgentToolRequest | null
+}
+
 export interface AgentRouteResponse {
   question: string
   analysis: AgentQuestionAnalysis
   intent: AgentIntentResult
   experiments: AgentExperimentCandidate[]
   routeDecision: AgentRouteDecisionResult
+  ai: AgentAIRouteMetadata
 }
 
 export class AgentRouteRequestError
@@ -126,6 +146,7 @@ function isAgentRouteResponse(
 
   const intent = value.intent
   const routeDecision = value.routeDecision
+  const ai = value.ai
 
   return (
     typeof value.question === 'string' &&
@@ -157,6 +178,35 @@ function isAgentRouteResponse(
       isExperimentCandidate,
     ) &&
     typeof routeDecision.scoreGap === 'number'
+    &&
+    isRecord(ai) &&
+    typeof ai.attempted === 'boolean' &&
+    typeof ai.status === 'string' &&
+    [
+      'skipped',
+      'disabled',
+      'enhanced',
+      'fallback',
+      'failed',
+    ].includes(ai.status) &&
+    Array.isArray(ai.models) &&
+    ai.models.every(
+      (model) => typeof model === 'string',
+    ) &&
+    typeof ai.reviewed === 'boolean' &&
+    typeof ai.message === 'string' &&
+    (
+      ai.toolRequest === null ||
+      (
+        isRecord(ai.toolRequest) &&
+        typeof ai.toolRequest.name === 'string' &&
+        [
+          'search-experiments',
+          'create-experiment',
+        ].includes(ai.toolRequest.name) &&
+        isRecord(ai.toolRequest.input)
+      )
+    )
   )
 }
 

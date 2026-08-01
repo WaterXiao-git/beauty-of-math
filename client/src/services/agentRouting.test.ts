@@ -58,6 +58,14 @@ function createResponse(): AgentRouteResponse {
       alternatives: [],
       scoreGap: 60,
     },
+    ai: {
+      attempted: false,
+      status: 'skipped',
+      models: [],
+      reviewed: false,
+      message: '规则结果已经足够明确。',
+      toolRequest: null,
+    },
   }
 }
 

@@ -258,7 +258,7 @@ export default function AgentExperimentRouter() {
                 智能实验导航
               </h2>
               <span className="rounded-full bg-white/80 px-2.5 py-1 text-xs font-medium text-indigo-600 ring-1 ring-indigo-100">
-                规则路由 MVP
+                规则 + 双模型 Agent
               </span>
             </div>
             <p className="mt-1 text-sm leading-relaxed text-slate-500">
@@ -369,12 +369,22 @@ export default function AgentExperimentRouter() {
                 {result.routeDecision.message}
               </p>
 
-              {result.routeDecision.decision ===
-                'ai' && (
-                <p className="mt-2 text-xs leading-relaxed text-amber-700">
-                  当前尚未接入大模型。你可以先选择候选实验，或换一种更明确的问法。
+              {result.ai.attempted && (
+                <p className="mt-2 text-xs leading-relaxed text-indigo-700">
+                  {result.ai.message}
+                  {result.ai.reviewed
+                    ? ' 本次结果已完成双模型复核。'
+                    : ''}
                 </p>
               )}
+
+              {!result.ai.attempted &&
+                result.routeDecision.decision ===
+                  'ai' && (
+                  <p className="mt-2 text-xs leading-relaxed text-amber-700">
+                    {result.ai.message} 你可以先选择候选实验，或换一种更明确的问法。
+                  </p>
+                )}
 
               {candidates.length > 0 && (
                 <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">

@@ -26,8 +26,11 @@
 - 已将候选标记为 `exact`、`strong`、`related` 三档；相近文本命中只能推荐，不能触发自动跳转。
 - 已在前端首页接入“智能实验导航”输入框，支持直接跳转、实验建议、待确认和无匹配四类交互。
 - 已提供 Agent HTTP 接口和对应的 Node.js 自动化测试。
+- 已接入规则优先的双模型 Agent：`deepseek-v4-flash` 负责主路由，`qwen3.7-plus` 在低置信度、查询改写、追问、工具请求和未命中时进行复核，并在主模型异常时接管。
+- 已为模型输出增加 JSON 结构校验、实验 ID 白名单和安全降级；AI 只能推荐或追问，不能编造页面路径或直接执行代码。
+- 已预留 `search-experiments`、`create-experiment` 工具协议；创建实验目前只会产生待确认请求，不会自动执行。
 
-下一步将继续完成主题级兜底、数学参数提取、真实问题集评估和受控 AI 兜底。
+下一步将继续完成真实 API 联调、主题级兜底、数学参数提取、真实问题集评估，以及搜索和创建实验 Skill。
 
 ## 当前能力
 
@@ -56,7 +59,7 @@
 | 搜索 | Fuse.js、pinyin-pro |
 | 前端测试 | Vitest |
 | 后端服务 | Node.js、Express、TypeScript |
-| Agent 路由 | 规则意图分类、实验注册表、候选评分、置信度决策 |
+| Agent 路由 | 规则意图分类、实验注册表、候选评分、DeepSeek 主路由、千问复核与故障接管 |
 | 后端测试 | Node.js Test Runner、tsx |
 | 当前数据存储 | LowDB / JSON |
 
@@ -125,6 +128,25 @@ npm run dev:server
 
 > 前端业务接口使用 `/api` 相对路径。开发模式已经由 Vite 代理到 `http://localhost:3001`；生产部署仍需配置统一反向代理。
 
+### 配置双模型 Agent
+
+先复制后端环境变量模板：
+
+```powershell
+Copy-Item server/.env.example server/.env
+```
+
+然后只在本机的 `server/.env` 中填写 `DEEPSEEK_API_KEY` 和 `QWEN_API_KEY`。`.env` 已被 Git 忽略，禁止把真实密钥写入源码、README、提交记录或前端环境变量。若密钥曾在聊天、截图或日志中明文出现，应先在服务商控制台轮换后再使用。
+
+默认模型与接口：
+
+- DeepSeek 主模型：`deepseek-v4-flash`，OpenAI 兼容地址 `https://api.deepseek.com/v1`。
+- 千问复核模型：`qwen3.7-plus`，中国内地北京地域兼容地址 `https://dashscope.aliyuncs.com/compatible-mode/v1`。
+- 任一密钥缺失时，已配置的模型可以独立工作；两个模型都未配置或 `AGENT_AI_ENABLED=false` 时，系统自动退回纯规则路由。
+- 模型调用默认 8 秒超时，可分别通过 `DEEPSEEK_TIMEOUT_MS`、`QWEN_TIMEOUT_MS` 调整。
+
+模型调用只发生在歧义候选、相近候选、混合意图或未命中场景。完整标题和强语义已经产生明确结果时继续使用本地规则，不增加外部调用延迟和费用。
+
 ## 常用命令
 
 ### 前端
@@ -175,6 +197,7 @@ npm run dev:server
 | `DELETE` | `/api/experiments/:id` | 删除实验记录 |
 | `POST` | `/api/agent/intent` | 识别用户问题的操作意图 |
 | `POST` | `/api/agent/route` | 识别意图、匹配实验并生成路由决策 |
+| `GET` | `/api/agent/status` | 查看不含密钥的 Agent 启用状态、模型名称和工具规划 |
 | `POST` | `/api/bugs` | 提交问题反馈 |
 | `POST` | `/api/admin/login` | 后台管理认证 |
 
@@ -190,10 +213,15 @@ curl -X POST http://localhost:3001/api/agent/route \
 
 - `direct`：意图和实验均明确，可以直接进入实验。
 - `suggest`：实验明确但操作意图不够清晰，或仅找到若干相近候选，先展示建议。
-- `ai`：存在复合意图，或只有操作意图而没有实验候选，需要进一步处理。
+- `ai`：模型要求补充信息或提出受控工具请求，需要用户进一步确认。
 - `no-match`：未识别到相关数学实验。
 
-当前 Agent 只进行规则匹配和路由决策，尚不会调用外部大模型，也不会生成或执行任意代码。
+Agent 始终先运行本地规则。只有规则结果不明确时，DeepSeek 才会输出结构化路由建议；查询改写、低置信度、追问、工具请求和未命中结果会交给千问复核。主模型超时或异常时由千问接管，两个模型都失败时保留原规则结果。
+
+模型只能从服务器提供的候选 ID 中选择。即使模型建议了实验，最终页面路径仍由本地注册表解析，且 AI 增强结果不会触发自动跳转。模型可以提出以下工具请求，但当前不会自行执行：
+
+- `search-experiments`：后续接入扩展实验库搜索。
+- `create-experiment`：后续生成受限实验方案，必须人工审核与批准。
 
 接口响应中的 `analysis` 会返回拆分后的 `knowledgeText` 和 `knowledgeTerms`；每个候选的 `matchQuality` 用于区分完整标题、强语义和相近文本命中。
 
@@ -223,6 +251,8 @@ curl -X POST http://localhost:3001/api/agent/route \
 ## 下一阶段规划
 
 - 根据真实课堂问题继续完善输入框提示、候选解释和交互反馈。
+- 建立离线 Agent 评测集，分别统计规则命中率、主模型纠错率、复核一致率、延迟和调用成本。
+- 实现 `search-experiments` Skill，再设计需要人工批准的 `create-experiment` Skill。
 - 增加函数表达式、区间、精度等数学参数提取。
 - 继续将页面入口、目录、讲解和参数 Schema 收敛到统一 Manifest。
 - 为未命中的问题定义受限 `VisualizationSpec`，由统一渲染器执行。

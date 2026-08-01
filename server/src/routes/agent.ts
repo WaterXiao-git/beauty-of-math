@@ -5,8 +5,12 @@ import {
 } from '../agent/intentClassifier.js'
 
 import {
-  routeQuestion,
-} from '../agent/questionRouter.js'
+  routeQuestionWithAI,
+} from '../agent/ai/agentCoordinator.js'
+
+import {
+  loadAgentAIConfig,
+} from '../agent/ai/config.js'
 
 const router = Router()
 
@@ -45,7 +49,7 @@ router.post('/intent', (req, res) => {
  * 第一层 + 第二层：
  * 识别意图并匹配实验模块。
  */
-router.post('/route', (req, res) => {
+router.post('/route', async (req, res) => {
   const question = readQuestion(req.body)
 
   if (!question) {
@@ -54,9 +58,32 @@ router.post('/route', (req, res) => {
     })
   }
 
-  return res.json(
-    routeQuestion(question),
-  )
+  try {
+    return res.json(
+      await routeQuestionWithAI(question),
+    )
+  } catch {
+    return res.status(500).json({
+      error: '实验路由服务暂时不可用',
+    })
+  }
+})
+
+/**
+ * 仅暴露可公开的配置状态，不返回密钥或完整环境配置。
+ */
+router.get('/status', (_req, res) => {
+  const config = loadAgentAIConfig()
+
+  return res.json({
+    enabled: config.enabled,
+    primaryModel: config.primary?.model ?? null,
+    reviewerModel: config.reviewer?.model ?? null,
+    tools: {
+      searchExperiments: 'planned',
+      createExperiment: 'planned-approval-required',
+    },
+  })
 })
 
 export default router

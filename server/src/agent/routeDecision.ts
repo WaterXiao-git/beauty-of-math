@@ -24,6 +24,9 @@ export const ROUTE_DECISION_REASONS = [
   'ambiguous-experiment',
   'intent-without-experiment',
   'no-experiment-candidate',
+  'ai-enhanced-suggestion',
+  'ai-clarification',
+  'ai-confirmed-no-match',
 ] as const
 
 export type RouteDecisionReason =

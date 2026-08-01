@@ -42,6 +42,7 @@ export interface AgentAIProposal {
 export interface AgentModelRequest {
   systemPrompt: string
   userPrompt: string
+  maxTokens?: number
 }
 
 export interface AgentModelProvider {

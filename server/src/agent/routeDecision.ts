@@ -126,7 +126,21 @@ function hasMixedIntent(
       (candidate) => candidate.score >= 4,
     )
 
-  return strongIntentCandidates.length >= 2
+  if (strongIntentCandidates.length < 2) {
+    return false
+  }
+
+  const intents = new Set(
+    strongIntentCandidates.map(
+      (candidate) => candidate.intent,
+    ),
+  )
+
+  return !(
+    intents.size === 2 &&
+    intents.has('find-experiment') &&
+    intents.has('visualize')
+  )
 }
 
 /**
@@ -135,10 +149,31 @@ function hasMixedIntent(
 function isIntentClear(
   intent: IntentClassificationResult,
 ): boolean {
+  const strongCandidates = intent.candidates.filter(
+    (candidate) => candidate.score >= 4,
+  )
+  const substantiveCandidates =
+    strongCandidates.filter(
+      (candidate) =>
+        candidate.intent !== 'find-experiment',
+    )
+  const navigationWrapsSingleIntent =
+    strongCandidates.some(
+      (candidate) =>
+        candidate.intent === 'find-experiment',
+    ) &&
+    substantiveCandidates.length === 1 &&
+    substantiveCandidates[0].intent === 'visualize'
+
   return (
     intent.primaryIntent !== 'unknown' &&
-    !intent.needsAI &&
-    intent.confidence >= MIN_CLEAR_INTENT_CONFIDENCE
+    (
+      navigationWrapsSingleIntent ||
+      (
+        !intent.needsAI &&
+        intent.confidence >= MIN_CLEAR_INTENT_CONFIDENCE
+      )
+    )
   )
 }
 

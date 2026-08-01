@@ -38,6 +38,7 @@ function createResponse(): AgentRouteResponse {
 
   return {
     question: '打开黎曼和实验',
+    generationAllowed: true,
     analysis: {
       originalText: '打开黎曼和实验',
       normalizedText: '打开黎曼和实验',

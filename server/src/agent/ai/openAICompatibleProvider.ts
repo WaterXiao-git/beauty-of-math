@@ -114,7 +114,10 @@ implements AgentModelProvider {
               type: 'json_object',
             },
             temperature: 0.1,
-            max_tokens: 700,
+            max_tokens: Math.min(
+              2_000,
+              Math.max(200, request.maxTokens ?? 700),
+            ),
             stream: false,
             ...providerOptions,
           }),

@@ -112,6 +112,54 @@ test('DeepSeek 生成并由千问复核实验配置', async () => {
   assert.equal(reviewer.calls, 1)
 })
 
+test('完整实验生成与复核使用更大的输出预算', async () => {
+  const budgets: number[] = []
+  const primary = new FakeProvider(
+    'deepseek',
+    (request: AgentModelRequest) => {
+      budgets.push(request.maxTokens ?? 0)
+      return validSpec()
+    },
+  )
+  const reviewer = new FakeProvider(
+    'qwen',
+    (request: AgentModelRequest) => {
+      budgets.push(request.maxTokens ?? 0)
+      return validSpec()
+    },
+  )
+
+  await generateDynamicExperiment(
+    '展示二次函数',
+    { primary, reviewer },
+  )
+
+  assert.deepEqual(budgets, [1_400, 1_400])
+})
+
+test('二次项系数可取零时补充退化情况', async () => {
+  const primary = new FakeProvider(
+    'deepseek',
+    validSpec(),
+  )
+
+  const result = await generateDynamicExperiment(
+    '展示二次函数',
+    { primary, reviewer: null },
+  )
+
+  assert.ok(
+    result.spec.steps.some((step) =>
+      step.description.includes('不再是抛物线'),
+    ),
+  )
+  assert.ok(
+    result.spec.knowledgePoints.some((point) =>
+      point.includes('不能再称为二次函数'),
+    ),
+  )
+})
+
 test('主模型失败时由千问生成配置', async () => {
   const primary = new FakeProvider(
     'deepseek',

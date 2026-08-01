@@ -67,6 +67,7 @@ export interface AgentAIRouteMetadata {
 
 export interface AgentRouteResponse {
   question: string
+  generationAllowed: boolean
   analysis: AgentQuestionAnalysis
   intent: AgentIntentResult
   experiments: AgentExperimentCandidate[]
@@ -161,6 +162,7 @@ function isAgentRouteResponse(
 
   return (
     typeof value.question === 'string' &&
+    typeof value.generationAllowed === 'boolean' &&
     isQuestionAnalysis(value.analysis) &&
     isRecord(intent) &&
     typeof intent.primaryIntent === 'string' &&

@@ -88,7 +88,7 @@ const INTENT_RULES: IntentRule[] = [
       },
       {
         label: '观察变化',
-        pattern: /观察.{0,8}(?:变化|过程|趋势|逼近)/,
+        pattern: /观察.{0,24}(?:变化|过程|趋势|逼近|接近)/,
       },
     ],
     keywords: [

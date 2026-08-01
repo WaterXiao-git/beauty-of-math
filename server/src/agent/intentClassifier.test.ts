@@ -32,6 +32,15 @@ test('识别普通展示表达', () => {
   assert.equal(result.needsAI, false)
 })
 
+test('识别较长自然语言中的观察变化意图', () => {
+  const result = classifyIntent(
+    '我想观察矩形不断增加时，黎曼和怎样逐渐接近定积分',
+  )
+
+  assert.equal(result.primaryIntent, 'visualize')
+  assert.equal(result.needsAI, false)
+})
+
 test('识别解释意图', () => {
   const result = classifyIntent(
     '为什么矩形数量越多，黎曼和越接近定积分？',

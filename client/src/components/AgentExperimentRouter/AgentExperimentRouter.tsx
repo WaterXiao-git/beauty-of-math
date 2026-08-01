@@ -294,6 +294,7 @@ export default function AgentExperimentRouter() {
 
   const canGenerateExperiment =
     result !== null &&
+    result.generationAllowed &&
     (
       result.routeDecision.decision === 'no-match' ||
       (

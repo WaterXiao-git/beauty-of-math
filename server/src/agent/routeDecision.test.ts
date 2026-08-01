@@ -49,6 +49,16 @@ test('查找实验意图明确时直接路由', () => {
   )
 })
 
+test('打开并展示同一实验不是需要拆分的复合意图', () => {
+  const result = decide(
+    '打开圆锥曲线实验，展示椭圆 a=6、b=2，并显示焦点',
+  )
+
+  assert.equal(result.decision, 'direct')
+  assert.equal(result.reason, 'clear-route')
+  assert.equal(result.target?.id, 'conic-sections')
+})
+
 test('实验标题中的意图词不会制造复合意图', () => {
   const questions = [
     '打开加减乘除可视化实验',

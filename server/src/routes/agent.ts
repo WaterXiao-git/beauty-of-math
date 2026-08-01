@@ -17,6 +17,14 @@ import {
   generateDynamicExperiment,
 } from '../agent/dynamicExperiment/generator.js'
 
+import {
+  isGeneratableMathExperimentRequest,
+} from '../agent/mathDomainGuard.js'
+
+import {
+  routeQuestion,
+} from '../agent/questionRouter.js'
+
 const router = Router()
 
 const generationRequestTimes = new Map<string, number>()
@@ -67,9 +75,16 @@ router.post('/route', async (req, res) => {
   }
 
   try {
-    return res.json(
-      await routeQuestionWithAI(question),
-    )
+    const result = await routeQuestionWithAI(question)
+
+    return res.json({
+      ...result,
+      generationAllowed:
+        isGeneratableMathExperimentRequest(
+          question,
+          result.experiments,
+        ),
+    })
   } catch {
     return res.status(500).json({
       error: '实验路由服务暂时不可用',
@@ -93,6 +108,19 @@ router.post('/generate', async (req, res) => {
   if (question.length > 500) {
     return res.status(400).json({
       error: '问题过长，请控制在 500 个字符以内',
+    })
+  }
+
+  const ruleResult = routeQuestion(question)
+
+  if (
+    !isGeneratableMathExperimentRequest(
+      question,
+      ruleResult.experiments,
+    )
+  ) {
+    return res.status(422).json({
+      error: '只能为数学教学相关问题生成临时实验',
     })
   }
 

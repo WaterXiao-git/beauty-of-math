@@ -36,6 +36,7 @@ knowledgePoints 为 1 到 8 条简短且可验证的数学知识。
 表达式使用 mathjs 语法，只能包含数字、x 或 theta、参数 id、pi、e，以及 sin/cos/tan/asin/acos/atan/sqrt/abs/exp/log/ln/floor/ceil/round/min/max/pow。幂使用 ^，不要使用 Math. 前缀。
 坐标与参数范围应适合课堂观察。samples 在 100 到 800 之间。
 如果问题属于基础四则运算，使用 arithmetic-blocks；极坐标方程使用 polar-2d；其他显式函数使用 cartesian-2d。
+参数范围包含会改变函数类型、产生退化或导致未定义的特殊值时，必须在步骤和知识点中明确说明。
 内容必须使用中文，数学结论必须保守、准确。`
 
 const REVIEW_SYSTEM_PROMPT = `你是数学教学实验审核员。检查草案的数学正确性、可渲染性、参数范围和课堂表达，并输出修正后的完整 JSON 配置。
@@ -43,6 +44,85 @@ const REVIEW_SYSTEM_PROMPT = `你是数学教学实验审核员。检查草案�
 表达式只能使用草案协议列出的安全 mathjs 标识符。无法确定的数学结论应删除或改为保守表述。`
 
 const GENERATION_TIMEOUT_MS = 20_000
+
+function enrichTeachingEdgeCases(
+  spec: DynamicExperimentSpec,
+): DynamicExperimentSpec {
+  if (spec.renderer.type !== 'cartesian-2d') {
+    return spec
+  }
+
+  const expression = spec.renderer.expression
+    .replace(/\s+/g, '')
+
+  const quadraticParameter =
+    spec.parameters.find((parameter) => {
+      const term = `${parameter.id}*x^2`
+      const reversedTerm = `x^2*${parameter.id}`
+
+      return (
+        parameter.min <= 0 &&
+        parameter.max >= 0 &&
+        (
+          expression.includes(term) ||
+          expression.includes(reversedTerm)
+        )
+      )
+    })
+
+  if (!quadraticParameter) {
+    return spec
+  }
+
+  const zeroPattern = new RegExp(
+    `${quadraticParameter.id}\\s*=\\s*0`,
+    'i',
+  )
+  const alreadyExplained = [
+    ...spec.knowledgePoints,
+    ...spec.steps.map((step) => step.description),
+  ].some((text) => zeroPattern.test(text))
+
+  if (alreadyExplained) {
+    return spec
+  }
+
+  const defaultValues = Object.fromEntries(
+    spec.parameters.map((parameter) => [
+      parameter.id,
+      parameter.defaultValue,
+    ]),
+  )
+  const parameterLabel = quadraticParameter.id
+  const edgeCaseStep: DynamicExperimentSpec['steps'][number] = {
+    title: '检查退化情况',
+    description:
+      `将 ${parameterLabel}=0，此时二次项消失，图像不再是抛物线。`,
+    parameterValues: {
+      ...defaultValues,
+      [quadraticParameter.id]: 0,
+    },
+  }
+  const edgeCaseKnowledge =
+    `当 ${parameterLabel}=0 时，二次项消失，函数会退化为更低次数的函数，不能再称为二次函数。`
+
+  return {
+    ...spec,
+    steps: spec.steps.length >= 8
+      ? [...spec.steps.slice(0, 7), edgeCaseStep]
+      : [...spec.steps, edgeCaseStep],
+    knowledgePoints:
+      spec.knowledgePoints.length >= 8
+        ? [
+            ...spec.knowledgePoints.slice(0, 7),
+            edgeCaseKnowledge,
+          ]
+        : [
+            ...spec.knowledgePoints,
+            edgeCaseKnowledge,
+          ],
+  }
+}
 
 export class DynamicExperimentGenerationError
 extends Error {
@@ -128,6 +208,7 @@ async function requestGeneratedSpec(
       task: '生成临时交互式数学实验配置',
       question,
     }),
+    maxTokens: 1_400,
   })
 
   const spec = parseDynamicExperimentSpec(
@@ -155,6 +236,7 @@ async function requestReviewedSpec(
       question,
       draft,
     }),
+    maxTokens: 1_400,
   })
 
   const spec = parseDynamicExperimentSpec(
@@ -244,7 +326,7 @@ export async function generateDynamicExperiment(
 
   return {
     question,
-    spec,
+    spec: enrichTeachingEdgeCases(spec),
     generation: {
       models,
       reviewed,

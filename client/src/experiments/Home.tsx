@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { experiments } from './catalog'
 import type { DifficultyLevel, Experiment } from './catalog'
 import { buildIndex, makeFuse, searchExperiments } from './searchExperiments'
+import { AgentExperimentRouter } from '../components/AgentExperimentRouter'
 
 // 难度等级配置 - 使用更精美的渐变色
 const difficultyConfig: Record<DifficultyLevel, { label: string; color: string; bgColor: string; gradient: string; ageRange: string }> = {
@@ -121,6 +122,8 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      <AgentExperimentRouter />
 
       {/* 统计卡片 - 移动端横向滚动 */}
       <div className="mb-6 md:mb-10 -mx-4 px-4 md:mx-0 md:px-0">

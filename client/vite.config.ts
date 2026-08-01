@@ -21,6 +21,14 @@ export default defineConfig({
     // 为 plotly.js 提供 global 对象
     global: 'globalThis',
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
   build: {
     rollupOptions: {
       output: {

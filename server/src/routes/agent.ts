@@ -12,7 +12,15 @@ import {
   loadAgentAIConfig,
 } from '../agent/ai/config.js'
 
+import {
+  DynamicExperimentGenerationError,
+  generateDynamicExperiment,
+} from '../agent/dynamicExperiment/generator.js'
+
 const router = Router()
+
+const generationRequestTimes = new Map<string, number>()
+const GENERATION_COOLDOWN_MS = 3_000
 
 function readQuestion(body: unknown): string {
   if (
@@ -70,6 +78,59 @@ router.post('/route', async (req, res) => {
 })
 
 /**
+ * 用户明确确认后，生成仅在当前浏览器预览的临时实验配置。
+ * 不写文件、不注册永久路由，也不执行模型代码。
+ */
+router.post('/generate', async (req, res) => {
+  const question = readQuestion(req.body)
+
+  if (!question) {
+    return res.status(400).json({
+      error: '问题不能为空',
+    })
+  }
+
+  if (question.length > 500) {
+    return res.status(400).json({
+      error: '问题过长，请控制在 500 个字符以内',
+    })
+  }
+
+  const clientKey = req.ip || 'unknown'
+  const now = Date.now()
+  const lastRequest =
+    generationRequestTimes.get(clientKey) ?? 0
+
+  if (now - lastRequest < GENERATION_COOLDOWN_MS) {
+    return res.status(429).json({
+      error: '动态实验生成请求过于频繁，请稍后再试',
+    })
+  }
+
+  generationRequestTimes.set(clientKey, now)
+
+  try {
+    return res.json(
+      await generateDynamicExperiment(question),
+    )
+  } catch (error) {
+    if (
+      error instanceof DynamicExperimentGenerationError
+    ) {
+      return res.status(
+        error.code === 'not-configured' ? 503 : 422,
+      ).json({
+        error: error.message,
+      })
+    }
+
+    return res.status(500).json({
+      error: '动态实验生成服务暂时不可用',
+    })
+  }
+})
+
+/**
  * 仅暴露可公开的配置状态，不返回密钥或完整环境配置。
  */
 router.get('/status', (_req, res) => {
@@ -81,7 +142,7 @@ router.get('/status', (_req, res) => {
     reviewerModel: config.reviewer?.model ?? null,
     tools: {
       searchExperiments: 'planned',
-      createExperiment: 'planned-approval-required',
+      createExperiment: 'available-preview-approval-required',
     },
   })
 })

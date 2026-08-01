@@ -26,6 +26,7 @@ function createCandidate(
     matchedSignals: [`标题:${id}`],
     intentSupported: true,
     matchQuality: 'exact' as const,
+    initialParameters: {},
   }
 }
 

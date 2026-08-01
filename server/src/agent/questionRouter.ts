@@ -19,6 +19,10 @@ import {
   type QuestionAnalysisResult,
 } from './questionAnalyzer.js'
 
+import {
+  extractExperimentInitialParameters,
+} from './parameterExtractor.js'
+
 export interface QuestionRouteResult {
   question: string
   analysis: QuestionAnalysisResult
@@ -65,16 +69,28 @@ export function routeQuestion(
       analysis,
     )
 
+  const candidatesWithParameters =
+    experimentResult.candidates.map(
+      (candidate) => ({
+        ...candidate,
+        initialParameters:
+          extractExperimentInitialParameters(
+            question,
+            candidate.id,
+          ),
+      }),
+    )
+
   const routeDecision = decideRoute(
     intentResult,
-    experimentResult.candidates,
+    candidatesWithParameters,
   )
 
   return {
     question,
     analysis,
     intent: intentResult,
-    experiments: experimentResult.candidates,
+    experiments: candidatesWithParameters,
     routeDecision,
   }
 }

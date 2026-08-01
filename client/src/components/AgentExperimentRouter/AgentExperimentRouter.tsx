@@ -15,6 +15,11 @@ import {
   type AgentRouteResponse,
 } from '../../services/agentRouting'
 
+import {
+  requestDynamicExperiment,
+  saveDynamicExperimentPreview,
+} from '../../services/dynamicExperiment'
+
 const EXAMPLE_QUESTIONS = [
   '动态演示黎曼和的逼近过程',
   '打开偏微分方程实验',
@@ -78,12 +83,12 @@ function CandidateButton({
 }: {
   candidate: AgentExperimentCandidate
   isPrimary: boolean
-  onSelect: (path: string) => void
+  onSelect: (candidate: AgentExperimentCandidate) => void
 }) {
   return (
     <button
       type="button"
-      onClick={() => onSelect(candidate.path)}
+      onClick={() => onSelect(candidate)}
       className={`group flex w-full items-center gap-3 rounded-xl border p-3 text-left transition-all hover:-translate-y-0.5 hover:shadow-md ${
         isPrimary
           ? 'border-indigo-200 bg-white shadow-sm'
@@ -139,6 +144,8 @@ export default function AgentExperimentRouter() {
     useState<AgentRouteResponse | null>(null)
   const [isLoading, setIsLoading] =
     useState(false)
+  const [isGenerating, setIsGenerating] =
+    useState(false)
   const [errorMessage, setErrorMessage] =
     useState<string | null>(null)
 
@@ -180,10 +187,15 @@ export default function AgentExperimentRouter() {
         getDirectRoutePath(routeResult)
 
       if (directPath) {
+        const target =
+          routeResult.routeDecision.target
+
         navigate(directPath, {
           state: {
             source: 'agent-route',
             question: normalizedQuestion,
+            initialParameters:
+              target?.initialParameters ?? {},
           },
         })
         return
@@ -226,6 +238,50 @@ export default function AgentExperimentRouter() {
     setErrorMessage(null)
   }
 
+  const handleGenerateExperiment = async () => {
+    const normalizedQuestion = question.trim()
+
+    if (!normalizedQuestion || isGenerating) {
+      return
+    }
+
+    abortControllerRef.current?.abort()
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+    setIsGenerating(true)
+    setErrorMessage(null)
+
+    try {
+      const generated = await requestDynamicExperiment(
+        normalizedQuestion,
+        controller.signal,
+      )
+
+      saveDynamicExperimentPreview(generated)
+      navigate('/generated-experiment', {
+        state: {
+          source: 'agent-generated-experiment',
+          question: normalizedQuestion,
+        },
+      })
+    } catch (error) {
+      if (!isAbortError(error)) {
+        setErrorMessage(
+          error instanceof Error
+            ? error.message
+            : '动态实验生成失败，请稍后重试。',
+        )
+      }
+    } finally {
+      if (
+        abortControllerRef.current === controller
+      ) {
+        abortControllerRef.current = null
+        setIsGenerating(false)
+      }
+    }
+  }
+
   const candidates = result
     ? collectRouteCandidates(result)
     : []
@@ -235,6 +291,22 @@ export default function AgentExperimentRouter() {
         result.routeDecision.decision
       ]
     : null
+
+  const canGenerateExperiment =
+    result !== null &&
+    (
+      result.routeDecision.decision === 'no-match' ||
+      (
+        result.routeDecision.decision === 'suggest' &&
+        result.routeDecision.target?.matchQuality === 'related'
+      ) ||
+      (
+        result.routeDecision.decision === 'ai' &&
+        candidates.length === 0
+      ) ||
+      result.ai.toolRequest?.name ===
+        'create-experiment'
+    )
 
   return (
     <section
@@ -394,18 +466,50 @@ export default function AgentExperimentRouter() {
                         key={candidate.path}
                         candidate={candidate}
                         isPrimary={index === 0}
-                        onSelect={(path) =>
-                          navigate(path, {
+                        onSelect={(selectedCandidate) =>
+                          navigate(selectedCandidate.path, {
                             state: {
                               source:
                                 'agent-suggestion',
                               question,
+                              initialParameters:
+                                selectedCandidate.initialParameters,
                             },
                           })
                         }
                       />
                     ),
                   )}
+                </div>
+              )}
+
+              {canGenerateExperiment && (
+                <div className="mt-4 rounded-xl border border-purple-200 bg-white/80 p-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                      <h4 className="font-semibold text-slate-800">
+                        没有合适的预设实验？
+                      </h4>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                        可以生成一个临时交互实验预览；配置会经过安全校验，不会写入项目代码。
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleGenerateExperiment}
+                      disabled={isGenerating}
+                      className="inline-flex min-h-11 flex-shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-purple-200 disabled:cursor-not-allowed disabled:opacity-60"
+                    >
+                      {isGenerating ? (
+                        <>
+                          <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                          正在生成实验
+                        </>
+                      ) : (
+                        <>生成临时实验 →</>
+                      )}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>

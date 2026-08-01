@@ -14,6 +14,10 @@ import {
   type QuestionAnalysisResult,
 } from './questionAnalyzer.js'
 
+import type {
+  ExperimentInitialParameters,
+} from './parameterExtractor.js'
+
 export const EXPERIMENT_MATCH_QUALITIES = [
   'exact',
   'strong',
@@ -32,6 +36,7 @@ export interface ExperimentMatchCandidate {
   matchedSignals: string[]
   intentSupported: boolean
   matchQuality: ExperimentMatchQuality
+  initialParameters: ExperimentInitialParameters
 }
 
 export interface ExperimentMatchResult {
@@ -615,6 +620,7 @@ export function matchExperiments(
         matchedSignals: result.matchedSignals,
         intentSupported: result.intentSupported,
         matchQuality: result.matchQuality,
+        initialParameters: {},
       }
     })
 

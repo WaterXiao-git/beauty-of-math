@@ -4,7 +4,7 @@ import type {
 
 export interface AgentToolPolicy {
   name: AgentToolName
-  status: 'planned'
+  status: 'planned' | 'available-preview'
   approvalRequired: boolean
   description: string
 }
@@ -23,8 +23,8 @@ export const AGENT_TOOL_POLICIES:
     },
     {
       name: 'create-experiment',
-      status: 'planned',
+      status: 'available-preview',
       approvalRequired: true,
-      description: '生成新实验方案，必须经过人工确认。',
+      description: '生成当前浏览器可预览的临时实验，必须由用户主动确认。',
     },
   ]

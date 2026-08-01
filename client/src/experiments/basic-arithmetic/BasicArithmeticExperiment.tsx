@@ -6,6 +6,10 @@ import { NarrationPresenter } from '../../components/NarrationPresenter'
 import { useNarrationOptional } from '../../contexts/NarrationContext'
 import { basicArithmeticNarration } from '../../narrations/scripts/basic-arithmetic'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
+import {
+  readInitialNumber,
+  useAgentInitialParameters,
+} from '../../hooks/useAgentInitialParameters'
 
 type Operation = 'addition' | 'subtraction' | 'multiplication' | 'division'
 
@@ -16,12 +20,47 @@ interface Step {
 }
 
 export default function BasicArithmeticExperiment() {
-  const [operation, setOperation] = useState<Operation>('addition')
-  const [num1, setNum1] = useState(7)
-  const [num2, setNum2] = useState(5)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const initialParameters = useAgentInitialParameters()
+  const requestedOperation = initialParameters.operation
+  const initialOperation: Operation =
+    requestedOperation === 'addition' ||
+    requestedOperation === 'subtraction' ||
+    requestedOperation === 'multiplication' ||
+    requestedOperation === 'division'
+      ? requestedOperation
+      : 'addition'
+
+  const [operation, setOperation] =
+    useState<Operation>(initialOperation)
+  const [num1, setNum1] = useState(() =>
+    Math.round(
+      readInitialNumber(
+        initialParameters,
+        'num1',
+        7,
+        0,
+        24,
+      ),
+    ),
+  )
+  const [num2, setNum2] = useState(() =>
+    Math.round(
+      readInitialNumber(
+        initialParameters,
+        'num2',
+        5,
+        0,
+        24,
+      ),
+    ),
+  )
+  const [isAnimating, setIsAnimating] = useState(
+    initialParameters.autoPlay === true,
+  )
   const [currentStep, setCurrentStep] = useState(0)
-  const [showBlocks, setShowBlocks] = useState(true)
+  const [showBlocks, setShowBlocks] = useState(
+    initialParameters.showBlocks !== false,
+  )
   const animationRef = useRef<number | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
@@ -561,8 +600,8 @@ export default function BasicArithmeticExperiment() {
                 </label>
                 <input
                   type="range"
-                  min="1"
-                  max="12"
+                  min="0"
+                  max="24"
                   value={num1}
                   onChange={(e) => {
                     setNum1(parseInt(e.target.value))
@@ -577,8 +616,8 @@ export default function BasicArithmeticExperiment() {
                 </label>
                 <input
                   type="range"
-                  min="1"
-                  max="12"
+                  min="0"
+                  max="24"
                   value={num2}
                   onChange={(e) => {
                     setNum2(parseInt(e.target.value))

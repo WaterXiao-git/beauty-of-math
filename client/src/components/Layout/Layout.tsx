@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import { NarrationProvider, useNarrationOptional } from '../../contexts/NarrationContext'
@@ -7,6 +7,7 @@ import { BugReportButton } from '../BugReport'
 
 function LayoutContent() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const mainRef = useRef<HTMLElement>(null)
   const narration = useNarrationOptional()
   const location = useLocation()
   const navigate = useNavigate()
@@ -16,6 +17,10 @@ function LayoutContent() {
   // 获取当前实验名称（用于 Bug 报告）
   const experimentPath = location.pathname
   const isExperimentPage = experimentPath !== '/' && experimentPath.length > 1
+
+  useEffect(() => {
+    mainRef.current?.scrollTo({ top: 0, behavior: 'auto' })
+  }, [location.pathname])
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
@@ -64,7 +69,7 @@ function LayoutContent() {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* 主内容区 */}
-      <main className={`flex-1 overflow-auto md:ml-0 pt-14 md:pt-0 transition-all duration-300 ${isNarrationMode ? 'pb-20' : ''}`}>
+      <main ref={mainRef} className={`flex-1 overflow-auto md:ml-0 pt-14 md:pt-0 transition-all duration-300 ${isNarrationMode ? 'pb-20' : ''}`}>
         <div className="min-h-full p-4 md:p-8 flex flex-col">
           <div className="animate-fade-in flex-1">
             <Outlet />

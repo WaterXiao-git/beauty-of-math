@@ -17,6 +17,10 @@ export interface AgentExperimentCandidate {
   matchedSignals: string[]
   intentSupported: boolean
   matchQuality: 'exact' | 'strong' | 'related'
+  initialParameters: Record<
+    string,
+    string | number | boolean
+  >
 }
 
 export interface AgentQuestionAnalysis {
@@ -114,7 +118,14 @@ function isExperimentCandidate(
       'exact',
       'strong',
       'related',
-    ].includes(value.matchQuality)
+    ].includes(value.matchQuality) &&
+    isRecord(value.initialParameters) &&
+    Object.values(value.initialParameters).every(
+      (parameterValue) =>
+        typeof parameterValue === 'string' ||
+        typeof parameterValue === 'number' ||
+        typeof parameterValue === 'boolean',
+    )
   )
 }
 

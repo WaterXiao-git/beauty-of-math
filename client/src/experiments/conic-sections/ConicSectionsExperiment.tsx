@@ -6,6 +6,10 @@ import { NarrationPresenter } from '../../components/NarrationPresenter'
 import { useNarrationOptional } from '../../contexts/NarrationContext'
 import { conicSectionsNarration } from '../../narrations/scripts/conic-sections'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
+import {
+  readInitialNumber,
+  useAgentInitialParameters,
+} from '../../hooks/useAgentInitialParameters'
 
 interface Step {
   description: string
@@ -42,15 +46,41 @@ const conicConfigs: Record<ConicType, ConicConfig> = {
 }
 
 export default function ConicSectionsExperiment() {
-  const [conicType, setConicType] = useState<ConicType>('ellipse')
-  const [a, setA] = useState(5) // 长轴/实轴
-  const [b, setB] = useState(3) // 短轴/虚轴
-  const [p, setP] = useState(2) // 抛物线焦准距
-  const [showFoci, setShowFoci] = useState(true)
-  const [showDirectrix, setShowDirectrix] = useState(true)
-  const [showAsymptotes, setShowAsymptotes] = useState(true)
-  const [showPoint, setShowPoint] = useState(true)
-  const [isAnimating, setIsAnimating] = useState(false)
+  const initialParameters = useAgentInitialParameters()
+  const requestedConicType = initialParameters.conicType
+  const initialConicType: ConicType =
+    requestedConicType === 'ellipse' ||
+    requestedConicType === 'hyperbola' ||
+    requestedConicType === 'parabola'
+      ? requestedConicType
+      : 'ellipse'
+
+  const [conicType, setConicType] =
+    useState<ConicType>(initialConicType)
+  const [a, setA] = useState(() =>
+    readInitialNumber(initialParameters, 'a', 5, 1, 8),
+  ) // 长轴/实轴
+  const [b, setB] = useState(() =>
+    readInitialNumber(initialParameters, 'b', 3, 1, 8),
+  ) // 短轴/虚轴
+  const [p, setP] = useState(() =>
+    readInitialNumber(initialParameters, 'p', 2, 0.5, 5),
+  ) // 抛物线焦准距
+  const [showFoci, setShowFoci] = useState(
+    initialParameters.showFoci !== false,
+  )
+  const [showDirectrix, setShowDirectrix] = useState(
+    initialParameters.showDirectrix !== false,
+  )
+  const [showAsymptotes, setShowAsymptotes] = useState(
+    initialParameters.showAsymptotes !== false,
+  )
+  const [showPoint, setShowPoint] = useState(
+    initialParameters.showPoint !== false,
+  )
+  const [isAnimating, setIsAnimating] = useState(
+    initialParameters.autoPlay === true,
+  )
   const [animationAngle, setAnimationAngle] = useState(0)
   const [currentStep, setCurrentStep] = useState(0)
   const animationRef = useRef<number | null>(null)

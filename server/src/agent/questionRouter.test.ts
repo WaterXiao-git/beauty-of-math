@@ -173,3 +173,44 @@ test('路由结果返回拆分后的知识文本', () => {
     candidateIds.includes('quadratic-function'),
   )
 })
+
+test('已有算术实验返回用户指定的初始参数', () => {
+  const result = routeQuestion(
+    '打开加减乘除可视化，用方块演示 23 - 8',
+  )
+
+  assert.equal(
+    result.routeDecision.target?.id,
+    'basic-arithmetic',
+  )
+  assert.deepEqual(
+    result.routeDecision.target?.initialParameters,
+    {
+      operation: 'subtraction',
+      num1: 23,
+      num2: 8,
+      showBlocks: true,
+    },
+  )
+})
+
+test('圆锥曲线实验返回类型和参数', () => {
+  const result = routeQuestion(
+    '打开圆锥曲线，展示椭圆 a=6、b=2 的焦点动态变化',
+  )
+
+  assert.equal(
+    result.routeDecision.target?.id,
+    'conic-sections',
+  )
+  assert.deepEqual(
+    result.routeDecision.target?.initialParameters,
+    {
+      conicType: 'ellipse',
+      a: 6,
+      b: 2,
+      showFoci: true,
+      autoPlay: true,
+    },
+  )
+})

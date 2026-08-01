@@ -151,3 +151,25 @@ test('分数核心词产生分数实验建议', () => {
     'suggest',
   )
 })
+
+test('路由结果返回拆分后的知识文本', () => {
+  const result = routeQuestion(
+    '请帮我比较一次函数和二次函数的图像变化',
+  )
+
+  assert.equal(
+    result.analysis.knowledgeText,
+    '一次函数和二次函数的图像变化',
+  )
+
+  const candidateIds = result.experiments.map(
+    (candidate) => candidate.id,
+  )
+
+  assert.ok(
+    candidateIds.includes('linear-function'),
+  )
+  assert.ok(
+    candidateIds.includes('quadratic-function'),
+  )
+})

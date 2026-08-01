@@ -104,7 +104,11 @@ function CandidateButton({
           {candidate.title}
         </div>
         <div className="mt-0.5 text-xs text-slate-500">
-          {isPrimary ? '最匹配的实验' : '备选实验'}
+          {isPrimary
+            ? candidate.matchQuality === 'related'
+              ? '相近实验推荐'
+              : '最匹配的实验'
+            : '备选实验'}
         </div>
       </div>
       <svg

@@ -164,17 +164,11 @@ test(
 )
 
 test(
-  'Registry 数量等于已启用 Manifest 数量',
+  '基础 Registry 数量等于完整 Manifest 数量',
   () => {
-    const enabledManifests =
-      ALL_EXPERIMENT_MANIFESTS.filter(
-        (manifest) =>
-          manifest.agent.enabled,
-      )
-
     assert.equal(
       EXPERIMENT_REGISTRY.length,
-      enabledManifests.length,
+      ALL_EXPERIMENT_MANIFESTS.length,
     )
   },
 )

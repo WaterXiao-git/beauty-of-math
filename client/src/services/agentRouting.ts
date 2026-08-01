@@ -16,6 +16,15 @@ export interface AgentExperimentCandidate {
   confidence: number
   matchedSignals: string[]
   intentSupported: boolean
+  matchQuality: 'exact' | 'strong' | 'related'
+}
+
+export interface AgentQuestionAnalysis {
+  originalText: string
+  normalizedText: string
+  knowledgeText: string
+  knowledgeTerms: string[]
+  removedPhrases: string[]
 }
 
 export interface AgentIntentResult {
@@ -35,6 +44,7 @@ export interface AgentRouteDecisionResult {
 
 export interface AgentRouteResponse {
   question: string
+  analysis: AgentQuestionAnalysis
   intent: AgentIntentResult
   experiments: AgentExperimentCandidate[]
   routeDecision: AgentRouteDecisionResult
@@ -78,7 +88,32 @@ function isExperimentCandidate(
       (signal) =>
         typeof signal === 'string',
     ) &&
-    typeof value.intentSupported === 'boolean'
+    typeof value.intentSupported === 'boolean' &&
+    typeof value.matchQuality === 'string' &&
+    [
+      'exact',
+      'strong',
+      'related',
+    ].includes(value.matchQuality)
+  )
+}
+
+function isQuestionAnalysis(
+  value: unknown,
+): value is AgentQuestionAnalysis {
+  return (
+    isRecord(value) &&
+    typeof value.originalText === 'string' &&
+    typeof value.normalizedText === 'string' &&
+    typeof value.knowledgeText === 'string' &&
+    Array.isArray(value.knowledgeTerms) &&
+    value.knowledgeTerms.every(
+      (term) => typeof term === 'string',
+    ) &&
+    Array.isArray(value.removedPhrases) &&
+    value.removedPhrases.every(
+      (phrase) => typeof phrase === 'string',
+    )
   )
 }
 
@@ -94,6 +129,7 @@ function isAgentRouteResponse(
 
   return (
     typeof value.question === 'string' &&
+    isQuestionAnalysis(value.analysis) &&
     isRecord(intent) &&
     typeof intent.primaryIntent === 'string' &&
     typeof intent.confidence === 'number' &&

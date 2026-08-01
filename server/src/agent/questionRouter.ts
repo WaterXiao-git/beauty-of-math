@@ -14,8 +14,14 @@ import {
   type RouteDecisionResult,
 } from './routeDecision.js'
 
+import {
+  analyzeQuestion,
+  type QuestionAnalysisResult,
+} from './questionAnalyzer.js'
+
 export interface QuestionRouteResult {
   question: string
+  analysis: QuestionAnalysisResult
   intent: IntentClassificationResult
   experiments: ExperimentMatchCandidate[]
   routeDecision: RouteDecisionResult
@@ -31,6 +37,8 @@ export interface QuestionRouteResult {
 export function routeQuestion(
   question: string,
 ): QuestionRouteResult {
+  const analysis = analyzeQuestion(question)
+
   const initialIntentResult =
     classifyIntent(question)
 
@@ -38,6 +46,8 @@ export function routeQuestion(
     matchExperiments(
       question,
       initialIntentResult.primaryIntent,
+      3,
+      analysis,
     )
 
   const intentResult =
@@ -51,6 +61,8 @@ export function routeQuestion(
     matchExperiments(
       question,
       intentResult.primaryIntent,
+      3,
+      analysis,
     )
 
   const routeDecision = decideRoute(
@@ -60,6 +72,7 @@ export function routeQuestion(
 
   return {
     question,
+    analysis,
     intent: intentResult,
     experiments: experimentResult.candidates,
     routeDecision,

@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 
 import {
   EXPERIMENT_REGISTRY,
+  SEMANTIC_EXPERIMENT_REGISTRY,
 } from '../experimentRegistry.js'
 
 import {
@@ -153,7 +154,7 @@ test(
 )
 
 test(
-  'Registry 由所有启用的 Manifest 自动生成',
+  '基础 Registry 覆盖全部 Manifest，语义 Registry 只包含可信配置',
   () => {
     const enabledManifests =
       ALL_EXPERIMENT_MANIFESTS.filter(
@@ -161,70 +162,59 @@ test(
           manifest.agent.enabled,
       )
 
-    /**
-     * Registry 数量必须等于全部 enabled=true
-     * 的 Manifest 数量，而不再只是核心 5 个实验。
-     */
     assert.equal(
       EXPERIMENT_REGISTRY.length,
+      ALL_EXPERIMENT_MANIFESTS.length,
+    )
+
+    assert.equal(
+      SEMANTIC_EXPERIMENT_REGISTRY.length,
       enabledManifests.length,
     )
 
-    /**
-     * 当前已经自动启用高置信度实验，
-     * 所以 Registry 应多于核心实验数量。
-     */
     assert.ok(
-      EXPERIMENT_REGISTRY.length >
+      SEMANTIC_EXPERIMENT_REGISTRY.length >
         CORE_EXPERIMENT_MANIFESTS.length,
-      'Registry 应同时包含核心实验和高置信度自动启用实验',
+      '语义 Registry 应包含核心实验和高置信度自动启用实验',
     )
 
-    const enabledPaths =
+    const allPaths =
       new Set(
-        enabledManifests.map(
+        ALL_EXPERIMENT_MANIFESTS.map(
           (manifest) =>
             manifest.path,
         ),
       )
 
-    /**
-     * Registry 中的每个实验，
-     * 都必须来自 enabled=true 的 Manifest。
-     */
     for (
       const registryItem
       of EXPERIMENT_REGISTRY
     ) {
       assert.ok(
-        enabledPaths.has(
+        allPaths.has(
           registryItem.path,
         ),
-        `${registryItem.id} 不在已启用 Manifest 中`,
+        `${registryItem.id} 不在完整 Manifest 中`,
       )
     }
 
-    const registryPaths =
+    const semanticPaths =
       new Set(
-        EXPERIMENT_REGISTRY.map(
+        SEMANTIC_EXPERIMENT_REGISTRY.map(
           (item) =>
             item.path,
         ),
       )
 
-    /**
-     * 每一个已启用的 Manifest，
-     * 也都必须成功进入 Registry。
-     */
     for (
       const manifest
       of enabledManifests
     ) {
       assert.ok(
-        registryPaths.has(
+        semanticPaths.has(
           manifest.path,
         ),
-        `${manifest.id} 已启用但没有进入 Registry`,
+        `${manifest.id} 已启用但没有进入语义 Registry`,
       )
     }
   },

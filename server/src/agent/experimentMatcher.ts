@@ -9,6 +9,20 @@ import {
   type RoutableMathIntent,
 } from './experimentRegistry.js'
 
+import {
+  analyzeQuestion,
+  type QuestionAnalysisResult,
+} from './questionAnalyzer.js'
+
+export const EXPERIMENT_MATCH_QUALITIES = [
+  'exact',
+  'strong',
+  'related',
+] as const
+
+export type ExperimentMatchQuality =
+  (typeof EXPERIMENT_MATCH_QUALITIES)[number]
+
 export interface ExperimentMatchCandidate {
   id: string
   path: string
@@ -17,6 +31,7 @@ export interface ExperimentMatchCandidate {
   confidence: number
   matchedSignals: string[]
   intentSupported: boolean
+  matchQuality: ExperimentMatchQuality
 }
 
 export interface ExperimentMatchResult {
@@ -30,6 +45,7 @@ interface RawExperimentScore {
   score: number
   matchedSignals: string[]
   intentSupported: boolean
+  matchQuality: ExperimentMatchQuality
 }
 
 const OPTIONAL_SEMANTIC_WORDS =
@@ -199,30 +215,54 @@ interface SemanticTermScore {
  * 核心文本，为“意思接近但写法不完全一致”的输入提供候选。
  */
 function scoreSemanticTerms(
-  text: string,
+  queryTexts: readonly string[],
+  originalText: string,
   definition: ExperimentRouteDefinition,
 ): SemanticTermScore {
-  const queryCore = compactSemanticText(text)
+  const queryCores = Array.from(
+    new Set(
+      queryTexts
+        .map(compactSemanticText)
+        .filter(
+          (queryCore) =>
+            queryCore.length >=
+              MIN_SEMANTIC_TERM_LENGTH,
+        ),
+    ),
+  )
 
   if (
-    queryCore.length < MIN_SEMANTIC_TERM_LENGTH ||
-    isShadowedByLongerTitle(text, definition)
+    queryCores.length === 0 ||
+    isShadowedByLongerTitle(
+      originalText,
+      definition,
+    )
   ) {
     return { score: 0, signal: null }
   }
 
+  const semanticTerms = definition.semanticEnabled
+    ? [
+        ...definition.aliases.map((value) => ({
+          label: '相近别名',
+          value,
+          exactScore: 28,
+        })),
+        ...definition.keywords.map((value) => ({
+          label: '相近关键词',
+          value,
+          exactScore: 18,
+        })),
+      ]
+    : []
+
   const terms = [
-    { label: '核心标题', value: definition.title, exactScore: 35 },
-    ...definition.aliases.map((value) => ({
-      label: '相近别名',
-      value,
-      exactScore: 28,
-    })),
-    ...definition.keywords.map((value) => ({
-      label: '相近关键词',
-      value,
-      exactScore: 18,
-    })),
+    {
+      label: '核心标题',
+      value: definition.title,
+      exactScore: 35,
+    },
+    ...semanticTerms,
   ]
 
   let best: SemanticTermScore = {
@@ -237,46 +277,48 @@ function scoreSemanticTerms(
       continue
     }
 
-    let score = 0
+    for (const queryCore of queryCores) {
+      let score = 0
 
-    if (queryCore === termCore) {
-      score = term.exactScore
-    } else if (queryCore.includes(termCore)) {
-      const containmentRatio =
-        termCore.length / queryCore.length
+      if (queryCore === termCore) {
+        score = term.exactScore
+      } else if (queryCore.includes(termCore)) {
+        const containmentRatio =
+          termCore.length / queryCore.length
 
-      score = Math.round(14 + containmentRatio * 12)
-    } else if (
-      termCore.includes(queryCore) &&
-      (
-        term.label === '核心标题' ||
-        queryCore.length >= 3
-      )
-    ) {
-      const containmentRatio =
-        queryCore.length / termCore.length
-
-      if (containmentRatio >= 0.5) {
         score = Math.round(14 + containmentRatio * 12)
-      }
-    } else {
-      const similarity = calculateTextSimilarity(
-        queryCore,
-        termCore,
-      )
-
-      if (
-        Math.min(queryCore.length, termCore.length) >= 3 &&
-        similarity >= 0.58
+      } else if (
+        termCore.includes(queryCore) &&
+        (
+          term.label === '核心标题' ||
+          queryCore.length >= 3
+        )
       ) {
-        score = Math.round(8 + similarity * 12)
-      }
-    }
+        const containmentRatio =
+          queryCore.length / termCore.length
 
-    if (score > best.score) {
-      best = {
-        score,
-        signal: `${term.label}:${term.value}`,
+        if (containmentRatio >= 0.5) {
+          score = Math.round(14 + containmentRatio * 12)
+        }
+      } else {
+        const similarity = calculateTextSimilarity(
+          queryCore,
+          termCore,
+        )
+
+        if (
+          Math.min(queryCore.length, termCore.length) >= 3 &&
+          similarity >= 0.58
+        ) {
+          score = Math.round(8 + similarity * 12)
+        }
+      }
+
+      if (score > best.score) {
+        best = {
+          score,
+          signal: `${term.label}:${term.value}`,
+        }
       }
     }
   }
@@ -409,6 +451,7 @@ function supportsIntent(
 
 function scoreExperiment(
   text: string,
+  semanticTexts: readonly string[],
   intent: MathIntent,
   definition: ExperimentRouteDefinition,
   titleMatched: boolean,
@@ -424,43 +467,57 @@ function scoreExperiment(
     matchedSignals.add(`标题:${definition.title}`)
   }
 
-  /**
-   * 强短语通常包含较完整的数学教学表达。
-   */
-  for (const phrase of definition.strongPhrases) {
-    if (includesSearchTerm(text, phrase)) {
-      score += 35
-      matchedSignals.add(`强短语:${phrase}`)
+  if (definition.semanticEnabled) {
+    /**
+     * 强短语通常包含较完整的数学教学表达。
+     */
+    for (const phrase of definition.strongPhrases) {
+      if (includesSearchTerm(text, phrase)) {
+        score += 35
+        matchedSignals.add(`强短语:${phrase}`)
+      }
+    }
+
+    /**
+     * 别名比普通关键词更可靠。
+     */
+    for (const alias of definition.aliases) {
+      if (includesSearchTerm(text, alias)) {
+        score += 25
+        matchedSignals.add(`别名:${alias}`)
+      }
+    }
+
+    /**
+     * 关键词只作为辅助依据。
+     */
+    for (const keyword of definition.keywords) {
+      if (includesSearchTerm(text, keyword)) {
+        score += 6
+        matchedSignals.add(`关键词:${keyword}`)
+      }
     }
   }
 
   /**
-   * 别名比普通关键词更可靠。
+   * 已有高精度信号时不再叠加相似度分，
+   * 避免标题或别名被重复计分。
    */
-  for (const alias of definition.aliases) {
-    if (includesSearchTerm(text, alias)) {
-      score += 25
-      matchedSignals.add(`别名:${alias}`)
-    }
-  }
+  const highPrecisionMatched =
+    titleMatched ||
+    Array.from(matchedSignals).some(
+      (signal) =>
+        signal.startsWith('强短语:') ||
+        signal.startsWith('别名:'),
+    )
 
-  /**
-   * 关键词只作为辅助依据。
-   */
-  for (const keyword of definition.keywords) {
-    if (includesSearchTerm(text, keyword)) {
-      score += 6
-      matchedSignals.add(`关键词:${keyword}`)
-    }
-  }
-
-  /**
-   * 通用语义兜底只采用最高的一项，避免多个相似词重复叠分。
-   */
-  const semanticTermScore = scoreSemanticTerms(
-    text,
-    definition,
-  )
+  const semanticTermScore = highPrecisionMatched
+    ? { score: 0, signal: null }
+    : scoreSemanticTerms(
+        semanticTexts,
+        text,
+        definition,
+      )
 
   if (
     semanticTermScore.score > 0 &&
@@ -493,6 +550,12 @@ function scoreExperiment(
     score: Math.max(score, 0),
     matchedSignals: Array.from(matchedSignals),
     intentSupported,
+    matchQuality:
+      titleMatched
+        ? 'exact'
+        : highPrecisionMatched
+          ? 'strong'
+          : 'related',
   }
 }
 
@@ -505,6 +568,9 @@ export function matchExperiments(
   question: string,
   intent: MathIntent,
   limit = 3,
+  questionAnalysis:
+    QuestionAnalysisResult =
+      analyzeQuestion(question),
 ): ExperimentMatchResult {
   const normalizedText = normalizeQuestion(question)
 
@@ -519,6 +585,11 @@ export function matchExperiments(
 
   const safeLimit = Math.max(1, limit)
 
+  const semanticTexts = [
+    questionAnalysis.knowledgeText,
+    ...questionAnalysis.knowledgeTerms,
+  ].filter(Boolean)
+
   const candidates = EXPERIMENT_REGISTRY
     .map((definition): ExperimentMatchCandidate => {
       const titleMatched =
@@ -529,6 +600,7 @@ export function matchExperiments(
 
       const result = scoreExperiment(
         normalizedText,
+        semanticTexts,
         intent,
         definition,
         titleMatched,
@@ -542,6 +614,7 @@ export function matchExperiments(
         confidence: scoreToConfidence(result.score),
         matchedSignals: result.matchedSignals,
         intentSupported: result.intentSupported,
+        matchQuality: result.matchQuality,
       }
     })
 
@@ -554,6 +627,23 @@ export function matchExperiments(
     .sort((a, b) => {
       if (b.score !== a.score) {
         return b.score - a.score
+      }
+
+      const qualityPriority:
+        Record<ExperimentMatchQuality, number> = {
+          exact: 3,
+          strong: 2,
+          related: 1,
+        }
+
+      if (
+        qualityPriority[b.matchQuality] !==
+        qualityPriority[a.matchQuality]
+      ) {
+        return (
+          qualityPriority[b.matchQuality] -
+          qualityPriority[a.matchQuality]
+        )
       }
 
       return a.id.localeCompare(b.id)

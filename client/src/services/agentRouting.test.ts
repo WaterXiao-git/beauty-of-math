@@ -25,6 +25,7 @@ function createCandidate(
     confidence: 0.85,
     matchedSignals: [`标题:${id}`],
     intentSupported: true,
+    matchQuality: 'exact' as const,
   }
 }
 
@@ -36,6 +37,13 @@ function createResponse(): AgentRouteResponse {
 
   return {
     question: '打开黎曼和实验',
+    analysis: {
+      originalText: '打开黎曼和实验',
+      normalizedText: '打开黎曼和实验',
+      knowledgeText: '黎曼和',
+      knowledgeTerms: ['黎曼和'],
+      removedPhrases: ['打开', '实验'],
+    },
     intent: {
       primaryIntent: 'find-experiment',
       confidence: 0.85,

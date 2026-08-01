@@ -243,6 +243,21 @@ export function decideRoute(
   }
 
   /**
+   * 核心词和文本相似度只用于推荐候选。
+   * 只有完整标题、强短语或明确别名命中才允许自动跳转。
+   */
+  if (target.matchQuality === 'related') {
+    return {
+      decision: 'suggest',
+      reason: 'ambiguous-experiment',
+      message: '已找到含义相近的实验，请确认后再进入。',
+      target,
+      alternatives,
+      scoreGap,
+    }
+  }
+
+  /**
    * 实验明确，操作意图也明确。
    *
    * 可以直接执行页面路由。

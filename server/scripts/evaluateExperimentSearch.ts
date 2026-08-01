@@ -17,7 +17,7 @@ interface QueryTemplate {
 }
 
 interface EvaluationRow {
-  source: 'core' | 'inferred'
+  source: 'core' | 'semantic' | 'catalog'
 
   experimentId: string
   experimentTitle: string
@@ -89,11 +89,20 @@ const corePaths = new Set(
   ),
 )
 
-const enabledManifests =
-  ALL_EXPERIMENT_MANIFESTS.filter(
-    (manifest) =>
-      manifest.agent.enabled,
-  )
+const semanticPaths = new Set(
+  ALL_EXPERIMENT_MANIFESTS
+    .filter(
+      (manifest) =>
+        manifest.agent.enabled,
+    )
+    .map(
+      (manifest) =>
+        manifest.path,
+    ),
+)
+
+const routableManifests =
+  ALL_EXPERIMENT_MANIFESTS
 
 /**
  * 统计重复标题。
@@ -106,7 +115,7 @@ const titleCounts =
 
 for (
   const manifest
-  of enabledManifests
+  of routableManifests
 ) {
   titleCounts.set(
     manifest.title,
@@ -122,7 +131,7 @@ const rows: EvaluationRow[] = []
 
 for (
   const manifest
-  of enabledManifests
+  of routableManifests
 ) {
   for (
     const template
@@ -162,7 +171,11 @@ for (
           manifest.path,
         )
           ? 'core'
-          : 'inferred',
+          : semanticPaths.has(
+                manifest.path,
+              )
+            ? 'semantic'
+            : 'catalog',
 
       experimentId:
         manifest.id,
@@ -321,10 +334,16 @@ const coreRows =
       row.source === 'core',
   )
 
-const inferredRows =
+const semanticRows =
   rows.filter(
     (row) =>
-      row.source === 'inferred',
+      row.source === 'semantic',
+  )
+
+const catalogRows =
+  rows.filter(
+    (row) =>
+      row.source === 'catalog',
   )
 
 const uniqueTitleRows =
@@ -354,14 +373,18 @@ console.log({
     ALL_EXPERIMENT_MANIFESTS.length,
 
   registryExperiments:
-    enabledManifests.length,
+    routableManifests.length,
 
   coreExperiments:
     CORE_EXPERIMENT_MANIFESTS.length,
 
   inferredEnabled:
-    enabledManifests.length -
+    semanticPaths.size -
     CORE_EXPERIMENT_MANIFESTS.length,
+
+  catalogFallback:
+    catalogRows.length /
+    QUERY_TEMPLATES.length,
 
   queryTemplates:
     QUERY_TEMPLATES.length,
@@ -394,7 +417,17 @@ console.log(
 
 console.log(
   createAccuracySummary(
-    inferredRows,
+    semanticRows,
+  ),
+)
+
+console.log(
+  '\n=== 基础目录标题召回准确率 ===',
+)
+
+console.log(
+  createAccuracySummary(
+    catalogRows,
   ),
 )
 

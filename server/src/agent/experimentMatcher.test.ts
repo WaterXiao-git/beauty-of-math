@@ -168,6 +168,38 @@ test('核心词不完整时仍然返回相近候选', () => {
   )
 })
 
+test('低置信度 Manifest 仍可通过完整标题召回', () => {
+  const result = classifyAndMatch(
+    '打开贝塞尔曲线实验',
+  )
+
+  assert.equal(
+    result.candidates[0]?.id,
+    'bezier',
+  )
+  assert.equal(
+    result.candidates[0]?.matchQuality,
+    'exact',
+  )
+})
+
+test('比较问题可以同时召回两个知识点', () => {
+  const result = classifyAndMatch(
+    '比较一次函数和二次函数的图像变化',
+  )
+
+  const candidateIds = result.candidates.map(
+    (candidate) => candidate.id,
+  )
+
+  assert.ok(
+    candidateIds.includes('linear-function'),
+  )
+  assert.ok(
+    candidateIds.includes('quadratic-function'),
+  )
+})
+
 test('优先匹配更长的完整实验标题', () => {
   const pdeResult = classifyAndMatch(
     '打开偏微分方程实验',

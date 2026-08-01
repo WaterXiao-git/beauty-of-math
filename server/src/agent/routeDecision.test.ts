@@ -156,3 +156,30 @@ test('相近但不唯一的实验候选也作为建议返回', () => {
   )
   assert.ok(result.target)
 })
+
+test('低置信度实验完整标题仍允许直接路由', () => {
+  const result = decide(
+    '打开贝塞尔曲线实验',
+  )
+
+  assert.equal(result.decision, 'direct')
+  assert.equal(result.target?.id, 'bezier')
+  assert.equal(
+    result.target?.matchQuality,
+    'exact',
+  )
+})
+
+test('只有相近文本命中时禁止自动跳转', () => {
+  const result = decide('打开贝塞尔')
+
+  assert.equal(result.decision, 'suggest')
+  assert.equal(
+    result.reason,
+    'ambiguous-experiment',
+  )
+  assert.equal(
+    result.target?.matchQuality,
+    'related',
+  )
+})

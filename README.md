@@ -20,8 +20,9 @@
 - 已修复 Windows 中文目录下 Plotly 自定义别名无法解析的问题。
 - 已同步前端 Fuse.js、pinyin-pro 搜索依赖与 npm 锁文件。
 - 已实现第一版数学问题意图分类器，可识别可视化、解释、计算、比较和查找实验等意图。
-- 已建立首批 5 个实验的路由注册表：函数图像变换、ε-δ 极限、导数定义、黎曼和、旋转体体积。
+- 已建立统一实验 Manifest：从前端目录自动生成 300 个基础条目，并将 5 个核心实验配置与高置信度自动推断结果合并进 Agent 注册表。
 - 已实现实验候选评分和 `direct`、`suggest`、`ai`、`no-match` 四类路由决策。
+- 已处理实验标题意图污染、长短标题冲突和常见自然语言插词，并提供标题搜索、语义搜索评估脚本。
 - 已提供 Agent HTTP 接口和对应的 Node.js 自动化测试。
 
 下一步将把后端路由能力接入前端输入框，并继续完成数学参数提取和受控 AI 兜底。
@@ -73,8 +74,9 @@ mathviz/
 │     ├─ App.tsx                   # 页面路由入口
 │     └─ main.tsx                  # 前端启动入口
 ├─ server/                         # Express 后端
+│  ├─ scripts/                     # Manifest 生成、报告和搜索评估
 │  └─ src/
-│     ├─ agent/                    # 意图识别、实验匹配与路由决策
+│     ├─ agent/                    # 意图识别、Manifest、实验匹配与路由决策
 │     ├─ db/                       # LowDB 数据访问
 │     ├─ routes/                   # Agent、实验与问题反馈接口
 │     └─ index.ts                  # 服务启动入口
@@ -143,6 +145,12 @@ npm run build           # 编译 TypeScript
 npm run test            # 运行全部后端测试
 npm run test:intent     # 仅运行意图分类测试
 npm run start           # 运行编译后的服务
+npm run generate:manifests       # 从前端实验目录重新生成 Manifest
+npm run check:manifests          # 检查生成文件是否与前端目录同步
+npm run typecheck:scripts        # 检查后端维护脚本类型
+npm run report:manifests         # 查看自动推断和启用情况
+npm run evaluate:search          # 评估标题搜索及最终路由决策
+npm run evaluate:semantic-search # 评估不含实验标题的语义问题
 ```
 
 生产或共享环境必须通过环境变量设置管理密码，不应使用源码中的开发默认值：
@@ -184,6 +192,8 @@ curl -X POST http://localhost:3001/api/agent/route \
 
 当前 Agent 只进行规则匹配和路由决策，尚不会调用外部大模型，也不会生成或执行任意代码。
 
+实验注册表由 `client/src/experiments/catalog.ts` 自动生成。开发服务启动前会刷新生成文件，测试会检查生成文件是否过期；新增或修改实验目录后，也可以手动运行 `npm run generate:manifests`。
+
 ## 新增实验模块
 
 新增实验时，至少完成以下工作：
@@ -192,9 +202,10 @@ curl -X POST http://localhost:3001/api/agent/route \
 2. 将数学计算与 React 页面渲染分离，核心算法使用独立 TypeScript 文件。
 3. 为数学算法添加边界值、特殊值和异常输入测试。
 4. 在 `client/src/experiments/catalog.ts` 中登记标题、描述、难度和主题。
-5. 在 `client/src/App.tsx` 中配置懒加载和页面路由。
-6. 检查侧边栏、课程数据和讲解脚本等关联入口。
-7. 依次运行课程完整性检查、单元测试、Lint 和生产构建。
+5. 在 `server` 目录运行 `npm run generate:manifests`，同步 Agent 实验目录。
+6. 在 `client/src/App.tsx` 中配置懒加载和页面路由。
+7. 检查侧边栏、课程数据和讲解脚本等关联入口。
+8. 依次运行 Manifest 同步检查、搜索评估、课程完整性检查、单元测试、Lint 和生产构建。
 
 实验模块应优先保证：
 
@@ -207,9 +218,8 @@ curl -X POST http://localhost:3001/api/agent/route \
 ## 下一阶段规划
 
 - 将 Agent 路由接口接入前端自然语言输入框。
-- 将首批实验注册表扩展为统一的 `ExperimentDefinition` 模块协议。
 - 增加函数表达式、区间、精度等数学参数提取。
-- 将分散的页面入口、目录和讲解元数据统一管理。
+- 继续将页面入口、目录、讲解和参数 Schema 收敛到统一 Manifest。
 - 为未命中的问题定义受限 `VisualizationSpec`，由统一渲染器执行。
 - 建立标准测试问题集，评估模块命中率、数学正确性和渲染稳定性。
 - 对规则置信度进行真实语料校准，降低错误直接跳转率。

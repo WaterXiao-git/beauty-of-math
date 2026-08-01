@@ -10,6 +10,7 @@ import {
 
 import {
   decideRoute,
+  refineIntentForMatchedExperiment,
   type RouteDecisionResult,
 } from './routeDecision.js'
 
@@ -30,12 +31,27 @@ export interface QuestionRouteResult {
 export function routeQuestion(
   question: string,
 ): QuestionRouteResult {
-  const intentResult = classifyIntent(question)
+  const initialIntentResult =
+    classifyIntent(question)
 
-  const experimentResult = matchExperiments(
-    question,
-    intentResult.primaryIntent,
-  )
+  const initialExperimentResult =
+    matchExperiments(
+      question,
+      initialIntentResult.primaryIntent,
+    )
+
+  const intentResult =
+    refineIntentForMatchedExperiment(
+      initialIntentResult,
+      initialExperimentResult
+        .candidates[0] ?? null,
+    )
+
+  const experimentResult =
+    matchExperiments(
+      question,
+      intentResult.primaryIntent,
+    )
 
   const routeDecision = decideRoute(
     intentResult,

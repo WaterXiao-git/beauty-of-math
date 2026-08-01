@@ -4,11 +4,20 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "predev": "npm run generate:manifests",
     "dev": "tsx watch src/index.ts",
+    "prebuild": "npm run generate:manifests",
     "build": "tsc",
     "start": "node dist/index.js",
+    "pretest": "npm run check:manifests",
     "test": "tsx --test \"src/**/*.test.ts\"",
-    "test:intent": "tsx --test src/agent/intentClassifier.test.ts"
+    "test:intent": "tsx --test src/agent/intentClassifier.test.ts",
+    "generate:manifests": "tsx scripts/generateExperimentCatalog.ts",
+    "check:manifests": "tsx scripts/generateExperimentCatalog.ts --check",
+    "typecheck:scripts": "tsc -p scripts/tsconfig.json",
+    "report:manifests": "tsx scripts/reportManifestInference.ts",
+    "evaluate:search": "tsx scripts/evaluateExperimentSearch.ts",
+    "evaluate:semantic-search": "tsx scripts/evaluateSemanticSearch.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",

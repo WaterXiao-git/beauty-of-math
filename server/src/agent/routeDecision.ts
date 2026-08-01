@@ -1,5 +1,6 @@
-import type {
-  IntentClassificationResult,
+import {
+  classifyIntent,
+  type IntentClassificationResult,
 } from './intentClassifier.js'
 
 import type {
@@ -56,6 +57,59 @@ const MIN_CLEAR_INTENT_CONFIDENCE = 0.7
 const MIN_CLEAR_EXPERIMENT_CONFIDENCE = 0.72
 const MIN_CLEAR_EXPERIMENT_SCORE_GAP = 15
 
+function escapeRegularExpression(
+  value: string,
+): string {
+  return value.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&',
+  )
+}
+
+/**
+ * 实验标题描述的是知识点，
+ * 不应该被当作用户额外提出的操作意图。
+ *
+ * 仅在匹配器明确命中完整标题时移除标题，
+ * 用户在标题之外写出的“解释”“比较”等意图仍会保留。
+ */
+export function refineIntentForMatchedExperiment(
+  intent: IntentClassificationResult,
+  target: ExperimentMatchCandidate | null,
+): IntentClassificationResult {
+  if (
+    !target ||
+    !target.matchedSignals.includes(
+      `标题:${target.title}`,
+    )
+  ) {
+    return intent
+  }
+
+  const titlePattern = new RegExp(
+    escapeRegularExpression(
+      target.title,
+    ),
+    'gi',
+  )
+
+  const textWithoutTitle =
+    intent.originalText.replace(
+      titlePattern,
+      ' ',
+    )
+
+  const refinedIntent = classifyIntent(
+    textWithoutTitle,
+  )
+
+  return {
+    ...refinedIntent,
+    originalText: intent.originalText,
+    normalizedText: intent.normalizedText,
+  }
+}
+
 /**
  * 判断第一层是否检测到了复合意图。
  *
@@ -101,6 +155,11 @@ export function decideRoute(
 ): RouteDecisionResult {
   const target = experiments[0] ?? null
   const alternatives = experiments.slice(1)
+  const effectiveIntent =
+    refineIntentForMatchedExperiment(
+      intent,
+      target,
+    )
 
   /**
    * 完全没有实验候选。
@@ -114,7 +173,10 @@ export function decideRoute(
      *
      * 此时可以交给 AI 或追问用户。
      */
-    if (intent.primaryIntent !== 'unknown') {
+    if (
+      effectiveIntent.primaryIntent !==
+      'unknown'
+    ) {
       return {
         decision: 'ai',
         reason: 'intent-without-experiment',
@@ -150,7 +212,7 @@ export function decideRoute(
    * 例如：
    * “画出函数并解释为什么它连续”
    */
-  if (hasMixedIntent(intent)) {
+  if (hasMixedIntent(effectiveIntent)) {
     return {
       decision: 'ai',
       reason: 'mixed-intent',
@@ -185,7 +247,7 @@ export function decideRoute(
    *
    * 可以直接执行页面路由。
    */
-  if (isIntentClear(intent)) {
+  if (isIntentClear(effectiveIntent)) {
     return {
       decision: 'direct',
       reason: 'clear-route',

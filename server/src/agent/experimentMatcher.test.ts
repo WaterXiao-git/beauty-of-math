@@ -116,3 +116,55 @@ test('默认只返回最多三个候选', () => {
     result.candidates.length <= 3,
   )
 })
+
+test('优先匹配更长的完整实验标题', () => {
+  const pdeResult = classifyAndMatch(
+    '打开偏微分方程实验',
+  )
+
+  assert.equal(
+    pdeResult.candidates[0]?.id,
+    'pde',
+  )
+
+  assert.ok(
+    !pdeResult.candidates.some(
+      (candidate) =>
+        candidate.id === 'ode',
+    ),
+  )
+
+  const fftResult = classifyAndMatch(
+    '打开快速傅里叶变换实验',
+  )
+
+  assert.equal(
+    fftResult.candidates[0]?.id,
+    'fft',
+  )
+
+  assert.ok(
+    !fftResult.candidates.some(
+      (candidate) =>
+        candidate.id === 'fourier',
+    ),
+  )
+})
+
+test('语义短语允许常见量词插入', () => {
+  const result = classifyAndMatch(
+    '用有限个点补出一条连续曲线',
+  )
+
+  assert.equal(
+    result.candidates[0]?.id,
+    'interpolation',
+  )
+
+  assert.ok(
+    result.candidates[0]
+      ?.matchedSignals.includes(
+        '强短语:有限个点补出连续曲线',
+      ),
+  )
+})

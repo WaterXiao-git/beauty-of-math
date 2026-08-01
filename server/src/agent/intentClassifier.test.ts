@@ -23,6 +23,15 @@ test('识别可视化意图', () => {
   assert.ok(result.confidence >= 0.7)
 })
 
+test('识别普通展示表达', () => {
+  const result = classifyIntent(
+    '展示偏微分方程',
+  )
+
+  assert.equal(result.primaryIntent, 'visualize')
+  assert.equal(result.needsAI, false)
+})
+
 test('识别解释意图', () => {
   const result = classifyIntent(
     '为什么矩形数量越多，黎曼和越接近定积分？',

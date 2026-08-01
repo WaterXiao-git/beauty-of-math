@@ -75,6 +75,10 @@ const INTENT_RULES: IntentRule[] = [
         pattern: /演示(?:一下)?/,
       },
       {
+        label: '展示',
+        pattern: /展示(?:一下)?/,
+      },
+      {
         label: '模拟',
         pattern: /模拟(?:一下)?/,
       },

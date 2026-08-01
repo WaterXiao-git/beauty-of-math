@@ -49,6 +49,50 @@ test('查找实验意图明确时直接路由', () => {
   )
 })
 
+test('实验标题中的意图词不会制造复合意图', () => {
+  const questions = [
+    '打开加减乘除可视化实验',
+    '打开优化算法实验',
+    '打开鸽巢原理实验',
+    '打开行列式的几何意义实验',
+  ]
+
+  for (const question of questions) {
+    const result = decide(question)
+
+    assert.equal(
+      result.decision,
+      'direct',
+      question,
+    )
+  }
+})
+
+test('长标题不会与其短标题产生歧义', () => {
+  const pdeResult = decide(
+    '打开偏微分方程实验',
+  )
+
+  assert.equal(pdeResult.decision, 'direct')
+  assert.equal(pdeResult.target?.id, 'pde')
+
+  const fftResult = decide(
+    '打开快速傅里叶变换实验',
+  )
+
+  assert.equal(fftResult.decision, 'direct')
+  assert.equal(fftResult.target?.id, 'fft')
+})
+
+test('标题之外的真实复合意图仍然进入 AI', () => {
+  const result = decide(
+    '打开加减乘除可视化实验并解释为什么',
+  )
+
+  assert.equal(result.decision, 'ai')
+  assert.equal(result.reason, 'mixed-intent')
+})
+
 test('只有知识点名称时展示建议', () => {
   const result = decide('黎曼和')
 

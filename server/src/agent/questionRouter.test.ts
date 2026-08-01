@@ -101,6 +101,24 @@ test('明确问题产生 direct 决策', () => {
   )
 })
 
+test('返回去除实验标题干扰后的操作意图', () => {
+  const result = routeQuestion(
+    '打开加减乘除可视化实验',
+  )
+
+  assert.equal(
+    result.intent.primaryIntent,
+    'find-experiment',
+  )
+
+  assert.equal(result.intent.needsAI, false)
+
+  assert.equal(
+    result.routeDecision.decision,
+    'direct',
+  )
+})
+
 test('只有知识点时产生 suggest 决策', () => {
   const result = routeQuestion('黎曼和')
 

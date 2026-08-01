@@ -32,6 +32,147 @@ interface RawExperimentScore {
   intentSupported: boolean
 }
 
+const OPTIONAL_SEMANTIC_WORDS =
+  /(?:相关的|对应的|其中的|一下|一个|一种|一条|一组|一些|这个|这种|这条|这些|那些|请|帮我|的)/g
+
+function escapeRegularExpression(
+  value: string,
+): string {
+  return value.replace(
+    /[.*+?^${}()|[\]\\]/g,
+    '\\$&',
+  )
+}
+
+/**
+ * 搜索词允许忽略空格、常见量词和助词。
+ *
+ * 例如：
+ * “有限个点补出连续曲线”
+ * 可以命中：
+ * “用有限个点补出一条连续曲线”。
+ */
+function includesSearchTerm(
+  text: string,
+  searchTerm: string,
+): boolean {
+  const normalizedTerm =
+    normalizeQuestion(searchTerm)
+
+  if (!normalizedTerm) {
+    return false
+  }
+
+  const isAsciiTerm =
+    /^[a-z0-9 -]+$/.test(
+      normalizedTerm,
+    )
+
+  if (isAsciiTerm) {
+    const termPattern =
+      escapeRegularExpression(
+        normalizedTerm,
+      ).replace(/\s+/g, '\\s+')
+
+    return new RegExp(
+      `(?:^|[^a-z0-9])${termPattern}(?=$|[^a-z0-9])`,
+    ).test(text)
+  }
+
+  const compactText =
+    text.replace(/\s+/g, '')
+
+  const compactTerm =
+    normalizedTerm.replace(/\s+/g, '')
+
+  if (compactText.includes(compactTerm)) {
+    return true
+  }
+
+  const simplifiedText =
+    compactText.replace(
+      OPTIONAL_SEMANTIC_WORDS,
+      '',
+    )
+
+  const simplifiedTerm =
+    compactTerm.replace(
+      OPTIONAL_SEMANTIC_WORDS,
+      '',
+    )
+
+  return (
+    simplifiedTerm.length >= 4 &&
+    simplifiedText.includes(
+      simplifiedTerm,
+    )
+  )
+}
+
+/**
+ * 如果一个短标题只作为更长标题的一部分出现，
+ * 不把短标题视为独立标题命中。
+ *
+ * 用户同时明确写出两个标题时，
+ * 两个标题仍然都会保留。
+ */
+function hasIndependentTitleMatch(
+  text: string,
+  definition: ExperimentRouteDefinition,
+): boolean {
+  const title = normalizeQuestion(
+    definition.title,
+  )
+
+  if (!title || !text.includes(title)) {
+    return false
+  }
+
+  const longerMatchedTitles =
+    EXPERIMENT_REGISTRY
+      .filter(
+        (candidate) =>
+          candidate.id !== definition.id,
+      )
+      .map((candidate) =>
+        normalizeQuestion(
+          candidate.title,
+        ),
+      )
+      .filter(
+        (candidateTitle) =>
+          candidateTitle.length >
+            title.length &&
+          candidateTitle.includes(title) &&
+          text.includes(candidateTitle),
+      )
+      .sort(
+        (a, b) =>
+          b.length - a.length,
+      )
+
+  if (longerMatchedTitles.length === 0) {
+    return true
+  }
+
+  let textWithoutLongerTitles = text
+
+  for (
+    const longerTitle
+    of longerMatchedTitles
+  ) {
+    textWithoutLongerTitles =
+      textWithoutLongerTitles.replaceAll(
+        longerTitle,
+        ' ',
+      )
+  }
+
+  return textWithoutLongerTitles.includes(
+    title,
+  )
+}
+
 /**
  * 当前的 confidence 是规则分数映射值，
  * 不是统计学意义上的真实概率。
@@ -73,6 +214,7 @@ function scoreExperiment(
   text: string,
   intent: MathIntent,
   definition: ExperimentRouteDefinition,
+  titleMatched: boolean,
 ): RawExperimentScore {
   let score = 0
   const matchedSignals = new Set<string>()
@@ -80,7 +222,7 @@ function scoreExperiment(
   /**
    * 标题属于高可信信号。
    */
-  if (text.includes(definition.title.toLowerCase())) {
+  if (titleMatched) {
     score += 50
     matchedSignals.add(`标题:${definition.title}`)
   }
@@ -89,7 +231,7 @@ function scoreExperiment(
    * 强短语通常包含较完整的数学教学表达。
    */
   for (const phrase of definition.strongPhrases) {
-    if (text.includes(phrase.toLowerCase())) {
+    if (includesSearchTerm(text, phrase)) {
       score += 35
       matchedSignals.add(`强短语:${phrase}`)
     }
@@ -99,7 +241,7 @@ function scoreExperiment(
    * 别名比普通关键词更可靠。
    */
   for (const alias of definition.aliases) {
-    if (text.includes(alias.toLowerCase())) {
+    if (includesSearchTerm(text, alias)) {
       score += 25
       matchedSignals.add(`别名:${alias}`)
     }
@@ -109,7 +251,7 @@ function scoreExperiment(
    * 关键词只作为辅助依据。
    */
   for (const keyword of definition.keywords) {
-    if (text.includes(keyword.toLowerCase())) {
+    if (includesSearchTerm(text, keyword)) {
       score += 6
       matchedSignals.add(`关键词:${keyword}`)
     }
@@ -166,10 +308,17 @@ export function matchExperiments(
 
   const candidates = EXPERIMENT_REGISTRY
     .map((definition): ExperimentMatchCandidate => {
+      const titleMatched =
+        hasIndependentTitleMatch(
+          normalizedText,
+          definition,
+        )
+
       const result = scoreExperiment(
         normalizedText,
         intent,
         definition,
+        titleMatched,
       )
 
       return {

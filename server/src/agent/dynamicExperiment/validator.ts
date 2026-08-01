@@ -9,6 +9,7 @@ import {
 
 const MAX_TEXT_LENGTH = 500
 const MAX_EXPRESSION_LENGTH = 180
+const MAX_SANDBOX_DOCUMENT_LENGTH = 50_000
 const MAX_PARAMETERS = 6
 const MAX_STEPS = 8
 const MAX_KNOWLEDGE_POINTS = 8
@@ -59,6 +60,17 @@ function readText(
     .replace(/\s+/g, ' ')
     .trim()
     .slice(0, maxLength)
+}
+
+function readSandboxDocument(value: unknown): string {
+  if (typeof value !== 'string') {
+    return ''
+  }
+
+  return value
+    .replace(/\u0000/g, '')
+    .trim()
+    .slice(0, MAX_SANDBOX_DOCUMENT_LENGTH)
 }
 
 function readFiniteNumber(
@@ -284,6 +296,25 @@ function readRenderer(
       thetaMax,
       radiusMax,
       samples: Math.round(samples),
+    }
+  }
+
+  if (value.type === 'sandboxed-html') {
+    const document = readSandboxDocument(value.document)
+    const height = readFiniteNumber(
+      value.height,
+      320,
+      1_000,
+    )
+
+    if (!document || height === null) {
+      return null
+    }
+
+    return {
+      type: 'sandboxed-html',
+      document,
+      height: Math.round(height),
     }
   }
 

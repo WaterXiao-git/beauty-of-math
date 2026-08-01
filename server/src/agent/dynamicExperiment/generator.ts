@@ -19,28 +19,32 @@ import {
   parseDynamicExperimentSpec,
 } from './validator.js'
 
+import {
+  createKnownDynamicExperiment,
+} from './knownExperimentTemplates.js'
+
 const GENERATOR_SYSTEM_PROMPT = `你是数学教学可视化实验设计器。请把用户需求转换成一个临时、可交互的数学实验配置。
-只允许三种 renderer.type：cartesian-2d、polar-2d、arithmetic-blocks。
-禁止输出 React、JavaScript、HTML、URL、文件路径或 Markdown，只输出一个 JSON 对象。
+优先使用结构化渲染器；无法由固定渲染器表达的几何、算法、统计、物理或高维可视化，使用 sandboxed-html 生成原生 HTML/SVG/Canvas 交互图。只输出一个 JSON 对象，不要输出 Markdown。
 
 JSON 字段必须完整：
 version 固定为 1；title、description、gradeLevel、formulaLatex；
 parameters 是最多 6 个滑块，每项为 {id,label,min,max,step,defaultValue,unit}，id 只能是小写字母开头；
-renderer 三选一：
+renderer 四选一：
 1. {type:"cartesian-2d",expression,xMin,xMax,yMin,yMax,samples}
 2. {type:"polar-2d",expression,thetaMin,thetaMax,radiusMax,samples}
 3. {type:"arithmetic-blocks",operation,left,right}，operation 只能是 addition|subtraction|multiplication|division，数字为 0 到 24 的整数；
+4. {type:"sandboxed-html",document,height}。document 是可直接放入 body 的 HTML 片段，可包含 style、svg、canvas 和 script，长度不超过 50000 字符，height 为 320 到 1000。不得依赖外部资源或网络库。交互参数变化会通过 window message 发送：{type:"mathviz:parameters",parameters}，脚本必须监听该消息并重新绘制。
 steps 为 1 到 8 项，每项 {title,description,parameterValues}；
 knowledgePoints 为 1 到 8 条简短且可验证的数学知识。
 
 表达式使用 mathjs 语法，只能包含数字、x 或 theta、参数 id、pi、e，以及 sin/cos/tan/asin/acos/atan/sqrt/abs/exp/log/ln/floor/ceil/round/min/max/pow。幂使用 ^，不要使用 Math. 前缀。
 坐标与参数范围应适合课堂观察。samples 在 100 到 800 之间。
-如果问题属于基础四则运算，使用 arithmetic-blocks；极坐标方程使用 polar-2d；其他显式函数使用 cartesian-2d。
+如果问题属于基础四则运算，使用 arithmetic-blocks；极坐标方程使用 polar-2d；其他显式函数使用 cartesian-2d；其余需要自由绘图的内容使用 sandboxed-html。自由绘图应使用响应式尺寸、白色背景、蓝紫主色、清晰图例和参数反馈，视觉上接近现有数学实验页。
 参数范围包含会改变函数类型、产生退化或导致未定义的特殊值时，必须在步骤和知识点中明确说明。
 内容必须使用中文，数学结论必须保守、准确。`
 
 const REVIEW_SYSTEM_PROMPT = `你是数学教学实验审核员。检查草案的数学正确性、可渲染性、参数范围和课堂表达，并输出修正后的完整 JSON 配置。
-必须保持 version=1，只能使用 cartesian-2d、polar-2d、arithmetic-blocks，禁止输出代码、Markdown 或额外说明。
+必须保持 version=1，只能使用 cartesian-2d、polar-2d、arithmetic-blocks、sandboxed-html，禁止输出 Markdown 或额外说明。
 表达式只能使用草案协议列出的安全 mathjs 标识符。无法确定的数学结论应删除或改为保守表述。`
 
 const GENERATION_TIMEOUT_MS = 20_000
@@ -208,7 +212,7 @@ async function requestGeneratedSpec(
       task: '生成临时交互式数学实验配置',
       question,
     }),
-    maxTokens: 1_400,
+    maxTokens: 4_500,
   })
 
   const spec = parseDynamicExperimentSpec(
@@ -236,7 +240,7 @@ async function requestReviewedSpec(
       question,
       draft,
     }),
-    maxTokens: 1_400,
+    maxTokens: 4_500,
   })
 
   const spec = parseDynamicExperimentSpec(
@@ -260,6 +264,22 @@ export async function generateDynamicExperiment(
   question: string,
   options: DynamicExperimentGeneratorOptions = {},
 ): Promise<DynamicExperimentResponse> {
+  const knownExperiment =
+    createKnownDynamicExperiment(question)
+
+  if (knownExperiment) {
+    return {
+      question,
+      spec: knownExperiment,
+      generation: {
+        models: [],
+        reviewed: false,
+        fallback: false,
+        temporary: true,
+      },
+    }
+  }
+
   const defaults = configuredProviders()
   const primary = options.primary === undefined
     ? defaults.primary

@@ -73,7 +73,15 @@ export interface AgentAIRouteMetadata {
   toolRequest: AgentToolRequest | null
 }
 
+export interface AgentMathExplanation {
+  title: string
+  summary: string
+  keyPoints: string[]
+  example: string | null
+}
+
 export interface AgentEnhancedRouteResult
   extends QuestionRouteResult {
   ai: AgentAIRouteMetadata
+  explanation: AgentMathExplanation | null
 }

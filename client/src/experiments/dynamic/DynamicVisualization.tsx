@@ -13,6 +13,7 @@ import type {
   CartesianRendererSpec,
   DynamicRendererSpec,
   PolarRendererSpec,
+  SandboxedHtmlRendererSpec,
 } from '../../types/dynamicExperiment'
 
 interface VisualizationProps {
@@ -403,6 +404,64 @@ function ArithmeticVisualization({
   )
 }
 
+function SandboxedHtmlVisualization({
+  renderer,
+  parameters,
+}: {
+  renderer: SandboxedHtmlRendererSpec
+  parameters: Record<string, number>
+}) {
+  const iframeRef = useRef<HTMLIFrameElement>(null)
+  const sourceDocument = useMemo(
+    () => `<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data: blob:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; font-src data:; connect-src 'none'">
+  <style>
+    html,body{margin:0;min-height:100%;overflow:hidden;background:#fff;color:#1e293b;font-family:Inter,'Microsoft YaHei',system-ui,sans-serif}
+    *{box-sizing:border-box}
+  </style>
+</head>
+<body>${renderer.document}</body>
+</html>`,
+    [renderer.document],
+  )
+
+  const sendParameters = () => {
+    iframeRef.current?.contentWindow?.postMessage(
+      {
+        type: 'mathviz:parameters',
+        parameters,
+      },
+      '*',
+    )
+  }
+
+  useEffect(() => {
+    iframeRef.current?.contentWindow?.postMessage(
+      {
+        type: 'mathviz:parameters',
+        parameters,
+      },
+      '*',
+    )
+  }, [parameters])
+
+  return (
+    <iframe
+      ref={iframeRef}
+      title="AI 生成的交互数学实验"
+      srcDoc={sourceDocument}
+      sandbox="allow-scripts"
+      onLoad={sendParameters}
+      className="w-full rounded-xl border border-slate-200 bg-white"
+      style={{ height: renderer.height }}
+    />
+  )
+}
+
 export default function DynamicVisualization({
   renderer,
   parameters,
@@ -419,6 +478,15 @@ export default function DynamicVisualization({
   if (renderer.type === 'polar-2d') {
     return (
       <PolarVisualization
+        renderer={renderer}
+        parameters={parameters}
+      />
+    )
+  }
+
+  if (renderer.type === 'sandboxed-html') {
+    return (
+      <SandboxedHtmlVisualization
         renderer={renderer}
         parameters={parameters}
       />

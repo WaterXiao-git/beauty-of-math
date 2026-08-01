@@ -94,7 +94,7 @@ router.post('/route', async (req, res) => {
 
 /**
  * 用户明确确认后，生成仅在当前浏览器预览的临时实验配置。
- * 不写文件、不注册永久路由，也不执行模型代码。
+ * 不写文件、不注册永久路由；通用绘图代码只在前端隔离画布中运行。
  */
 router.post('/generate', async (req, res) => {
   const question = readQuestion(req.body)

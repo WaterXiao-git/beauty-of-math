@@ -11,6 +11,7 @@ export const ROUTE_DECISIONS = [
   'direct',
   'suggest',
   'ai',
+  'answer',
   'no-match',
 ] as const
 
@@ -26,6 +27,7 @@ export const ROUTE_DECISION_REASONS = [
   'no-experiment-candidate',
   'ai-enhanced-suggestion',
   'ai-clarification',
+  'ai-explanation',
   'ai-confirmed-no-match',
 ] as const
 

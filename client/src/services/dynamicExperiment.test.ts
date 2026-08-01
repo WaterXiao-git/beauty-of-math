@@ -111,4 +111,37 @@ describe('requestDynamicExperiment', () => {
       ),
     ).rejects.toThrow('无法识别')
   })
+
+  it('接受通用沙箱交互实验', async () => {
+    const original = validResponse()
+    const body = {
+      ...original,
+      spec: {
+        ...original.spec,
+        renderer: {
+          type: 'sandboxed-html',
+          document:
+            '<canvas id="view"></canvas><script>document.getElementById("view")</script>',
+          height: 560,
+        },
+      },
+    }
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(JSON.stringify(body), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }),
+    ) as typeof fetch
+
+    await expect(
+      requestDynamicExperiment(
+        '画一个四维超立方体',
+        undefined,
+        fetchMock,
+      ),
+    ).resolves.toEqual(body)
+  })
 })

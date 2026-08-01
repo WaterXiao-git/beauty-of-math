@@ -97,3 +97,32 @@ test('拒绝越界参数和除以零的运算配置', () => {
     null,
   )
 })
+
+test('接受通用沙箱交互实验配置', () => {
+  const spec = {
+    ...validSpec(),
+    renderer: {
+      type: 'sandboxed-html',
+      document:
+        '<canvas id="view"></canvas><script>document.getElementById("view")</script>',
+      height: 560,
+    },
+  }
+
+  const parsed = parseDynamicExperimentSpec(spec)
+
+  assert.equal(parsed?.renderer.type, 'sandboxed-html')
+})
+
+test('拒绝空白或超高的沙箱实验配置', () => {
+  const spec = {
+    ...validSpec(),
+    renderer: {
+      type: 'sandboxed-html',
+      document: '   ',
+      height: 1_500,
+    },
+  }
+
+  assert.equal(parseDynamicExperimentSpec(spec), null)
+})

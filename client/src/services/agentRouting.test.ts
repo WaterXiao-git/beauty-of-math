@@ -68,6 +68,7 @@ function createResponse(): AgentRouteResponse {
       message: '规则结果已经足够明确。',
       toolRequest: null,
     },
+    explanation: null,
   }
 }
 
@@ -156,6 +157,45 @@ describe('requestAgentRoute', () => {
     ).rejects.toThrow(
       '实验匹配服务返回了无法识别的数据。',
     )
+  })
+
+  it('解析 Agent 数学解释结果', async () => {
+    const responseBody = createResponse()
+    responseBody.routeDecision = {
+      decision: 'answer',
+      reason: 'ai-explanation',
+      message: '群是一种代数结构。',
+      target: null,
+      alternatives: [],
+      scoreGap: 0,
+    }
+    responseBody.experiments = []
+    responseBody.explanation = {
+      title: '群',
+      summary: '群是一种带有二元运算的代数结构。',
+      keyPoints: ['满足结合律。', '存在单位元和逆元。'],
+      example: '整数在加法下构成群。',
+    }
+    responseBody.ai.attempted = true
+    responseBody.ai.status = 'enhanced'
+
+    const fetchMock = vi.fn(
+      async () =>
+        new Response(JSON.stringify(responseBody), {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }),
+    ) as typeof fetch
+
+    await expect(
+      requestAgentRoute(
+        '什么是群论中的群',
+        undefined,
+        fetchMock,
+      ),
+    ).resolves.toEqual(responseBody)
   })
 })
 

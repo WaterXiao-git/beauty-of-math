@@ -2,6 +2,7 @@ export const DYNAMIC_RENDERER_TYPES = [
   'cartesian-2d',
   'polar-2d',
   'arithmetic-blocks',
+  'sandboxed-html',
 ] as const
 
 export type DynamicRendererType =
@@ -49,10 +50,17 @@ export interface ArithmeticBlocksRendererSpec {
   right: number
 }
 
+export interface SandboxedHtmlRendererSpec {
+  type: 'sandboxed-html'
+  document: string
+  height: number
+}
+
 export type DynamicRendererSpec =
   | CartesianRendererSpec
   | PolarRendererSpec
   | ArithmeticBlocksRendererSpec
+  | SandboxedHtmlRendererSpec
 
 export interface DynamicExperimentStep {
   title: string

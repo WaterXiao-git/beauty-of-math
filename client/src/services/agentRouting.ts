@@ -2,6 +2,7 @@ export const AGENT_ROUTE_DECISIONS = [
   'direct',
   'suggest',
   'ai',
+  'answer',
   'no-match',
 ] as const
 
@@ -65,6 +66,13 @@ export interface AgentAIRouteMetadata {
   toolRequest: AgentToolRequest | null
 }
 
+export interface AgentMathExplanation {
+  title: string
+  summary: string
+  keyPoints: string[]
+  example: string | null
+}
+
 export interface AgentRouteResponse {
   question: string
   generationAllowed: boolean
@@ -73,6 +81,7 @@ export interface AgentRouteResponse {
   experiments: AgentExperimentCandidate[]
   routeDecision: AgentRouteDecisionResult
   ai: AgentAIRouteMetadata
+  explanation: AgentMathExplanation | null
 }
 
 export class AgentRouteRequestError
@@ -159,6 +168,7 @@ function isAgentRouteResponse(
   const intent = value.intent
   const routeDecision = value.routeDecision
   const ai = value.ai
+  const explanation = value.explanation
 
   return (
     typeof value.question === 'string' &&
@@ -208,6 +218,22 @@ function isAgentRouteResponse(
     ) &&
     typeof ai.reviewed === 'boolean' &&
     typeof ai.message === 'string' &&
+    (
+      explanation === null ||
+      (
+        isRecord(explanation) &&
+        typeof explanation.title === 'string' &&
+        typeof explanation.summary === 'string' &&
+        Array.isArray(explanation.keyPoints) &&
+        explanation.keyPoints.every(
+          (point) => typeof point === 'string',
+        ) &&
+        (
+          explanation.example === null ||
+          typeof explanation.example === 'string'
+        )
+      )
+    ) &&
     (
       ai.toolRequest === null ||
       (

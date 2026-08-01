@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 
 import {
   parseAgentAIProposal,
+  parseMathExplanation,
   routeQuestionWithAI,
 } from './agentCoordinator.js'
 
@@ -380,6 +381,63 @@ test('非数学问题直接跳过两个模型', async () => {
   assert.equal(reviewer.calls, 0)
 })
 
+test('没有实验候选的数学定义问题由 Agent 直接解释', async () => {
+  const primary = new FakeProvider(
+    'deepseek',
+    'deepseek-v4-flash',
+    {
+      title: '群',
+      summary: '群是一组对象及其上的一个运算，满足四条基本公理。',
+      keyPoints: [
+        '运算结果仍在这个集合中。',
+        '运算满足结合律，并存在单位元和逆元。',
+      ],
+      example: '整数集合在加法下构成群。',
+    },
+  )
+
+  const result = await routeQuestionWithAI(
+    '什么是群论中的群',
+    { enabled: true, primary, reviewer: null },
+  )
+
+  assert.equal(result.routeDecision.decision, 'answer')
+  assert.equal(result.explanation?.title, '群')
+  assert.equal(primary.calls, 1)
+  assert.equal(result.experiments.length, 0)
+})
+
+test('数学解释主模型失败时由备用模型回答', async () => {
+  const primary = new FakeProvider(
+    'deepseek',
+    'deepseek-v4-flash',
+    new Error('timeout'),
+  )
+  const reviewer = new FakeProvider(
+    'qwen',
+    'qwen3.7-plus',
+    {
+      title: '测度',
+      summary: '测度用于给集合赋予大小。',
+      keyPoints: [
+        '空集的测度为零。',
+        '对两两不交集合满足可列可加性。',
+      ],
+      example: '区间的长度是勒贝格测度的基本例子。',
+    },
+  )
+
+  const result = await routeQuestionWithAI(
+    '测度的定义和含义是什么',
+    { enabled: true, primary, reviewer },
+  )
+
+  assert.equal(result.ai.status, 'fallback')
+  assert.equal(result.explanation?.title, '测度')
+  assert.equal(primary.calls, 1)
+  assert.equal(reviewer.calls, 1)
+})
+
 test('结构校验会删除模型编造的候选 ID', () => {
   const parsed = parseAgentAIProposal(
     proposal({
@@ -391,5 +449,17 @@ test('结构校验会删除模型编造的候选 ID', () => {
   assert.deepEqual(
     parsed?.candidateIds,
     ['fractions'],
+  )
+})
+
+test('数学解释至少需要两个有效关键点', () => {
+  assert.equal(
+    parseMathExplanation({
+      title: '群',
+      summary: '一个代数结构。',
+      keyPoints: ['只有一个关键点'],
+      example: null,
+    }),
+    null,
   )
 })

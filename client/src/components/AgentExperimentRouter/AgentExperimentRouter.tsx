@@ -24,6 +24,7 @@ const EXAMPLE_QUESTIONS = [
   '动态演示黎曼和的逼近过程',
   '打开偏微分方程实验',
   '用有限个点补出一条连续曲线',
+  '什么是群论中的群',
 ]
 
 const RESULT_PRESENTATION: Record<
@@ -58,6 +59,14 @@ const RESULT_PRESENTATION: Record<
       'border-amber-200 bg-amber-50/80',
     badgeClassName:
       'bg-amber-100 text-amber-700',
+  },
+  answer: {
+    label: '数学解释',
+    title: 'Agent 已回答这个数学问题',
+    containerClassName:
+      'border-cyan-200 bg-cyan-50/80',
+    badgeClassName:
+      'bg-cyan-100 text-cyan-700',
   },
   'no-match': {
     label: '暂无匹配',
@@ -388,7 +397,7 @@ export default function AgentExperimentRouter() {
               </>
             ) : (
               <>
-                找实验
+                智能处理
                 <span aria-hidden="true">→</span>
               </>
             )}
@@ -438,9 +447,40 @@ export default function AgentExperimentRouter() {
                   {presentation.title}
                 </h3>
               </div>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                {result.routeDecision.message}
-              </p>
+              {!result.explanation && (
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  {result.routeDecision.message}
+                </p>
+              )}
+
+              {result.explanation && (
+                <div className="mt-4 rounded-xl border border-cyan-200 bg-white/90 p-4 shadow-sm">
+                  <h4 className="text-base font-bold text-slate-800">
+                    {result.explanation.title}
+                  </h4>
+                  <p className="mt-2 text-sm leading-7 text-slate-700">
+                    {result.explanation.summary}
+                  </p>
+                  <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-600">
+                    {result.explanation.keyPoints.map(
+                      (point) => (
+                        <li key={point} className="flex gap-2">
+                          <span className="font-bold text-cyan-500">•</span>
+                          <span>{point}</span>
+                        </li>
+                      ),
+                    )}
+                  </ul>
+                  {result.explanation.example && (
+                    <div className="mt-4 rounded-lg bg-cyan-50 px-3 py-2.5 text-sm leading-relaxed text-slate-700">
+                      <span className="font-semibold text-cyan-700">
+                        例子：
+                      </span>
+                      {result.explanation.example}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {result.ai.attempted && (
                 <p className="mt-2 text-xs leading-relaxed text-indigo-700">
@@ -492,7 +532,7 @@ export default function AgentExperimentRouter() {
                         没有合适的预设实验？
                       </h4>
                       <p className="mt-1 text-xs leading-relaxed text-slate-500">
-                        可以生成一个临时交互实验预览；配置会经过安全校验，不会写入项目代码。
+                        可以即时生成 HTML、SVG 或 Canvas 交互实验，只在当前浏览器中临时预览。
                       </p>
                     </div>
                     <button

@@ -17,6 +17,13 @@ import {
 
 import DynamicVisualization from './DynamicVisualization'
 
+const RENDERER_LABELS = {
+  'cartesian-2d': '直角坐标交互图',
+  'polar-2d': '极坐标交互图',
+  'arithmetic-blocks': '算术方块演示',
+  'sandboxed-html': 'AI 交互画布',
+} as const
+
 export default function DynamicExperimentPage() {
   const navigate = useNavigate()
   const [response] = useState(
@@ -167,7 +174,7 @@ export default function DynamicExperimentPage() {
                 图形演示
               </h2>
               <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-600">
-                {spec.renderer.type}
+                {RENDERER_LABELS[spec.renderer.type]}
               </span>
             </div>
             <DynamicVisualization
@@ -286,7 +293,7 @@ export default function DynamicExperimentPage() {
           </section>
 
           <section className="rounded-xl border border-purple-200 bg-purple-50 p-4 text-xs leading-relaxed text-purple-800">
-            该实验由受限配置即时生成，未写入项目文件。
+            该实验由 Agent 即时生成，并在独立浏览器画布中运行，未写入项目文件。
             {response.generation.reviewed
               ? ' 数学内容已由备用模型复核。'
               : ' 使用前请结合课堂内容复核数学结论。'}

@@ -116,6 +116,17 @@ function isRenderer(
     )
   }
 
+  if (value.type === 'sandboxed-html') {
+    return (
+      typeof value.document === 'string' &&
+      value.document.trim().length > 0 &&
+      value.document.length <= 50_000 &&
+      isFiniteNumber(value.height) &&
+      value.height >= 320 &&
+      value.height <= 1_000
+    )
+  }
+
   return (
     typeof value.operation === 'string' &&
     [

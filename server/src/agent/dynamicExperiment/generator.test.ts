@@ -134,7 +134,31 @@ test('完整实验生成与复核使用更大的输出预算', async () => {
     { primary, reviewer },
   )
 
-  assert.deepEqual(budgets, [1_400, 1_400])
+  assert.deepEqual(budgets, [4_500, 4_500])
+})
+
+test('四维超立方体使用通用画布模板直接生成', async () => {
+  const primary = new FakeProvider(
+    'deepseek',
+    new Error('不应调用模型'),
+  )
+  const reviewer = new FakeProvider(
+    'qwen',
+    new Error('不应调用模型'),
+  )
+
+  const result = await generateDynamicExperiment(
+    '画一个四维超立方体的三维投影',
+    { primary, reviewer },
+  )
+
+  assert.equal(
+    result.spec.renderer.type,
+    'sandboxed-html',
+  )
+  assert.equal(result.spec.parameters[0]?.id, 'dimension')
+  assert.equal(primary.calls, 0)
+  assert.equal(reviewer.calls, 0)
 })
 
 test('二次项系数可取零时补充退化情况', async () => {

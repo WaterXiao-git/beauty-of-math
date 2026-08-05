@@ -174,8 +174,6 @@
 
 ![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=YWJiZGJkYjU3MjY4YjlhYzc2YWQ1ZjcxMmRhYTAyMjFfZWFjNTJjMjk4MDk3ZTYxYTIwNmYwNjhmZmE0MDJiZGJfSUQ6NzY3MDE3MjYyNTIwNDgwODY1MV8xNzg1OTM3MzE2OjE3ODYwMjM3MTZfVjM)
 
-\[01\_epsilon\_delta\.html\]
-
 ## 4\.2 示例2：导数的几何意义
 
 | 项目     | 需求                                                         |
@@ -190,8 +188,6 @@
 
 ![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=ZDZkMmQzZTk4ODBhMjU2ZWRkOTJjMmUwMWUyYTIzYTlfMDMwNzc0OGY0YmM3Mjk5YWU2NDY1MGFmMDIzNzhjNzJfSUQ6NzY3MDE3MjgzNTMyMjU0NzQ2NV8xNzg1OTM3MzE2OjE3ODYwMjM3MTZfVjM)
 
-\[02\_derivative\_secant\_tangent\.html\]
-
 ## 4\.3 示例3：罗尔定理
 
 | 项目       | 需求                                                         |
@@ -205,8 +201,6 @@
 示意图：
 
 ![Image](https://internal-api-drive-stream.feishu.cn/space/api/box/stream/download/authcode/?code=NWY0MjA3OWFlODFlMDI3MzYzNzU5OWE0OTVkNDkyNDNfMmUyYzA3ZGVhMTM2N2U5NmE0NTVhN2Y2ZmRiMzAzNjBfSUQ6NzY3MDE3Mjk2MDYxOTQ0OTI5MV8xNzg1OTM3MzE2OjE3ODYwMjM3MTZfVjM)
-
-\[03\_rolle\_theorem\.html\]
 
 # 5\. 系统实现与工程边界
 

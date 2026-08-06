@@ -70,7 +70,7 @@ function makeDerivFn(expr: string) {
 
 export default function DerivativeDemo() {
   const navigate = useNavigate()
-  const { transform, handlers, consumeDrag } = usePanZoom()
+  const { transform, handlers } = usePanZoom()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
   const [loadError, setLoadError] = useState('')
@@ -142,7 +142,7 @@ export default function DerivativeDemo() {
     )
   }
 
-  const { f, fp, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff } = derived
+  const { f, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff } = derived
   const [xMin, xMax] = activeCase.domain
   const [yMin, yMax] = activeCase.yRange
   const sx = (x: number) => PAD_L + ((x - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R)

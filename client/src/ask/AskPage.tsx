@@ -128,7 +128,7 @@ export default function AskPage() {
       })
       if (!res.ok) {
         const j = await res.json().catch(() => ({}))
-        throw new Error(j.error ?? HTTP )
+        throw new Error(j.error ?? '生成失败，请稍后重试')
       }
       const spec = await res.json()
       if (spec?.id) {

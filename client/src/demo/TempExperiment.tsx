@@ -23,7 +23,6 @@ interface TempSpec {
 
 function svgCartesian(spec: TempSpec): string {
   const W = 820, H = 520, PAD = 56
-  const xs = spec.points.map((p) => p.x)
   const ys = spec.points.map((p) => p.y)
   const xMin = spec.domain[0], xMax = spec.domain[1]
   const yMin = Math.min(...ys, -1) * 1.1, yMax = Math.max(...ys, 1) * 1.1

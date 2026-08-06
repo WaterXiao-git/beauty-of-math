@@ -6,7 +6,7 @@ import RolleCanvas from './RolleCanvas'
 import type { Conditions } from './RolleCanvas'
 import RolleControl from './RolleControl'
 import PlayerBar from './PlayerBar'
-import { CASES, judgmentText, stepDescription } from './rolleData'
+import { CASES, STEPS, judgmentText, stepDescription } from './rolleData'
 
 const CONDITION_LABELS: Record<keyof Conditions, string> = {
   continuous: '闭区间连续',

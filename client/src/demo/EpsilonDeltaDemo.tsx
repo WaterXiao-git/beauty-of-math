@@ -76,7 +76,7 @@ function feasibleDelta(f: (x: number) => number, a: number, L: number, eps: numb
 
 export default function EpsilonDeltaDemo() {
   const navigate = useNavigate()
-  const { transform, handlers, consumeDrag } = usePanZoom()
+  const { transform, handlers } = usePanZoom()
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
   const [loadError, setLoadError] = useState('')
   const [caseId, setCaseId] = useState('')
@@ -151,7 +151,6 @@ export default function EpsilonDeltaDemo() {
   const visWorldXMin = dMin + ((visMapMin - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
   const visWorldXMax = dMin + ((visMapMax - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
   const grid = calcViewportGrid(transform, W, H, [dMin, dMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
-  const inEps = (x: number) => Math.abs(f(x) - L) < epsilon
 
   // 曲线采样
   const curvePts: string[] = []

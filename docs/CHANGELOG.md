@@ -1,3 +1,19 @@
+## 2026-08-06 · 修复：前端 tsc 9 处错误（死代码 / 未使用变量 / 错误占位符）
+
+**模块**：前端演示页 + 提问页
+
+**内容**：
+- RolleCanvas 删除视口网格改造后残留的 gridLines 死代码（gridLines 从未定义，运行时 ReferenceError，且旧固定范围网格已被 calcViewportGrid 取代）
+- AskPage /api/generate 失败分支误写 `HTTP` 占位符 → 改为中文提示「生成失败，请稍后重试」（原为运行时 ReferenceError）
+- RolleDemo 补 import STEPS（PlayerBar steps prop 所需，原本编译报 Cannot find name 'STEPS'）
+- DerivativeDemo / EpsilonDeltaDemo / RolleCanvas 移除未使用的 consumeDrag 解构；DerivativeDemo 移除未用 fp 解构；EpsilonDeltaDemo 移除未用 inEps；TempExperiment 移除未用 xs
+
+**涉及文件**：`client/src/demo/RolleCanvas.tsx`、`RolleDemo.tsx`、`DerivativeDemo.tsx`、`EpsilonDeltaDemo.tsx`、`TempExperiment.tsx`、`client/src/ask/AskPage.tsx`
+
+**验证**：tsc -b --noEmit exit 0（此前 9 错误全清）；vite build 成功（48.4s）
+
+---
+
 ## 2026-08-06 · 演示页面包屑可点击
 
 **模块**：前端演示页

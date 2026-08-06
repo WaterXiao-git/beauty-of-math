@@ -29,7 +29,7 @@ const PAD_T = 44
 const PAD_B = 52
 
 export default function RolleCanvas({ case: c, conditions, step, xiLocked, onToggleXiLock }: RolleCanvasProps) {
-  const { transform, handlers, consumeDrag } = usePanZoom()
+  const { transform, handlers } = usePanZoom()
   const [a, b] = c.domain
   const [yMin, yMax] = c.yRange
   const breakX = (a + b) / 2
@@ -66,11 +66,6 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
   const showEqualLine = conditions.equalEndpoints && step >= 2
   // 中值点 + 水平切线（条件全满足且步进到扫描阶段）
   const showXi = xi != null && allSatisfied && step >= 3
-
-  const gridYs = [-2, -1, 0, 1, 2].filter((gy) => gy >= yMin && gy <= yMax)
-  for (const gy of gridYs) {
-    gridLines.push(<line key={'gy' + gy} x1={sx(a)} y1={sy(gy)} x2={sx(b)} y2={sy(gy)} stroke="#1e293b" strokeWidth={1} />)
-  }
 
   return (
     <section className="flex-1 min-w-0 bg-slate-900 rounded-2xl p-4 md:p-6 flex flex-col gap-4">

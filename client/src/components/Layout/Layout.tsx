@@ -14,6 +14,7 @@ function LayoutContent() {
   const isCourseShell =
     location.pathname === '/' ||
     location.pathname === '/ask' ||
+    location.pathname === '/experiments' ||
     location.pathname === '/rolle' ||
     location.pathname.startsWith('/demo/') ||
     location.pathname.startsWith('/temp/')

@@ -1,6 +1,7 @@
 // 抽屉式/可折叠侧边栏（Off-canvas Drawer）：固定定位、可滑出隐藏/展开
 // 用法：open 控制滑入滑出，onClose 关闭；选中态与 CourseHome 知识点联动
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { CourseChapter } from './courseData'
 
 interface DrawerSidebarProps {
@@ -197,6 +198,14 @@ export default function DrawerSidebar({
             </div>
           )}
         </nav>
+
+        <Link
+          to="/experiments"
+          onClick={onClose}
+          className="mt-3 flex h-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-100"
+        >
+          浏览全部 300 个可视化实验
+        </Link>
       </aside>
     </div>
   )

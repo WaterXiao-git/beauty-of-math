@@ -1,5 +1,6 @@
 // 左侧栏：章节目录（树形手风琴）
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import type { CourseChapter } from './courseData'
 
 interface ChapterSidebarProps {
@@ -7,9 +8,10 @@ interface ChapterSidebarProps {
   /** 当前选中的知识点 id */
   selectedPointId: string
   onSelectPoint: (pointId: string) => void
+  onCollapse?: () => void
 }
 
-export default function ChapterSidebar({ chapters, selectedPointId, onSelectPoint }: ChapterSidebarProps) {
+export default function ChapterSidebar({ chapters, selectedPointId, onSelectPoint, onCollapse }: ChapterSidebarProps) {
   // 默认展开包含当前选中知识点的章节
   const [expanded, setExpanded] = useState<Set<string>>(() => {
     const init = new Set<string>()
@@ -36,11 +38,13 @@ export default function ChapterSidebar({ chapters, selectedPointId, onSelectPoin
         <h2 className="text-sm font-bold text-gray-800">章节目录</h2>
         <button
           type="button"
+          onClick={onCollapse}
           className="p-1.5 rounded-md text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-          aria-label="筛选与排序"
+          aria-label="收起章节目录"
+          title="收起章节目录"
         >
           <svg className="w-4.5 h-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 6h16M7 12h10M10 18h4" />
+            <path d="M15 18l-6-6 6-6" />
           </svg>
         </button>
       </div>
@@ -49,7 +53,7 @@ export default function ChapterSidebar({ chapters, selectedPointId, onSelectPoin
       <nav className="flex-1 overflow-y-auto p-3 space-y-1.5" aria-label="章节目录">
         {chapters.map((ch, chIndex) => {
           const isActiveChapter = ch.sections.some((sec) => sec.points.some((p) => p.id === selectedPointId))
-          const isExpanded = expanded.has(ch.id)
+          const isExpanded = expanded.has(ch.id) || isActiveChapter
           return (
             <div key={ch.id} className="rounded-lg">
               {/* 一级：章节行 */}
@@ -118,6 +122,18 @@ export default function ChapterSidebar({ chapters, selectedPointId, onSelectPoin
           )
         })}
       </nav>
+
+      <div className="border-t border-gray-100 p-3">
+        <Link
+          to="/experiments"
+          className="flex h-10 items-center justify-center gap-2 rounded-lg bg-blue-50 text-sm font-semibold text-blue-700 transition hover:bg-blue-100"
+        >
+          <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          全部可视化实验
+        </Link>
+      </div>
     </aside>
   )
 }

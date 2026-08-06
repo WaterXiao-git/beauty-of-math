@@ -1,10 +1,10 @@
-// 课程主界面：可返回的课程概览 + 隐藏目录抽屉 + 知识点学习工作区
+// 课程主界面：桌面三栏知识工作区 + 可收起章节目录 + 移动端抽屉
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { fetchPublishedCourses, fetchPublishedCourseTree } from '../services/contentCatalog'
+import ChapterSidebar from './ChapterSidebar'
 import CourseHeader from './CourseHeader'
-import CourseOverview from './CourseOverview'
 import DrawerSidebar from './DrawerSidebar'
 import KnowledgeMap from './KnowledgeMap'
 import KnowledgeCards from './KnowledgeCards'
@@ -13,6 +13,7 @@ import { mergePublishedCourseTree } from './courseContentAdapter'
 import {
   chapters as localChapters,
   COURSE_TITLE,
+  DEFAULT_POINT_ID,
 } from './courseData'
 import type { CourseChapter, CourseSection, KnowledgePoint } from './courseData'
 
@@ -47,10 +48,9 @@ function findChapter(chapters: CourseChapter[], pointId: string) {
 export default function CourseHome() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [navigationOpen, setNavigationOpen] = useState(false)
+  const [sidebarVisible, setSidebarVisible] = useState(true)
   const [chapters, setChapters] = useState<CourseChapter[]>(localChapters)
-  const [syncedPointCount, setSyncedPointCount] = useState(0)
-  const [contentSource, setContentSource] = useState<'loading' | 'api' | 'fallback'>('loading')
-  const selectedPointId = searchParams.get('point') ?? ''
+  const selectedPointId = searchParams.get('point') ?? DEFAULT_POINT_ID
 
   useEffect(() => {
     const controller = new AbortController()
@@ -65,21 +65,20 @@ export default function CourseHome() {
       .then((tree) => {
         const adapted = mergePublishedCourseTree(localChapters, tree)
         setChapters(adapted.chapters)
-        setSyncedPointCount(adapted.syncedPointIds.size)
-        setContentSource('api')
       })
       .catch((error: unknown) => {
         if (error instanceof DOMException && error.name === 'AbortError') return
         setChapters(localChapters)
-        setSyncedPointCount(0)
-        setContentSource('fallback')
       })
 
     return () => controller.abort()
   }, [])
 
   const allPoints = useMemo(() => collectAllPoints(chapters), [chapters])
-  const point = selectedPointId ? findPoint(chapters, selectedPointId) : undefined
+  const point =
+    findPoint(chapters, selectedPointId) ??
+    findPoint(chapters, DEFAULT_POINT_ID) ??
+    allPoints[0]
   const section = point ? findSection(chapters, point.id) : undefined
   const chapter = point ? findChapter(chapters, point.id) : undefined
 
@@ -91,13 +90,21 @@ export default function CourseHome() {
   }, [allPoints, point])
 
   const selectPoint = (pointId: string) => {
-    setSearchParams({ point: pointId })
+    setSearchParams(pointId === DEFAULT_POINT_ID ? {} : { point: pointId })
     setNavigationOpen(false)
   }
 
-  const showOverview = () => {
+  const showDefaultPoint = () => {
     setSearchParams({})
     setNavigationOpen(false)
+  }
+
+  const toggleNavigation = () => {
+    if (window.matchMedia('(min-width: 1024px)').matches) {
+      setSidebarVisible((visible) => !visible)
+      return
+    }
+    setNavigationOpen(true)
   }
 
   const breadcrumb = point
@@ -106,7 +113,7 @@ export default function CourseHome() {
 
   const handleBreadcrumbClick = (index: number) => {
     if (index <= 1 || !point) {
-      showOverview()
+      showDefaultPoint()
       return
     }
     if (index === 2 && chapter) {
@@ -125,7 +132,8 @@ export default function CourseHome() {
       <CourseHeader
         breadcrumb={breadcrumb}
         onBreadcrumbClick={handleBreadcrumbClick}
-        onOpenNavigation={() => setNavigationOpen(true)}
+        onOpenNavigation={toggleNavigation}
+        navigationVisible={sidebarVisible}
       />
 
       <DrawerSidebar
@@ -136,16 +144,17 @@ export default function CourseHome() {
         chapters={chapters}
       />
 
-      {!point ? (
-        <CourseOverview
-          chapters={chapters}
-          syncedPointCount={syncedPointCount}
-          contentSource={contentSource}
-          onSelectPoint={selectPoint}
-          onOpenNavigation={() => setNavigationOpen(true)}
-        />
-      ) : (
-        <div className="flex min-h-0 flex-1 gap-4 p-4 md:p-5">
+      {point && (
+        <div className="flex min-h-0 flex-1 gap-4 p-3 md:p-4">
+          {sidebarVisible && (
+            <ChapterSidebar
+              chapters={chapters}
+              selectedPointId={point.id}
+              onSelectPoint={selectPoint}
+              onCollapse={() => setSidebarVisible(false)}
+            />
+          )}
+
           <main className="flex min-w-0 flex-1 flex-col gap-4 overflow-y-auto">
             <KnowledgeMap
               point={point}
@@ -153,9 +162,10 @@ export default function CourseHome() {
               onSelectPoint={selectPoint}
             />
             <KnowledgeCards
-              points={allPoints}
+              points={section?.points ?? [point]}
               selectedPointId={point.id}
               onSelectPoint={selectPoint}
+              sectionTitle={section?.title}
             />
           </main>
 

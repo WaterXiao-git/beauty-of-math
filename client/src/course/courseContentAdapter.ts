@@ -26,8 +26,8 @@ function findPublishedPoint(
 }
 
 /**
- * 正式发布数据覆盖本地展示字段；尚未迁入后端的知识点继续使用本地课程数据。
- * 这样内容后台可以逐点迁移，而不会让前端目录从 15 项骤减到 3 项。
+ * 正式发布数据覆盖内容字段，但保留课程大纲中的稳定导航标题；
+ * 尚未迁入后端的知识点继续使用本地课程数据。
  */
 export function mergePublishedCourseTree(
   localChapters: CourseChapter[],
@@ -45,7 +45,6 @@ export function mergePublishedCourseTree(
         syncedPointIds.add(point.id)
         return {
           ...point,
-          title: published.title,
           summary: published.summary,
           template: published.templateKey ?? point.template,
           demoId: published.id,

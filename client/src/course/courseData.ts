@@ -100,7 +100,7 @@ export const DEFAULT_POINT_ID = 'limit-of-function'
 export const chapters: CourseChapter[] = [
   {
     id: 'ch1',
-    title: '函数与极限',
+    title: '函数、极限与连续',
     sections: [
       {
         id: 'ch1-s1',
@@ -108,21 +108,45 @@ export const chapters: CourseChapter[] = [
         points: [
           {
             id: 'function',
-            title: '函数',
+            title: '函数的概念',
             status: 'mastered',
             previewLevel: 'A',
             template: '函数图像可视化',
             summary:
               '函数是描述两个变量之间依赖关系的数学模型：对定义域内的每一个 x，通过对应法则 f 唯一确定一个 y。本知识点涵盖函数的定义域、值域、单调性、奇偶性等基本性质。',
             goals: ['理解函数的概念与三要素（定义域、值域、对应法则）', '掌握基本初等函数的图像与性质', '会求复合函数与反函数'],
-            related: ['函数的极限', '数列的极限', '连续函数'],
+            related: ['函数的表示法', '函数的性质', '函数的极限'],
             experimentPath: '/linear-function',
+          },
+          {
+            id: 'function-representation',
+            title: '函数的表示法',
+            status: 'mastered',
+            previewLevel: 'A',
+            template: '函数多表征联动',
+            summary:
+              '函数可以用解析式、表格和图像表示。不同表示法从规则、离散数据与几何形态三个角度描述同一个变量关系。',
+            goals: ['理解函数的三种常见表示法', '能够在解析式、表格和图像之间转换', '会根据问题选择合适的表示法'],
+            related: ['函数的概念', '函数的性质', '连续的概念'],
+            experimentPath: '/function-transform',
+          },
+          {
+            id: 'function-properties',
+            title: '函数的性质',
+            status: 'mastered',
+            previewLevel: 'A',
+            template: '函数性质可视化',
+            summary:
+              '函数的有界性、单调性、奇偶性和周期性刻画了函数图像的整体特征，是理解极限、连续与导数的基础。',
+            goals: ['会判断函数的单调性与奇偶性', '理解周期性与有界性的图像意义', '能结合图像分析函数性质'],
+            related: ['函数的概念', '函数的表示法', '连续函数的性质'],
+            experimentPath: '/function-transform',
           },
         ],
       },
       {
         id: 'ch1-s2',
-        title: '1.2 数列的极限',
+        title: '1.2 极限',
         points: [
           {
             id: 'limit-of-sequence',
@@ -135,12 +159,6 @@ export const chapters: CourseChapter[] = [
             goals: ['理解数列极限的 ε−N 定义', '掌握收敛数列的性质（唯一性、有界性、保号性）', '会用夹逼准则与单调有界准则求极限'],
             related: ['函数的极限', '两个重要极限'],
           },
-        ],
-      },
-      {
-        id: 'ch1-s3',
-        title: '1.3 函数的极限',
-        points: [
           {
             id: 'limit-of-function',
             title: '函数的极限',
@@ -155,16 +173,32 @@ export const chapters: CourseChapter[] = [
               '理解左极限与右极限的关系',
               '会用极限定义证明简单函数的极限',
             ],
-            related: ['函数', '数列的极限', '极限的运算法则', '两个重要极限', '无穷小与无穷大', '连续函数'],
+            related: ['函数的概念', '数列的极限', '极限的运算法则', '两个重要极限', '无穷小与无穷大', '连续的概念'],
             experimentPath: '/calculus',
             demoId: 'epsilon-delta',
           },
-        ],
-      },
-      {
-        id: 'ch1-s4',
-        title: '1.4 无穷小与无穷大',
-        points: [
+          {
+            id: 'limit-laws',
+            title: '极限的运算法则',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: '运算律可视化',
+            summary:
+              '极限满足四则运算法则与复合运算法则：在极限存在的条件下，和的极限等于极限的和，积的极限等于极限的积，商的极限（分母不为 0）等于极限的商。',
+            goals: ['掌握极限的四则运算法则', '掌握复合函数极限运算法则', '会求 0/0 型、∞/∞ 型未定式的极限'],
+            related: ['函数的极限', '两个重要极限', '无穷小与无穷大'],
+          },
+          {
+            id: 'two-important-limits',
+            title: '两个重要极限',
+            status: 'not-started',
+            previewLevel: 'C',
+            template: '重要极限动画',
+            summary:
+              '两个重要极限：lim(x→0) sin x / x = 1 与 lim(x→∞) (1 + 1/x)ˣ = e。它们是连接三角、指数函数与极限理论的桥梁，也是许多未定式求值的关键。',
+            goals: ['牢记两个重要极限的形式', '理解其几何与数值意义', '会凑型用重要极限求极限'],
+            related: ['函数的极限', '极限的运算法则', '数列的极限'],
+          },
           {
             id: 'infinitesimal',
             title: '无穷小与无穷大',
@@ -179,46 +213,12 @@ export const chapters: CourseChapter[] = [
         ],
       },
       {
-        id: 'ch1-s5',
-        title: '1.5 极限的运算法则',
-        points: [
-          {
-            id: 'limit-laws',
-            title: '极限的运算法则',
-            status: 'not-started',
-            previewLevel: 'B',
-            template: '运算律可视化',
-            summary:
-              '极限满足四则运算法则与复合运算法则：在极限存在的条件下，和的极限等于极限的和，积的极限等于极限的积，商的极限（分母不为 0）等于极限的商。',
-            goals: ['掌握极限的四则运算法则', '掌握复合函数极限运算法则', '会求 0/0 型、∞/∞ 型未定式的极限'],
-            related: ['函数的极限', '两个重要极限', '无穷小与无穷大'],
-          },
-        ],
-      },
-      {
-        id: 'ch1-s6',
-        title: '1.6 两个重要极限',
-        points: [
-          {
-            id: 'two-important-limits',
-            title: '两个重要极限',
-            status: 'not-started',
-            previewLevel: 'C',
-            template: '重要极限动画',
-            summary:
-              '两个重要极限：lim(x→0) sin x / x = 1 与 lim(x→∞) (1 + 1/x)ˣ = e。它们是连接三角、指数函数与极限理论的桥梁，也是许多未定式求值的关键。',
-            goals: ['牢记两个重要极限的形式', '理解其几何与数值意义', '会凑型用重要极限求极限'],
-            related: ['函数的极限', '极限的运算法则', '数列的极限'],
-          },
-        ],
-      },
-      {
-        id: 'ch1-s7',
-        title: '1.7 函数的连续性',
+        id: 'ch1-s3',
+        title: '1.3 连续函数',
         points: [
           {
             id: 'continuity',
-            title: '连续函数',
+            title: '连续的概念',
             status: 'not-started',
             previewLevel: 'B',
             template: '连续性直观演示',
@@ -226,6 +226,18 @@ export const chapters: CourseChapter[] = [
               '函数在某点连续，即该点极限存在且等于函数值：lim(x→x₀) f(x) = f(x₀)。连续函数具有介值性、最值性等优良性质，是分析学研究的核心对象。',
             goals: ['理解函数连续的定义（极限与函数值相等）', '掌握间断点的分类（第一类、第二类）', '会用闭区间上连续函数的性质解题'],
             related: ['函数的极限', '无穷小与无穷大'],
+            experimentPath: '/calculus',
+          },
+          {
+            id: 'continuity-properties',
+            title: '连续函数的性质',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: '连续函数性质演示',
+            summary:
+              '闭区间上的连续函数具有有界性、最值性、零点存在性与介值性。这些性质把局部连续条件转化为全局结论。',
+            goals: ['掌握闭区间上连续函数的基本性质', '理解零点定理与介值定理', '能利用连续性证明方程根的存在性'],
+            related: ['连续的概念', '函数的性质', '函数的极限'],
             experimentPath: '/calculus',
           },
         ],

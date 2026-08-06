@@ -22,6 +22,7 @@ function lazyRetry<T extends { default: React.ComponentType }>(
 }
 
 const AskPage = lazyRetry(() => import('./ask/AskPage'))
+const ExperimentLibraryPage = lazyRetry(() => import('./course/ExperimentLibraryPage'))
 const RolleDemo = lazyRetry(() => import('./demo/RolleDemo'))
 const DemoPage = lazyRetry(() => import('./demo/DemoPage'))
 const TempExperiment = lazyRetry(() => import('./demo/TempExperiment'))
@@ -345,6 +346,7 @@ export default function App() {
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="ask" element={<AskPage />} />
+            <Route path="experiments" element={<ExperimentLibraryPage />} />
             <Route path="rolle" element={<RolleDemo />} />
             <Route path="demo/:pointId" element={<DemoPage />} />
             <Route path="temp/:specId" element={<TempExperiment />} />

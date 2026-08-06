@@ -54,8 +54,9 @@ describe('mergePublishedCourseTree', () => {
     )
     const limitPoint = points.find((point) => point.id === 'limit-of-function')
 
-    expect(points).toHaveLength(15)
-    expect(limitPoint?.title).toBe('ε−δ 极限定义（已发布）')
+    expect(points).toHaveLength(18)
+    expect(limitPoint?.title).toBe('函数的极限')
+    expect(limitPoint?.summary).toBe('来自后端的正式摘要')
     expect(limitPoint?.source).toBe('published')
     expect(result.syncedPointIds.has('limit-of-function')).toBe(true)
     expect(points.find((point) => point.id === 'function')?.source).toBeUndefined()

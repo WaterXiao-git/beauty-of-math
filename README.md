@@ -21,6 +21,8 @@
 - 已补充项目根目录 README 和技术栈架构图。
 - 已同步课程平台新版前端：首页升级为“课程—章节—知识点”三栏学习界面，并新增 AI 提问页、统一演示容器和临时实验预览页。
 - 已加入 geoboard 交互画板基础能力，支持可拖拽点、曲线约束、贯穿线、画布平移与缩放；罗尔定理、ε−δ 和导数几何意义已提供统一演示样例。
+- 已建立课程、章节/小节、知识点、内容版本、案例、步骤和模板绑定的数据模型；首批三个演示知识点已经迁移为经过校验的 `1.0.0` 发布 Bundle。
+- 已增加可替换的内存内容仓储和 `/api/content` 只读接口，支持课程统计、层级目录、当前发布内容与历史版本读取。
 - 已修复 Windows 中文目录下 Plotly 自定义别名无法解析的问题。
 - 已同步前端 Fuse.js、pinyin-pro 搜索依赖与 npm 锁文件。
 - 已实现第一版数学问题意图分类器，可识别可视化、解释、计算、比较和查找实验等意图。
@@ -48,6 +50,7 @@
 
 - 约 300 个数学实验入口，覆盖小学数学、中学数学、微积分、线性代数、概率统计、数值分析、离散数学和应用数学等方向。
 - 支持从课程、章节、知识地图和知识点详情进入教学内容，并从知识点跳转到统一演示页面。
+- 后端可按发布版本返回默认案例、参数协议、教学步骤、语义对象、公式和固定模板，实现同一内容版本稳定复现。
 - 提供独立 AI 提问页，可展示直接命中、相近推荐、概念解释、生成确认和未命中等路由结果。
 - 按学习阶段和数学主题进行分类、筛选和导航。
 - 支持标题、描述、拼音和多关键词模糊搜索。
@@ -125,8 +128,10 @@ mathviz/
 │  ├─ scripts/                     # Manifest 生成、报告和搜索评估
 │  └─ src/
 │     ├─ agent/                    # 意图识别、Manifest、实验匹配与路由决策
+│     ├─ content/                  # 版本化内容模型、校验、发布种子与仓储
 │     ├─ db/                       # LowDB 数据访问
-│     ├─ routes/                   # Agent、实验与问题反馈接口
+│     ├─ routes/                   # 内容目录、Agent、实验与问题反馈接口
+│     ├─ services/                 # 内容目录与业务服务
 │     └─ index.ts                  # 服务启动入口
 ├─ package.json                    # 根目录开发脚本
 ├─ LICENSE                         # 非商业许可
@@ -245,6 +250,11 @@ npm run dev:server
 | `GET` | `/api/knowledge`、`/api/knowledge/:id` | 获取课程知识点与统一演示配置 |
 | `POST` | `/api/answer` | 新版提问页使用的数学概念解释接口 |
 | `POST` | `/api/generate` | 新版提问页使用的临时实验生成接口 |
+| `GET` | `/api/content/courses` | 获取公开发布课程及章节、知识点数量 |
+| `GET` | `/api/content/courses/:courseId/tree` | 获取“章节—小节—知识点”发布目录树 |
+| `GET` | `/api/content/knowledge-points/:id` | 获取知识点当前发布 Bundle 和主模板 |
+| `GET` | `/api/content/knowledge-points/:id/versions` | 获取知识点发布版本历史 |
+| `GET` | `/api/content/knowledge-points/:id/versions/:contentVersion` | 获取指定内容版本 Bundle |
 | `POST` | `/api/bugs` | 提交问题反馈 |
 | `POST` | `/api/admin/login` | 后台管理认证 |
 

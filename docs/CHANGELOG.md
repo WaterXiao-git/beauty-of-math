@@ -1,3 +1,14 @@
+## 2026-08-06 · 版本化课程内容模型与只读 API
+
+**模块**：课程内容模型、发布数据、仓储和 HTTP API
+
+**内容**：章节模型增加父子层级以支持“章节—小节—知识点”；将 ε−δ、导数几何意义和罗尔定理迁移为包含发布版本、参数、案例、步骤、语义对象、公式、验收规则及主模板绑定的 `1.0.0` Bundle；新增启动时强校验的内存仓储，以及课程列表、课程树、知识点详情和版本历史只读接口。保留原 `/api/knowledge` 兼容接口。
+
+**涉及文件**：`server/src/content/`、`server/src/services/contentCatalogService.ts`、`server/src/routes/content.ts`、`server/src/index.ts`、`docs/knowledge-content-data-model.md`、`README.md`
+
+**验证**：内容模型与仓储聚焦测试 11/11；服务端完整测试 181/181、TypeScript 检查和生产构建通过；5 个 `/api/content` 正常/异常路径冒烟检查结果为 200/200/200/200/404
+
+---
 ## 2026-08-06 · 同步课程平台前端并兼容现有 Agent 后端
 
 **模块**：课程主页、AI 提问页、统一演示页、服务端接口

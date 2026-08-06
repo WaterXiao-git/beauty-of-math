@@ -9,6 +9,7 @@ import knowledgeRouter from './routes/knowledge.js'
 import routeRouter from './routes/route.js'
 import answerRouter from './routes/answer.js'
 import generateRouter from './routes/generate.js'
+import contentRouter from './routes/content.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -26,6 +27,7 @@ app.use('/api/knowledge', knowledgeRouter)
 app.use('/api/route', routeRouter)
 app.use('/api/answer', answerRouter)
 app.use('/api/generate', generateRouter)
+app.use('/api/content', contentRouter)
 
 // 管理员认证接口
 app.post('/api/admin/login', (req, res) => {

@@ -14,6 +14,7 @@ const CONDITION_LABELS: Record<keyof Conditions, string> = {
 }
 
 export default function RolleDemo() {
+  const navigate = useNavigate()
   const [caseId, setCaseId] = useState('double-valley')
   const [conditions, setConditions] = useState<Conditions>({
     continuous: true,
@@ -55,7 +56,7 @@ export default function RolleDemo() {
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <DemoHeader breadcrumb={['高等数学（上册）', '第三章 微分中值定理', '罗尔定理']} />
+      <DemoHeader breadcrumb={['高等数学（上册）', '第三章 微分中值定理', '罗尔定理']} onBreadcrumbClick={() => navigate('/')} />
 
       <div className="flex-1 min-h-0 flex gap-4 p-4 md:p-5">
         {/* 左：深色交互画板 */}

@@ -1,5 +1,7 @@
 // 深色交互式画板：SVG 曲线 / 端点 / 中值点 / 辅助线 / 公式浮层 / 动态数据面板
 import MathFormula from '../components/MathFormula/MathFormula'
+import { usePanZoom } from './usePanZoom'
+import { calcViewportGrid } from './viewport'
 import type { RolleCase } from './rolleData'
 import { LEGEND } from './rolleData'
 
@@ -27,6 +29,7 @@ const PAD_T = 44
 const PAD_B = 52
 
 export default function RolleCanvas({ case: c, conditions, step, xiLocked, onToggleXiLock }: RolleCanvasProps) {
+  const { transform, handlers, consumeDrag } = usePanZoom()
   const [a, b] = c.domain
   const [yMin, yMax] = c.yRange
   const breakX = (a + b) / 2
@@ -35,6 +38,7 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
   // 坐标映射
   const sx = (x: number) => PAD_L + ((x - a) / (b - a)) * (W - PAD_L - PAD_R)
   const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
+  const grid = calcViewportGrid(transform, W, H, [a, b], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
   // 曲线采样（支持连续性破坏：断口）
   const N = 120
@@ -63,11 +67,6 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
   // 中值点 + 水平切线（条件全满足且步进到扫描阶段）
   const showXi = xi != null && allSatisfied && step >= 3
 
-  // 网格线
-  const gridLines = []
-  for (let gx = Math.ceil(a); gx <= Math.floor(b); gx++) {
-    gridLines.push(<line key={'gx' + gx} x1={sx(gx)} y1={sy(yMin)} x2={sx(gx)} y2={sy(yMax)} stroke="#1e293b" strokeWidth={1} />)
-  }
   const gridYs = [-2, -1, 0, 1, 2].filter((gy) => gy >= yMin && gy <= yMax)
   for (const gy of gridYs) {
     gridLines.push(<line key={'gy' + gy} x1={sx(a)} y1={sy(gy)} x2={sx(b)} y2={sy(gy)} stroke="#1e293b" strokeWidth={1} />)
@@ -93,15 +92,18 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
 
       {/* 画布 */}
       <div className="relative rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden flex-1 min-h-[380px]">
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
-          {/* 网格 */}
-          {gridLines}
-
-          {/* 坐标轴 */}
-          <g stroke="#475569" strokeWidth={1.4}>
-            <line x1={sx(a)} y1={sy(0)} x2={sx(b)} y2={sy(0)} />
-            <line x1={sx(a)} y1={sy(yMin)} x2={sx(a)} y2={sy(yMax)} />
-          </g>
+        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" {...handlers}>
+          {/* 视口网格与坐标轴（无限延伸） */}
+          {grid.verts.map((v, i) => (
+            <line key={"v" + i} x1={v.pos} y1={0} x2={v.pos} y2={H} stroke={v.major ? "#334155" : "#1e293b"} strokeWidth={1} />
+          ))}
+          {grid.hors.map((h, i) => (
+            <line key={"h" + i} x1={0} y1={h.pos} x2={W} y2={h.pos} stroke={h.major ? "#334155" : "#1e293b"} strokeWidth={1} />
+          ))}
+          {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
+          {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
+        <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
+        
 
           {/* 端点水平虚线（f(a)=f(b)） */}
           {showEqualLine && (
@@ -162,6 +164,7 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
             <text x={sx(b) - 4} y={sy(0) + 18} textAnchor="middle">b</text>
             <text x={sx(0) + 6} y={sy(0) - 6}>0</text>
           </g>
+        </g>
         </svg>
 
         {/* 公式浮层（左上角） */}

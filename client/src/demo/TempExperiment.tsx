@@ -2,7 +2,7 @@
 // spec 存于 SessionStorage（仅当前会话预览，不写源码/不注册永久路由）
 // 渲染采用 iframe srcDoc 自包含 HTML（SVG），sandbox 隔离，无外部资源
 import { useMemo } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import DemoHeader from './DemoHeader'
 
 interface TempPoint { x: number; y: number }
@@ -109,6 +109,7 @@ function buildHtml(spec: TempSpec): string {
 // ---------- 页面 ----------
 
 export default function TempExperiment() {
+  const navigate = useNavigate()
   const { specId = '' } = useParams()
 
   const spec = useMemo<TempSpec | null>(() => {
@@ -125,7 +126,7 @@ export default function TempExperiment() {
   if (!spec) {
     return (
       <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['临时实验']} />
+        <DemoHeader breadcrumb={['临时实验']} onBreadcrumbClick={() => navigate('/ask')} />
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 max-w-md text-center">
             <div className="text-4xl mb-3">⏳</div>
@@ -144,7 +145,7 @@ export default function TempExperiment() {
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <DemoHeader breadcrumb={['临时实验', spec.title]} />
+      <DemoHeader breadcrumb={['临时实验', spec.title]} onBreadcrumbClick={() => navigate('/ask')} />
       <div className="flex-1 min-h-0 p-4 md:p-5">
         <iframe
           srcDoc={html}

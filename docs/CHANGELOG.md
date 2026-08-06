@@ -1,3 +1,124 @@
+## 2026-08-06 · 演示页面包屑可点击
+
+**模块**：前端演示页
+
+**内容**：DemoHeader 面包屑非末项可点击（hover 变紫+下划线）；四个演示页接入：ε−δ/导数/罗尔非末项点击回主界面，临时实验页「临时实验」点击回提问页
+
+**涉及文件**：`client/src/demo/DemoHeader.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`、`RolleDemo.tsx`、`TempExperiment.tsx`
+
+**验证**：tsc exit 0；vite 编译 5 模块 200
+
+---
+## 2026-08-06 · 修复：ε−δ 页 √x 案例曲线不显示
+
+**模块**：前端演示画布
+
+**内容**：无限延伸改造后曲线采样从可视范围开始，√x 在 x<0 为 NaN 被跳过，首点非 i=0 导致 path 以 L 开头被 SVG 判为无效 → 整条曲线消失；改为 started 标志让首个有效点用 M 起笔（sin/x² 不受影响）
+
+**涉及文件**：`client/src/demo/EpsilonDeltaDemo.tsx`
+
+**验证**：tsc exit 0；vite 编译 200
+
+---
+## 2026-08-06 · geoboard 几何画板内核（GeoGebra 式预留框架）+ 导数页拖拽示例
+
+**模块**：前端演示画布
+
+**内容**：
+- 新增 geoboard 内核：types.ts（CoordSystem 坐标映射/PointConstraint 约束/visibleRect/clipLineToRect 无限线裁剪）、useDraggablePoint（命中+拖拽+约束 free/xAxis/yAxis/curve）、GeoPoint（可拖拽点：命中区/拖拽态/标签，stopPropagation 与画布平移互斥）、GeoLine（两点定线自动贯穿可视区域）
+- 导数页接入示例：P 点沿曲线拖动（更新 x0，滑块同步）、Q 点沿曲线拖动（更新 h），割线/切线改 GeoLine 贯穿并随点实时联动，Δx/Δy/斜率数值面板同步
+- 预留能力清单见 geoboard/types.ts 注释（衍生对象/测量/约束系统/对象面板）
+
+**涉及文件**：
+- `client/src/demo/geoboard/`（types.ts、useDraggablePoint.ts、GeoPoint.tsx、GeoLine.tsx，新增）
+- `client/src/demo/DerivativeDemo.tsx`（接入）
+
+**验证**：tsc exit 0；vite 编译 5 模块 200
+
+---
+## 2026-08-06 · ε−δ 演示页曲线与虚线无限延伸
+
+**模块**：前端演示画布
+
+**内容**：ε−δ 页（默认案例 x²）：曲线采样范围从固定 domain 改为可视世界范围（铺满视图）；ε 蓝虚线（L±ε）与 L 线、δ 黄虚线改为贯穿全屏（可视映射坐标），ε/δ 带区域同步扩展；pan/zoom 时跟随世界坐标但始终贯穿
+
+**涉及文件**：`client/src/demo/EpsilonDeltaDemo.tsx`
+
+**验证**：tsc exit 0；vite 编译 200
+
+---
+## 2026-08-06 · 修复：Cannot access 'dMin' before initialization
+
+**模块**：前端演示画布
+
+**内容**：视口网格 grid 计算被插入到 domain 变量（dMin/dMax、xMin/xMax、a/b）定义之前，触发 TDZ 报错；三个画布的 grid 计算统一移到 sx/sy 定义之后
+
+**涉及文件**：`client/src/demo/RolleCanvas.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`
+
+**验证**：顺序断言 grid@>domain@ 正确；tsc exit 0；vite 编译 200
+
+---
+## 2026-08-06 · 坐标轴/网格无限延伸（Desmos 风格）
+
+**模块**：前端演示画布
+
+**内容**：
+- 新增 viewport.ts：calcViewportGrid 按当前 pan/zoom 变换计算铺满屏幕的网格线（间距自适应 niceStep 1/2/5×10^n）与贯穿坐标轴（世界 0 的屏幕位置）
+- 三个演示画布（罗尔/ε−δ/导数）的网格与坐标轴从"固定数据范围"改为"视口坐标系"（g 外屏幕坐标）；曲线/节点/ε−δ 带等数据内容保持世界坐标
+- 效果：任意缩放/平移后网格始终铺满画布、坐标轴贯穿全屏
+
+**涉及文件**：`client/src/demo/viewport.ts`（新增）、`RolleCanvas.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`
+
+**验证**：tsc exit 0；vite 编译 4 模块 200
+
+---
+## 2026-08-06 · 修复：演示页 usePanZoom is not defined
+
+**模块**：前端演示页
+
+**内容**：EpsilonDeltaDemo / DerivativeDemo 调用 usePanZoom 但 import 缺失（此前 patch 的 import 锚点依赖 MathFormula import，这两个文件没有）；补上 import
+
+**涉及文件**：`client/src/demo/EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`
+
+**验证**：tsc exit 0；vite 编译 200 且模块包含 usePanZoom
+
+---
+## 2026-08-06 · 演示画布滚轮缩放 + 拖拽平移（修复）
+
+**模块**：前端演示页
+
+**内容**：
+- 新增 usePanZoom hook：滚轮以鼠标为中心缩放（0.5-12x）+ 拖拽平移 + 区分点击/拖拽（consumeDrag）
+- 应用于三个演示画布（罗尔/ε−δ/导数），SVG 内容以 <g transform> 包裹
+- 修复：含图标 <svg> 的文件 gClose 曾误插到图标闭合前（lastIndexOf 误匹配），改为插入主画布第一个 </svg> 前
+
+**涉及文件**：`client/src/demo/usePanZoom.ts`（新增）、`RolleCanvas.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`
+
+**验证**：tsc exit 0；vite 编译 4 模块全 200
+
+---
+## 2026-08-06 · 演示画布滚轮缩放 + 拖拽平移
+
+**模块**：前端演示页
+
+**内容**：新增 usePanZoom hook（滚轮以鼠标为中心缩放 0.5-12x + 拖拽平移，区分点击/拖拽），应用于三个演示画布（罗尔定理/ε−δ/导数）；SVG 内容以 <g transform> 包裹，光标 grab 样式
+
+**涉及文件**：`client/src/demo/usePanZoom.ts`（新增）、`RolleCanvas.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`
+
+**验证**：tsc exit 0；vite 编译 4 模块 200
+
+---
+## 2026-08-06 · 主界面面包屑可点击回退层级
+
+**模块**：前端主界面
+
+**内容**：CourseHeader 面包屑非末项可点击（> 连接，代表子章节层级）；CourseHome 实现层级跳转：首页/课程→默认知识点、章节→该章第一个知识点、小节→该小节第一个知识点；AskPage 不受影响
+
+**涉及文件**：`client/src/course/CourseHeader.tsx`、`CourseHome.tsx`
+
+**验证**：tsc exit 0；vite 编译 200
+
+---
 ## 2026-08-06 · 清理被遗弃的前端残留
 
 **模块**：前端清理

@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
@@ -6,6 +7,12 @@ import { fileURLToPath } from 'node:url'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server: {
+    // 统一知识点/演示接口代理到后端
+    proxy: {
+      '/api': 'http://localhost:3001',
+    },
+  },
   plugins: [react(), tailwindcss(), compression({ threshold: 1024 })],
   resolve: {
     alias: {

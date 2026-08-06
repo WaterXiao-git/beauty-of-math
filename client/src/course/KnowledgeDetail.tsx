@@ -1,0 +1,122 @@
+// 右侧栏：当前知识点详情（简介 / 配图 / 学习目标 / CTA）
+import { Link } from 'react-router-dom'
+import type { KnowledgePoint } from './courseData'
+import { STATUS_META } from './courseData'
+
+interface KnowledgeDetailProps {
+  point: KnowledgePoint
+}
+
+/** ε−δ 极限收敛示意图（SVG） */
+function LimitChart() {
+  return (
+    <svg viewBox="0 0 300 180" className="w-full h-auto rounded-lg bg-gray-50 border border-gray-100">
+      {/* 坐标轴 */}
+      <g stroke="#9ca3af" strokeWidth={1}>
+        {/* x 轴 */}
+        <line x1={30} y1={150} x2={282} y2={150} />
+        {/* y 轴 */}
+        <line x1={40} y1={12} x2={40} y2={160} />
+      </g>
+      {/* 箭头 */}
+      <g fill="#9ca3af">
+        <path d="M278 146 L288 150 L278 154 Z" />
+        <path d="M36 16 L40 6 L44 16 Z" />
+      </g>
+
+      {/* ε 条带（y = A ± ε） */}
+      <g stroke="#93c5fd" strokeWidth={1} strokeDasharray="4 3">
+        <line x1={40} y1={70} x2={278} y2={70} />
+        <line x1={40} y1={92} x2={278} y2={92} />
+      </g>
+      {/* 极限水平线 y = A */}
+      <line x1={40} y1={81} x2={278} y2={81} stroke="#2563eb" strokeWidth={1.4} strokeDasharray="2 2" />
+      {/* x = x₀ 竖虚线 */}
+      <line x1={195} y1={12} x2={195} y2={160} stroke="#f59e0b" strokeWidth={1} strokeDasharray="4 3" />
+
+      {/* 函数曲线：在 x₀ 附近收敛到 A */}
+      <path
+        d="M40 140 C 90 138 120 130 150 112 C 172 100 182 92 195 84 C 210 75 235 74 262 76 L 280 78"
+        fill="none" stroke="#1d4ed8" strokeWidth={2.2} strokeLinecap="round"
+      />
+
+      {/* 标注文字 */}
+      <g fontSize={11} fill="#4b5563" fontFamily="inherit">
+        <text x={268} y={142}>x</text>
+        <text x={24} y={16}>y</text>
+        <text x={200} y={172}>x₀</text>
+        <text x={228} y={66} fill="#2563eb">A</text>
+        <text x={238} y={86} fill="#93c5fd">ε</text>
+        <text x={150} y={120} fill="#1d4ed8" fontSize={11.5}>y = f(x)</text>
+        <text x={46} y={72} fill="#6b7280" fontSize={10}>A+ε</text>
+        <text x={46} y={98} fill="#6b7280" fontSize={10}>A−ε</text>
+      </g>
+    </svg>
+  )
+}
+
+export default function KnowledgeDetail({ point }: KnowledgeDetailProps) {
+  const status = STATUS_META[point.status]
+
+  return (
+    <aside className="hidden xl:flex w-72 xl:w-80 shrink-0 bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex flex-col gap-5">
+      {/* 头：大标题 + 状态 Tag */}
+      <div className="flex items-start justify-between gap-2">
+        <h3 className="text-lg font-bold text-gray-900 leading-snug">{point.title}</h3>
+        <span className={`shrink-0 px-2.5 py-1 rounded-full text-xs font-semibold ${status.bg} ${status.text}`}>
+          {status.label}
+        </span>
+      </div>
+
+      {/* 知识点简介 */}
+      <div>
+        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">知识点简介</h4>
+        <p className="text-[13px] text-gray-600 leading-relaxed">{point.summary}</p>
+      </div>
+
+      {/* 配图 */}
+      <div>
+        <LimitChart />
+      </div>
+
+      {/* 学习目标 */}
+      <div className="flex-1">
+        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">学习目标</h4>
+        <ul className="space-y-2">
+          {point.goals.map((goal, i) => (
+            <li key={i} className="flex items-start gap-2 text-[13px] text-gray-600 leading-relaxed">
+              <svg className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" fill="#eff6ff" stroke="none" />
+                <path d="M9 12l2 2 4-4" />
+              </svg>
+              <span>{goal}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      {/* CTA */}
+      <div className="space-y-2.5 pt-1">
+        <Link
+          to={`/demo/${point.id}`}
+          className="w-full inline-flex items-center justify-center gap-1.5 h-11 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-md shadow-blue-500/20"
+        >
+          进入演示
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M5 12h14m-6-6 6 6-6 6" />
+          </svg>
+        </Link>
+        <button
+          type="button"
+          className="w-full inline-flex items-center justify-center gap-1.5 h-11 rounded-lg bg-white text-blue-600 border-2 border-blue-200 text-sm font-semibold hover:border-blue-400 hover:bg-blue-50 active:bg-blue-100 transition-colors"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M16 2v4M8 2v4M3 10h18" />
+          </svg>
+          加入学习计划
+        </button>
+      </div>
+    </aside>
+  )
+}

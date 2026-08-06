@@ -1,6 +1,7 @@
 // 罗尔定理交互演示页：深色画板（左）+ 控制面板（右）+ 底部播放控制条
 import { useEffect, useState } from 'react'
 import DemoHeader from './DemoHeader'
+import { useNavigate } from 'react-router-dom'
 import RolleCanvas from './RolleCanvas'
 import type { Conditions } from './RolleCanvas'
 import RolleControl from './RolleControl'

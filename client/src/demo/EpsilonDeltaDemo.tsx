@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { compile } from 'mathjs'
 import DemoHeader from './DemoHeader'
+import { useNavigate } from 'react-router-dom'
 import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'

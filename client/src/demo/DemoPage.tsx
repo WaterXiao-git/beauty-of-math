@@ -26,10 +26,10 @@ function DrawerTab({ onClick }: { onClick: () => void }) {
       onClick={onClick}
       aria-label="打开章节目录"
       title="章节目录"
-      className="absolute left-0 top-1/2 -translate-y-1/2 z-40 h-14 w-6 flex items-center justify-center rounded-r-xl bg-white/90 backdrop-blur-sm border border-l-0 border-gray-200 shadow-md hover:bg-indigo-600 hover:border-indigo-600 hover:translate-x-0.5 transition-all group"
+      className="absolute left-0 top-1/2 -translate-y-1/2 z-40 h-16 w-8 flex items-center justify-center rounded-r-xl bg-white/90 backdrop-blur-sm border border-l-0 border-gray-200 shadow-md hover:bg-indigo-600 hover:border-indigo-600 hover:translate-x-1 transition-all group"
     >
       <svg
-        className="w-3.5 h-3.5 text-gray-500 group-hover:text-white transition-colors"
+        className="w-4 h-4 text-gray-500 group-hover:text-white transition-colors"
         viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round"
       >
         <path d="M4 6h16M4 12h16M4 18h16" />

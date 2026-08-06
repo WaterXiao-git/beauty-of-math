@@ -1,8 +1,8 @@
 // AI 智能提问与路由页：真实调用 POST /api/route（规则优先路由），按五分支渲染
 import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import CourseHeader from '../course/CourseHeader'
-import ChapterSidebar from '../course/ChapterSidebar'
+import DrawerSidebar from '../course/DrawerSidebar'
 import { chapters, findPoint } from '../course/courseData'
 import QuestionInput from './QuestionInput'
 import MatchResults from './MatchResults'
@@ -44,13 +44,16 @@ const DEFAULT_QUESTION = '什么是函数在一点的极限？为什么要用 ϵ
 
 export default function AskPage() {
   const navigate = useNavigate()
-  const [question, setQuestion] = useState(DEFAULT_QUESTION)
+  const [searchParams] = useSearchParams()
+  const [question, setQuestion] = useState(
+    () => searchParams.get('question')?.trim() || DEFAULT_QUESTION,
+  )
   const [prompts, setPrompts] = useState(() => pickPrompts(3))
   const [loading, setLoading] = useState(false)
   const [route, setRoute] = useState<RouteResult | null>(null)
   const [error, setError] = useState('')
   const [generating, setGenerating] = useState(false)
-  const [sidebarPointId, setSidebarPointId] = useState('limit-of-function')
+  const [navigationOpen, setNavigationOpen] = useState(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const focusInput = () => inputRef.current?.focus()
@@ -168,16 +171,21 @@ export default function AskPage() {
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <CourseHeader breadcrumb={['首页', 'AI 智能提问']} askActive />
+      <CourseHeader
+        breadcrumb={['首页', 'AI 智能提问']}
+        askActive
+        onOpenNavigation={() => setNavigationOpen(true)}
+      />
+
+      <DrawerSidebar
+        open={navigationOpen}
+        onClose={() => setNavigationOpen(false)}
+        selectedPointId=""
+        onSelectPoint={(pointId) => navigate(`/?point=${encodeURIComponent(pointId)}`)}
+        chapters={chapters}
+      />
 
       <div className="flex-1 min-h-0 flex gap-4 p-4 md:p-5">
-        {/* 左：章节目录 */}
-        <ChapterSidebar
-          chapters={chapters}
-          selectedPointId={sidebarPointId}
-          onSelectPoint={setSidebarPointId}
-        />
-
         {/* 中：提问输入 + 路由结果 */}
         <main className="flex-1 min-w-0 flex flex-col gap-4 overflow-y-auto">
           <QuestionInput

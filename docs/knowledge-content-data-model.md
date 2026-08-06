@@ -370,6 +370,7 @@ template_bindings(knowledge_point_version_id, priority)
 
 ```http
 GET /api/content/courses
+GET /api/content/experiments?q=&difficulty=&topic=&offset=&limit=
 GET /api/content/courses/:courseId/tree
 GET /api/content/knowledge-points/:id
 GET /api/content/knowledge-points/:id/versions

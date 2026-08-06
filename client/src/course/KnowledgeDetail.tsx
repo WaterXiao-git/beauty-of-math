@@ -1,4 +1,5 @@
 // 右侧栏：当前知识点详情（简介 / 配图 / 学习目标 / CTA）
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { KnowledgePoint } from './courseData'
 import { STATUS_META } from './courseData'
@@ -57,6 +58,25 @@ function LimitChart() {
 
 export default function KnowledgeDetail({ point }: KnowledgeDetailProps) {
   const status = STATUS_META[point.status]
+  const [learningPlan, setLearningPlan] = useState<string[]>(() => {
+    try {
+      return JSON.parse(localStorage.getItem('mathviz-learning-plan') ?? '[]') as string[]
+    } catch {
+      return []
+    }
+  })
+  const inPlan = learningPlan.includes(point.id)
+  const demoPath = point.demoId
+    ? `/demo/${point.demoId}`
+    : point.experimentPath ?? `/ask?question=${encodeURIComponent(`为我讲解${point.title}`)}`
+
+  const toggleLearningPlan = () => {
+    const next = learningPlan.includes(point.id)
+      ? learningPlan.filter((id) => id !== point.id)
+      : [...new Set([...learningPlan, point.id])]
+    localStorage.setItem('mathviz-learning-plan', JSON.stringify(next))
+    setLearningPlan(next)
+  }
 
   return (
     <aside className="hidden xl:flex w-72 xl:w-80 shrink-0 bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex flex-col gap-5">
@@ -98,7 +118,7 @@ export default function KnowledgeDetail({ point }: KnowledgeDetailProps) {
       {/* CTA */}
       <div className="space-y-2.5 pt-1">
         <Link
-          to={`/demo/${point.id}`}
+          to={demoPath}
           className="w-full inline-flex items-center justify-center gap-1.5 h-11 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 active:bg-blue-800 transition-colors shadow-md shadow-blue-500/20"
         >
           进入演示
@@ -108,13 +128,19 @@ export default function KnowledgeDetail({ point }: KnowledgeDetailProps) {
         </Link>
         <button
           type="button"
-          className="w-full inline-flex items-center justify-center gap-1.5 h-11 rounded-lg bg-white text-blue-600 border-2 border-blue-200 text-sm font-semibold hover:border-blue-400 hover:bg-blue-50 active:bg-blue-100 transition-colors"
+          onClick={toggleLearningPlan}
+          aria-pressed={inPlan}
+          className={`w-full inline-flex items-center justify-center gap-1.5 h-11 rounded-lg border-2 text-sm font-semibold transition-colors ${
+            inPlan
+              ? 'border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+              : 'border-blue-200 bg-white text-blue-600 hover:border-blue-400 hover:bg-blue-50 active:bg-blue-100'
+          }`}
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
             <rect x="3" y="4" width="18" height="18" rx="2" />
             <path d="M16 2v4M8 2v4M3 10h18" />
           </svg>
-          加入学习计划
+          {inPlan ? '已加入学习计划' : '加入学习计划'}
         </button>
       </div>
     </aside>

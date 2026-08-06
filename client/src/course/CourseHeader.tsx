@@ -8,14 +8,34 @@ interface CourseHeaderProps {
   askActive?: boolean
   /** 面包屑项点击回调（index 0=首页, 1=课程, 2=章节, 3=小节, 4=知识点）；不传则纯文本 */
   onBreadcrumbClick?: (index: number) => void
+  /** 打开隐藏的章节与知识点抽屉 */
+  onOpenNavigation?: () => void
 }
 
-export default function CourseHeader({ breadcrumb, askActive = false, onBreadcrumbClick }: CourseHeaderProps) {
+export default function CourseHeader({
+  breadcrumb,
+  askActive = false,
+  onBreadcrumbClick,
+  onOpenNavigation,
+}: CourseHeaderProps) {
   const last = breadcrumb.length - 1
   return (
     <header className="flex items-center justify-between h-16 px-4 md:px-6 bg-white border-b border-gray-100 shadow-sm shrink-0">
       {/* 左侧：Logo + 面包屑 */}
       <div className="flex items-center gap-4 md:gap-6 min-w-0">
+        {onOpenNavigation && (
+          <button
+            type="button"
+            onClick={onOpenNavigation}
+            className="inline-flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+            aria-label="打开章节与知识点"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <span className="hidden sm:inline">课程目录</span>
+          </button>
+        )}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">
           {/* 蓝色几何 Logo */}
           <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-blue-500 flex items-center justify-center shadow-md shadow-blue-500/25">
@@ -45,6 +65,13 @@ export default function CourseHeader({ breadcrumb, askActive = false, onBreadcru
                 >
                   {item}
                 </button>
+              ) : i === 0 && i < last ? (
+                <Link
+                  to="/"
+                  className="truncate text-gray-500 transition-colors hover:text-blue-600 hover:underline"
+                >
+                  {item}
+                </Link>
               ) : (
                 <span className={`truncate ${i === last ? 'text-blue-600 font-semibold' : 'text-gray-500'}`}>
                   {item}

@@ -2,7 +2,7 @@
 // 按知识点 demoId 渲染对应模板容器；未实现模板按需求 2.2 说明原因并给出替代路径
 import { useParams, Link } from 'react-router-dom'
 import type { ComponentType } from 'react'
-import CourseHeader from '../course/CourseHeader'
+import DemoHeader from './DemoHeader'
 import { COURSE_TITLE, findChapterOf, findPoint, findSectionOf } from '../course/courseData'
 import RolleDemo from './RolleDemo'
 import EpsilonDeltaDemo from './EpsilonDeltaDemo'
@@ -21,7 +21,7 @@ function DemoPlaceholder({ pointId }: { pointId: string }) {
   if (!point) {
     return (
       <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <CourseHeader breadcrumb={['首页', '演示']} />
+        <DemoHeader breadcrumb={['首页', '演示']} />
         <div className="flex-1 flex items-center justify-center p-8">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 max-w-md text-center">
             <div className="text-5xl mb-4">🔍</div>
@@ -45,7 +45,7 @@ function DemoPlaceholder({ pointId }: { pointId: string }) {
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <CourseHeader breadcrumb={breadcrumb} />
+      <DemoHeader breadcrumb={breadcrumb} />
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 max-w-lg w-full text-center">
           <div className="text-5xl mb-4">🛠️</div>
@@ -63,7 +63,7 @@ function DemoPlaceholder({ pointId }: { pointId: string }) {
               </Link>
             )}
             <Link
-              to="/"
+              to={`/?point=${encodeURIComponent(point.id)}`}
               className="inline-flex items-center justify-center px-5 h-10 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors"
             >
               返回知识点

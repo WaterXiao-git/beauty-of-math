@@ -1,7 +1,7 @@
 // 抽屉式/可折叠侧边栏（Off-canvas Drawer）：固定定位、可滑出隐藏/展开
 // 用法：open 控制滑入滑出，onClose 关闭；选中态与 CourseHome 知识点联动
-import { useMemo, useState } from 'react'
-import { chapters } from './courseData'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { CourseChapter } from './courseData'
 
 interface DrawerSidebarProps {
   /** 是否展开显示 */
@@ -12,6 +12,8 @@ interface DrawerSidebarProps {
   selectedPointId: string
   /** 选中知识点回调 */
   onSelectPoint: (pointId: string) => void
+  /** 当前课程目录；允许使用后端发布数据覆盖后的结果 */
+  chapters: CourseChapter[]
 }
 
 interface DrawerItem {
@@ -36,8 +38,33 @@ function splitSectionTitle(title: string): { num: string; name: string } {
   return m ? { num: m[1], name: m[2] } : { num: '', name: title }
 }
 
-export default function DrawerSidebar({ open, onClose, selectedPointId, onSelectPoint }: DrawerSidebarProps) {
+export default function DrawerSidebar({
+  open,
+  onClose,
+  selectedPointId,
+  onSelectPoint,
+  chapters,
+}: DrawerSidebarProps) {
   const [query, setQuery] = useState('')
+  const searchRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    const focusTimer = window.setTimeout(() => searchRef.current?.focus(), 180)
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.clearTimeout(focusTimer)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [onClose, open])
 
   // 按章节分组展平：章节 -> 小节(编号) -> 知识点
   const groups = useMemo<DrawerGroup[]>(
@@ -56,7 +83,7 @@ export default function DrawerSidebar({ open, onClose, selectedPointId, onSelect
           items,
         }
       }),
-    [],
+    [chapters],
   )
 
   // 搜索过滤（标题 / 编号 / 章节名）
@@ -80,16 +107,17 @@ export default function DrawerSidebar({ open, onClose, selectedPointId, onSelect
     <div className={`fixed inset-0 z-50 ${open ? '' : 'pointer-events-none'}`} aria-hidden={!open}>
       {/* 遮罩：点击关闭 */}
       <div
-        className={`absolute inset-0 bg-black/40 transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}
+        className={`absolute inset-0 bg-slate-950/45 backdrop-blur-[2px] transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`}
         onClick={onClose}
       />
 
       {/* 抽屉主体 */}
       <aside
-        className={`absolute left-0 top-0 h-screen w-80 md:w-96 bg-white shadow-lg border-r border-gray-100 flex flex-col p-6 transition-transform duration-300 ease-out ${
+        className={`absolute left-0 top-0 flex h-dvh w-[min(420px,92vw)] flex-col border-r border-gray-100 bg-white p-5 shadow-2xl transition-transform duration-300 ease-out md:p-6 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
         role="dialog"
+        aria-modal="true"
         aria-label="章节与知识点"
       >
         {/* 头部：标题 + 关闭按钮 */}
@@ -117,6 +145,7 @@ export default function DrawerSidebar({ open, onClose, selectedPointId, onSelect
             <path d="m21 21-4.3-4.3" />
           </svg>
           <input
+            ref={searchRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -163,7 +192,9 @@ export default function DrawerSidebar({ open, onClose, selectedPointId, onSelect
 
           {/* 空状态 */}
           {filteredGroups.length === 0 && (
-            <div className="text-center py-10 text-sm text-gray-400">未找到匹配的知识点</div>
+            <div className="rounded-xl border border-dashed border-gray-200 py-10 text-center text-sm text-gray-400">
+              未找到匹配的知识点
+            </div>
           )}
         </nav>
       </aside>

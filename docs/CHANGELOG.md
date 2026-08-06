@@ -1,3 +1,14 @@
+## 2026-08-06 · 可隐藏课程导航与前后端实验目录联动
+
+**模块**：课程首页、知识点导航、演示页导航、AI 提问页、内容目录 API
+
+**内容**：将常驻章节栏改为支持遮罩、搜索、Esc 关闭和滚动锁定的隐藏抽屉，并统一接入课程首页、演示页和 AI 提问页；新增可点击返回的课程概览首页，以 URL 查询参数保存知识点选择，知识点卡片扩展为全课程 15 项搜索导航；正式发布的 3 个知识点使用 `/api/content` 数据覆盖，本地课程内容作为渐进迁移回退；新增 300 个正式实验的后端分页、关键词、难度和主题筛选接口及首页实验库；补齐演示截图、带知识点上下文提问、帮助提示和本地学习计划交互。
+
+**涉及文件**：`client/src/course/`、`client/src/demo/DemoHeader.tsx`、`client/src/demo/DemoPage.tsx`、`client/src/ask/AskPage.tsx`、`client/src/services/contentCatalog.ts`、`server/src/services/experimentCatalogService.ts`、`server/src/routes/content.ts`、`README.md`、`docs/knowledge-content-data-model.md`
+
+**验证**：前端专项适配测试 1/1、完整测试 1852/1852、ESLint 和生产构建通过（课程完整性 300/300）；服务端完整测试 185/185、TypeScript 生产构建通过；`/api/content/experiments` 总量、分数搜索及难度/主题组合筛选冒烟检查通过；浏览器验证首页返回、URL 知识点状态、抽屉搜索、15 项知识点导航、300 项实验目录、演示路径和上下文提问均正常。
+
+---
 ## 2026-08-06 · 版本化课程内容模型与只读 API
 
 **模块**：课程内容模型、发布数据、仓储和 HTTP API

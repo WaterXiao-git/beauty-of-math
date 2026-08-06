@@ -7,11 +7,31 @@ import {
   listPublishedCourses,
   listPublishedKnowledgePointVersions,
 } from '../services/contentCatalogService.js'
+import { listPublishedExperiments } from '../services/experimentCatalogService.js'
 
 const router = Router()
 
 router.get('/courses', (_req, res) => {
   res.json(listPublishedCourses())
+})
+
+router.get('/experiments', (req, res) => {
+  const parseNumber = (value: unknown) => {
+    if (typeof value !== 'string' || value.trim() === '') return undefined
+    const parsed = Number(value)
+    return Number.isFinite(parsed) ? parsed : undefined
+  }
+
+  res.json(
+    listPublishedExperiments({
+      q: typeof req.query.q === 'string' ? req.query.q : undefined,
+      difficulty:
+        typeof req.query.difficulty === 'string' ? req.query.difficulty : undefined,
+      topic: typeof req.query.topic === 'string' ? req.query.topic : undefined,
+      offset: parseNumber(req.query.offset),
+      limit: parseNumber(req.query.limit),
+    }),
+  )
 })
 
 router.get('/courses/:courseId/tree', (req, res) => {

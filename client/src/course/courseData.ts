@@ -32,6 +32,12 @@ export interface KnowledgePoint {
   experimentPath?: string
   /** 统一演示页 id（对应 /demo/:id 与后端 /api/knowledge/:id）；未配置则显示「建设中」占位 */
   demoId?: string
+  /** 后端正式知识点 id；未迁移的本地知识点为空 */
+  backendId?: string
+  /** 当前发布内容版本 */
+  contentVersion?: string
+  /** 数据来源标记 */
+  source?: 'published'
 }
 
 /** 小节（二级节点） */
@@ -395,7 +401,7 @@ export const chapters: CourseChapter[] = [
 export function findPoint(id: string): KnowledgePoint | undefined {
   for (const ch of chapters) {
     for (const sec of ch.sections) {
-      const p = sec.points.find((pp) => pp.id === id)
+      const p = sec.points.find((pp) => pp.id === id || pp.demoId === id)
       if (p) return p
     }
   }

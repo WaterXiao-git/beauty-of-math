@@ -1,107 +1,167 @@
-// 课程主界面：顶部 Header + 三栏布局（章节目录 | 知识地图+卡片网格 | 知识点详情）
-import { useMemo, useState } from 'react'
+// 课程主界面：可返回的课程概览 + 隐藏目录抽屉 + 知识点学习工作区
+import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+
+import { fetchPublishedCourses, fetchPublishedCourseTree } from '../services/contentCatalog'
 import CourseHeader from './CourseHeader'
-import ChapterSidebar from './ChapterSidebar'
+import CourseOverview from './CourseOverview'
+import DrawerSidebar from './DrawerSidebar'
 import KnowledgeMap from './KnowledgeMap'
 import KnowledgeCards from './KnowledgeCards'
 import KnowledgeDetail from './KnowledgeDetail'
+import { mergePublishedCourseTree } from './courseContentAdapter'
 import {
-  chapters,
+  chapters as localChapters,
   COURSE_TITLE,
-  DEFAULT_POINT_ID,
-  findChapterOf,
-  findPoint,
-  findSectionOf,
 } from './courseData'
-import type { KnowledgePoint } from './courseData'
+import type { CourseChapter, CourseSection, KnowledgePoint } from './courseData'
 
-/** 收集全部知识点，用于知识地图关联节点查找 */
-function collectAllPoints(): KnowledgePoint[] {
-  const all: KnowledgePoint[] = []
-  for (const ch of chapters) {
-    for (const sec of ch.sections) {
-      all.push(...sec.points)
-    }
-  }
-  return all
+function collectAllPoints(chapters: CourseChapter[]): KnowledgePoint[] {
+  return chapters.flatMap((chapter) =>
+    chapter.sections.flatMap((section) => section.points),
+  )
+}
+
+function findPoint(chapters: CourseChapter[], pointId: string) {
+  return collectAllPoints(chapters).find(
+    (point) => point.id === pointId || point.demoId === pointId,
+  )
+}
+
+function findSection(chapters: CourseChapter[], pointId: string): CourseSection | undefined {
+  return chapters
+    .flatMap((chapter) => chapter.sections)
+    .find((section) =>
+      section.points.some((point) => point.id === pointId || point.demoId === pointId),
+    )
+}
+
+function findChapter(chapters: CourseChapter[], pointId: string) {
+  return chapters.find((chapter) =>
+    chapter.sections.some((section) =>
+      section.points.some((point) => point.id === pointId || point.demoId === pointId),
+    ),
+  )
 }
 
 export default function CourseHome() {
-  const [selectedPointId, setSelectedPointId] = useState(DEFAULT_POINT_ID)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [navigationOpen, setNavigationOpen] = useState(false)
+  const [chapters, setChapters] = useState<CourseChapter[]>(localChapters)
+  const [syncedPointCount, setSyncedPointCount] = useState(0)
+  const [contentSource, setContentSource] = useState<'loading' | 'api' | 'fallback'>('loading')
+  const selectedPointId = searchParams.get('point') ?? ''
 
-  const point = findPoint(selectedPointId) ?? findPoint(DEFAULT_POINT_ID)!
-  const section = findSectionOf(point.id)
-  const chapter = findChapterOf(point.id)
+  useEffect(() => {
+    const controller = new AbortController()
 
-  // 知识地图关联节点（按标题匹配全局知识点）
+    fetchPublishedCourses(controller.signal)
+      .then((courses) => {
+        const course =
+          courses.find((item) => item.code === 'higher-mathematics-1') ?? courses[0]
+        if (!course) throw new Error('没有可用的已发布课程')
+        return fetchPublishedCourseTree(course.id, controller.signal)
+      })
+      .then((tree) => {
+        const adapted = mergePublishedCourseTree(localChapters, tree)
+        setChapters(adapted.chapters)
+        setSyncedPointCount(adapted.syncedPointIds.size)
+        setContentSource('api')
+      })
+      .catch((error: unknown) => {
+        if (error instanceof DOMException && error.name === 'AbortError') return
+        setChapters(localChapters)
+        setSyncedPointCount(0)
+        setContentSource('fallback')
+      })
+
+    return () => controller.abort()
+  }, [])
+
+  const allPoints = useMemo(() => collectAllPoints(chapters), [chapters])
+  const point = selectedPointId ? findPoint(chapters, selectedPointId) : undefined
+  const section = point ? findSection(chapters, point.id) : undefined
+  const chapter = point ? findChapter(chapters, point.id) : undefined
+
   const relatedPoints = useMemo(() => {
-    const all = collectAllPoints()
+    if (!point) return []
     return point.related
-      .map((title) => all.find((p) => p.title === title))
-      .filter((p): p is KnowledgePoint => Boolean(p))
-  }, [point])
+      .map((title) => allPoints.find((candidate) => candidate.title === title))
+      .filter((candidate): candidate is KnowledgePoint => Boolean(candidate))
+  }, [allPoints, point])
 
-  // 卡片网格：当前小节内的知识点
-  const sectionPoints = section?.points ?? []
+  const selectPoint = (pointId: string) => {
+    setSearchParams({ point: pointId })
+    setNavigationOpen(false)
+  }
 
-  // 面包屑：首页 > 课程 > 章节 > 小节 > 知识点
-  const breadcrumb = [
-    '首页',
-    COURSE_TITLE,
-    chapter?.title ?? '',
-    section?.title ?? '',
-    point.title,
-  ].filter(Boolean)
+  const showOverview = () => {
+    setSearchParams({})
+    setNavigationOpen(false)
+  }
 
-  // 面包屑点击：回到对应层级（index 0=首页, 1=课程, 2=章节, 3=小节）
+  const breadcrumb = point
+    ? ['首页', COURSE_TITLE, chapter?.title ?? '', section?.title ?? '', point.title].filter(Boolean)
+    : ['首页', COURSE_TITLE]
+
   const handleBreadcrumbClick = (index: number) => {
-    if (index <= 1) {
-      // 首页 / 课程：回到默认知识点
-      setSelectedPointId(DEFAULT_POINT_ID)
+    if (index <= 1 || !point) {
+      showOverview()
       return
     }
     if (index === 2 && chapter) {
-      // 章节：选中该章第一个知识点
       const first = chapter.sections[0]?.points[0]
-      if (first) setSelectedPointId(first.id)
+      if (first) selectPoint(first.id)
       return
     }
     if (index === 3 && section) {
-      // 小节：选中该小节第一个知识点
       const first = section.points[0]
-      if (first) setSelectedPointId(first.id)
+      if (first) selectPoint(first.id)
     }
   }
 
   return (
-    <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <CourseHeader breadcrumb={breadcrumb} onBreadcrumbClick={handleBreadcrumbClick} />
+    <div className="flex h-full flex-col bg-[#f5f7fa]">
+      <CourseHeader
+        breadcrumb={breadcrumb}
+        onBreadcrumbClick={handleBreadcrumbClick}
+        onOpenNavigation={() => setNavigationOpen(true)}
+      />
 
-      <div className="flex-1 min-h-0 flex gap-4 p-4 md:p-5">
-        {/* 左：章节目录 */}
-        <ChapterSidebar
+      <DrawerSidebar
+        open={navigationOpen}
+        onClose={() => setNavigationOpen(false)}
+        selectedPointId={point?.id ?? ''}
+        onSelectPoint={selectPoint}
+        chapters={chapters}
+      />
+
+      {!point ? (
+        <CourseOverview
           chapters={chapters}
-          selectedPointId={point.id}
-          onSelectPoint={setSelectedPointId}
+          syncedPointCount={syncedPointCount}
+          contentSource={contentSource}
+          onSelectPoint={selectPoint}
+          onOpenNavigation={() => setNavigationOpen(true)}
         />
+      ) : (
+        <div className="flex min-h-0 flex-1 gap-4 p-4 md:p-5">
+          <main className="flex min-w-0 flex-1 flex-col gap-4 overflow-y-auto">
+            <KnowledgeMap
+              point={point}
+              relatedPoints={relatedPoints}
+              onSelectPoint={selectPoint}
+            />
+            <KnowledgeCards
+              points={allPoints}
+              selectedPointId={point.id}
+              onSelectPoint={selectPoint}
+            />
+          </main>
 
-        {/* 中：知识地图 + 知识点导航 */}
-        <main className="flex-1 min-w-0 flex flex-col gap-4 overflow-y-auto">
-          <KnowledgeMap
-            point={point}
-            relatedPoints={relatedPoints}
-            onSelectPoint={setSelectedPointId}
-          />
-          <KnowledgeCards
-            points={sectionPoints}
-            selectedPointId={point.id}
-            onSelectPoint={setSelectedPointId}
-          />
-        </main>
-
-        {/* 右：知识点详情 */}
-        <KnowledgeDetail point={point} />
-      </div>
+          <KnowledgeDetail point={point} />
+        </div>
+      )}
     </div>
   )
 }

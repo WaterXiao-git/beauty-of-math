@@ -5,6 +5,8 @@ import { compile } from 'mathjs'
 import DemoHeader from './DemoHeader'
 import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
+import { usePanZoom } from './usePanZoom'
+import { calcViewportGrid } from './viewport'
 
 interface DemoCase {
   id: string
@@ -72,6 +74,8 @@ function feasibleDelta(f: (x: number) => number, a: number, L: number, eps: numb
 }
 
 export default function EpsilonDeltaDemo() {
+  const navigate = useNavigate()
+  const { transform, handlers, consumeDrag } = usePanZoom()
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
   const [loadError, setLoadError] = useState('')
   const [caseId, setCaseId] = useState('')
@@ -114,7 +118,7 @@ export default function EpsilonDeltaDemo() {
   if (loadError) {
     return (
       <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['高等数学（上册）', '函数、极限与连续', 'ε−δ 极限定义']} />
+        <DemoHeader breadcrumb={['高等数学（上册）', '函数、极限与连续', 'ε−δ 极限定义']} onBreadcrumbClick={() => navigate('/')} />
         <div className="flex-1 flex items-center justify-center">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center">
             <div className="text-4xl mb-3">⚠️</div>
@@ -127,7 +131,7 @@ export default function EpsilonDeltaDemo() {
   if (!config || !activeCase || !derived) {
     return (
       <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['高等数学（上册）', '函数、极限与连续', 'ε−δ 极限定义']} />
+        <DemoHeader breadcrumb={['高等数学（上册）', '函数、极限与连续', 'ε−δ 极限定义']} onBreadcrumbClick={() => navigate('/')} />
         <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">配置加载中…</div>
       </div>
     )
@@ -138,23 +142,34 @@ export default function EpsilonDeltaDemo() {
   const [yMin, yMax] = activeCase.yRange
   const sx = (x: number) => PAD_L + ((x - dMin) / (dMax - dMin)) * (W - PAD_L - PAD_R)
   const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
+  // 可视范围（曲线铺满视图 / 虚线与带贯穿全屏）
+  const visMapMin = -transform.tx / transform.scale
+  const visMapMax = (W - transform.tx) / transform.scale
+  const visYMapMin = (H - transform.ty) / transform.scale
+  const visYMapMax = -transform.ty / transform.scale
+  const visWorldXMin = dMin + ((visMapMin - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
+  const visWorldXMax = dMin + ((visMapMax - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
+  const grid = calcViewportGrid(transform, W, H, [dMin, dMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
   const inEps = (x: number) => Math.abs(f(x) - L) < epsilon
 
   // 曲线采样
   const curvePts: string[] = []
   const inBandPts: string[] = []
   const N = 160
+  let curveStarted = false
   for (let i = 0; i <= N; i++) {
-    const x = dMin + ((dMax - dMin) * i) / N
+    const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
     const y = f(x)
     if (!Number.isFinite(y)) continue
-    curvePts.push((i === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+    // 首个有效点用 M 起笔（避免定义域外 NaN 导致 path 以 L 开头而整条不显示）
+    curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+    curveStarted = true
     if (step >= 4 && Math.abs(x - a) < delta) inBandPts.push((inBandPts.length === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
   }
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <DemoHeader breadcrumb={['高等数学（上册）', '函数、极限与连续', config.title]} />
+      <DemoHeader breadcrumb={['高等数学（上册）', '函数、极限与连续', config.title]} onBreadcrumbClick={() => navigate('/')} />
 
       <div className="flex-1 min-h-0 flex gap-4 p-4 md:p-5">
         {/* 左：深色画板 */}
@@ -172,36 +187,35 @@ export default function EpsilonDeltaDemo() {
           </div>
 
           <div className="relative rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden flex-1 min-h-[380px]">
-            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
-              {/* 网格 */}
-              {[-1, 0, 1, 2].filter((g) => g >= yMin && g <= yMax).map((gy) => (
-                <line key={'gy' + gy} x1={sx(dMin)} y1={sy(gy)} x2={sx(dMax)} y2={sy(gy)} stroke="#1e293b" />
-              ))}
-              {[0, 1, 2].filter((g) => g >= dMin && g <= dMax).map((gx) => (
-                <line key={'gx' + gx} x1={sx(gx)} y1={sy(yMin)} x2={sx(gx)} y2={sy(yMax)} stroke="#1e293b" />
-              ))}
-              {/* 坐标轴 */}
-              <g stroke="#475569" strokeWidth={1.4}>
-                <line x1={sx(dMin)} y1={sy(0)} x2={sx(dMax)} y2={sy(0)} />
-                <line x1={sx(dMin)} y1={sy(yMin)} x2={sx(dMin)} y2={sy(yMax)} />
-              </g>
-
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" {...handlers}>
+          {/* 视口网格与坐标轴（无限延伸） */}
+          {grid.verts.map((v, i) => (
+            <line key={"v" + i} x1={v.pos} y1={0} x2={v.pos} y2={H} stroke={v.major ? "#334155" : "#1e293b"} strokeWidth={1} />
+          ))}
+          {grid.hors.map((h, i) => (
+            <line key={"h" + i} x1={0} y1={h.pos} x2={W} y2={h.pos} stroke={h.major ? "#334155" : "#1e293b"} strokeWidth={1} />
+          ))}
+          {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
+          {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
+        <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
+        
+    
               {/* ε 误差带（L±ε 区域） */}
               {step >= 2 && (
                 <g>
-                  <rect x={sx(dMin)} y={sy(L + epsilon)} width={sx(dMax) - sx(dMin)} height={sy(L - epsilon) - sy(L + epsilon)} fill="#38bdf8" opacity={0.12} />
-                  <line x1={sx(dMin)} y1={sy(L + epsilon)} x2={sx(dMax)} y2={sy(L + epsilon)} stroke="#7dd3fc" strokeWidth={1.2} strokeDasharray="5 4" />
-                  <line x1={sx(dMin)} y1={sy(L - epsilon)} x2={sx(dMax)} y2={sy(L - epsilon)} stroke="#7dd3fc" strokeWidth={1.2} strokeDasharray="5 4" />
-                  <line x1={sx(dMin)} y1={sy(L)} x2={sx(dMax)} y2={sy(L)} stroke="#2563eb" strokeWidth={1.3} strokeDasharray="2 2" />
+                  <rect x={visMapMin} y={sy(L + epsilon)} width={visMapMax - visMapMin} height={sy(L - epsilon) - sy(L + epsilon)} fill="#38bdf8" opacity={0.12} />
+                  <line x1={visMapMin} y1={sy(L + epsilon)} x2={visMapMax} y2={sy(L + epsilon)} stroke="#7dd3fc" strokeWidth={1.2} strokeDasharray="5 4" />
+                  <line x1={visMapMin} y1={sy(L - epsilon)} x2={visMapMax} y2={sy(L - epsilon)} stroke="#7dd3fc" strokeWidth={1.2} strokeDasharray="5 4" />
+                  <line x1={visMapMin} y1={sy(L)} x2={visMapMax} y2={sy(L)} stroke="#2563eb" strokeWidth={1.3} strokeDasharray="2 2" />
                 </g>
               )}
 
               {/* δ 邻域（a±δ 竖带） */}
               {step >= 3 && delta > 0 && (
                 <g>
-                  <rect x={sx(a - delta)} y={sy(yMax)} width={sx(a + delta) - sx(a - delta)} height={sy(yMin) - sy(yMax)} fill="#fbbf24" opacity={0.1} />
-                  <line x1={sx(a - delta)} y1={sy(yMin)} x2={sx(a - delta)} y2={sy(yMax)} stroke="#fcd34d" strokeWidth={1.2} strokeDasharray="5 4" />
-                  <line x1={sx(a + delta)} y1={sy(yMin)} x2={sx(a + delta)} y2={sy(yMax)} stroke="#fcd34d" strokeWidth={1.2} strokeDasharray="5 4" />
+                  <rect x={sx(a - delta)} y={visYMapMin} width={sx(a + delta) - sx(a - delta)} height={visYMapMax - visYMapMin} fill="#fbbf24" opacity={0.1} />
+                  <line x1={sx(a - delta)} y1={visYMapMin} x2={sx(a - delta)} y2={visYMapMax} stroke="#fcd34d" strokeWidth={1.2} strokeDasharray="5 4" />
+                  <line x1={sx(a + delta)} y1={visYMapMin} x2={sx(a + delta)} y2={visYMapMax} stroke="#fcd34d" strokeWidth={1.2} strokeDasharray="5 4" />
                 </g>
               )}
 
@@ -227,7 +241,8 @@ export default function EpsilonDeltaDemo() {
                 {step >= 2 && <text x={sx(dMin) + 10} y={sy(L + epsilon) + 12} fontSize={10}>L+ε</text>}
                 {step >= 2 && <text x={sx(dMin) + 10} y={sy(L - epsilon) - 4} fontSize={10}>L−ε</text>}
               </g>
-            </svg>
+            </g>
+        </svg>
 
             {/* 动态数据面板 */}
             <div className="absolute bottom-3 left-3 flex items-center gap-2 flex-wrap">

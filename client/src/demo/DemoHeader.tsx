@@ -1,12 +1,14 @@
-// 演示页顶部导航：Logo+副标题 / 章节下拉 / 面包屑 / 截图 / 紫色提问 / 帮助 / 头像
+// 演示页顶部导航：Logo+副标题 / 章节下拉 / 面包屑（可点击回退）/ 截图 / 紫色提问 / 帮助 / 头像
 import { Link } from 'react-router-dom'
 
 interface DemoHeaderProps {
   /** 面包屑路径 */
   breadcrumb: string[]
+  /** 面包屑项点击回调（index 0 起，末项为当前页不可点）；不传则纯文本 */
+  onBreadcrumbClick?: (index: number) => void
 }
 
-export default function DemoHeader({ breadcrumb }: DemoHeaderProps) {
+export default function DemoHeader({ breadcrumb, onBreadcrumbClick }: DemoHeaderProps) {
   const last = breadcrumb.length - 1
   return (
     <header className="flex items-center justify-between h-16 px-4 md:px-6 bg-white border-b border-gray-100 shadow-sm shrink-0">
@@ -39,7 +41,7 @@ export default function DemoHeader({ breadcrumb }: DemoHeaderProps) {
           </svg>
         </button>
 
-        {/* 面包屑 */}
+        {/* 面包屑：非末项可点击回到对应层级 */}
         <nav aria-label="面包屑" className="hidden md:flex items-center gap-1.5 min-w-0 text-sm">
           {breadcrumb.map((item, i) => (
             <span key={i} className="flex items-center gap-1.5 min-w-0">
@@ -48,9 +50,19 @@ export default function DemoHeader({ breadcrumb }: DemoHeaderProps) {
                   <path d="M9 6l6 6-6 6" />
                 </svg>
               )}
-              <span className={`truncate ${i === last ? 'text-indigo-600 font-semibold' : 'text-gray-500'}`}>
-                {item}
-              </span>
+              {i < last && onBreadcrumbClick ? (
+                <button
+                  type="button"
+                  onClick={() => onBreadcrumbClick(i)}
+                  className="truncate text-gray-500 hover:text-indigo-600 hover:underline transition-colors"
+                >
+                  {item}
+                </button>
+              ) : (
+                <span className={`truncate ${i === last ? 'text-indigo-600 font-semibold' : 'text-gray-500'}`}>
+                  {item}
+                </span>
+              )}
             </span>
           ))}
         </nav>

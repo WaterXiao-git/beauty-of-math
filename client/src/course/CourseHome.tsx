@@ -53,9 +53,29 @@ export default function CourseHome() {
     point.title,
   ].filter(Boolean)
 
+  // 面包屑点击：回到对应层级（index 0=首页, 1=课程, 2=章节, 3=小节）
+  const handleBreadcrumbClick = (index: number) => {
+    if (index <= 1) {
+      // 首页 / 课程：回到默认知识点
+      setSelectedPointId(DEFAULT_POINT_ID)
+      return
+    }
+    if (index === 2 && chapter) {
+      // 章节：选中该章第一个知识点
+      const first = chapter.sections[0]?.points[0]
+      if (first) setSelectedPointId(first.id)
+      return
+    }
+    if (index === 3 && section) {
+      // 小节：选中该小节第一个知识点
+      const first = section.points[0]
+      if (first) setSelectedPointId(first.id)
+    }
+  }
+
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <CourseHeader breadcrumb={breadcrumb} />
+      <CourseHeader breadcrumb={breadcrumb} onBreadcrumbClick={handleBreadcrumbClick} />
 
       <div className="flex-1 min-h-0 flex gap-4 p-4 md:p-5">
         {/* 左：章节目录 */}

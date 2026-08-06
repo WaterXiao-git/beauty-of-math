@@ -1,10 +1,14 @@
 // 导数的几何意义演示（需求 4.2）：配置来自统一接口 /api/knowledge/derivative
 // 固定点 P + 移动点 Q，观察 h→0 时割线斜率趋近切线斜率（差商极限）
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { compile, derivative as mathDerivative } from 'mathjs'
 import DemoHeader from './DemoHeader'
 import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
+import { usePanZoom } from './usePanZoom'
+import GeoPoint from './geoboard/GeoPoint'
+import GeoLine from './geoboard/GeoLine'
+import { calcViewportGrid } from './viewport'
 
 interface DemoCase {
   id: string
@@ -64,6 +68,9 @@ function makeDerivFn(expr: string) {
 }
 
 export default function DerivativeDemo() {
+  const navigate = useNavigate()
+  const { transform, handlers, consumeDrag } = usePanZoom()
+  const svgRef = useRef<SVGSVGElement | null>(null)
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
   const [loadError, setLoadError] = useState('')
   const [caseId, setCaseId] = useState('')
@@ -115,7 +122,7 @@ export default function DerivativeDemo() {
   if (loadError) {
     return (
       <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', '导数的几何意义']} />
+        <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', '导数的几何意义']} onBreadcrumbClick={() => navigate('/')} />
         <div className="flex-1 flex items-center justify-center">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center">
             <div className="text-4xl mb-3">⚠️</div>
@@ -128,7 +135,7 @@ export default function DerivativeDemo() {
   if (!config || !activeCase || !derived) {
     return (
       <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', '导数的几何意义']} />
+        <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', '导数的几何意义']} onBreadcrumbClick={() => navigate('/')} />
         <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">配置加载中…</div>
       </div>
     )
@@ -139,6 +146,13 @@ export default function DerivativeDemo() {
   const [yMin, yMax] = activeCase.yRange
   const sx = (x: number) => PAD_L + ((x - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R)
   const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
+  const coord = {
+    sx,
+    sy,
+    fromSx: (mx: number) => xMin + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin),
+    fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
+  }
+  const grid = calcViewportGrid(transform, W, H, [xMin, xMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
   // 曲线采样
   const curvePts: string[] = []
@@ -152,7 +166,7 @@ export default function DerivativeDemo() {
 
     return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', config.title]} />
+      <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', config.title]} onBreadcrumbClick={() => navigate('/')} />
 
       <div className="flex-1 min-h-0 flex gap-4 p-4 md:p-5">
         {/* 左：深色画板 */}
@@ -171,19 +185,19 @@ export default function DerivativeDemo() {
           </div>
 
           <div className="relative rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden flex-1 min-h-[380px]">
-            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="xMidYMid meet">
-              {/* 网格 */}
-              {[-2, -1, 0, 1, 2, 3, 4].filter((g) => g >= yMin && g <= yMax).map((gy) => (
-                <line key={'gy' + gy} x1={sx(xMin)} y1={sy(gy)} x2={sx(xMax)} y2={sy(gy)} stroke="#1e293b" />
-              ))}
-              {[-2, -1, 0, 1, 2].filter((g) => g >= xMin && g <= xMax).map((gx) => (
-                <line key={'gx' + gx} x1={sx(gx)} y1={sy(yMin)} x2={sx(gx)} y2={sy(yMax)} stroke="#1e293b" />
-              ))}
-              <g stroke="#475569" strokeWidth={1.4}>
-                <line x1={sx(xMin)} y1={sy(0)} x2={sx(xMax)} y2={sy(0)} />
-                <line x1={sx(xMin)} y1={sy(yMin)} x2={sx(xMin)} y2={sy(yMax)} />
-              </g>
-
+            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" ref={svgRef} {...handlers}>
+          {/* 视口网格与坐标轴（无限延伸） */}
+          {grid.verts.map((v, i) => (
+            <line key={"v" + i} x1={v.pos} y1={0} x2={v.pos} y2={H} stroke={v.major ? "#334155" : "#1e293b"} strokeWidth={1} />
+          ))}
+          {grid.hors.map((h, i) => (
+            <line key={"h" + i} x1={0} y1={h.pos} x2={W} y2={h.pos} stroke={h.major ? "#334155" : "#1e293b"} strokeWidth={1} />
+          ))}
+          {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
+          {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
+        <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
+        
+    
               {/* Δx / Δy 标注（虚线三角形） */}
               {step >= 2 && (
                 <g stroke="#94a3b8" strokeWidth={1.1} strokeDasharray="5 4">
@@ -195,27 +209,31 @@ export default function DerivativeDemo() {
               {/* 函数曲线 */}
               {curvePts.length > 0 && <path d={curvePts.join(' ')} fill="none" stroke="#60a5fa" strokeWidth={2.6} strokeLinecap="round" />}
 
-              {/* 切线（粉色，step>=4） */}
+              {/* 切线（粉色，贯穿可视区域，step>=4） */}
               {step >= 4 && (
-                <line x1={sx(x0v) - 1.2 * (sx(1) - sx(0))} y1={sy(yP - tangentSlope * 1.2)} x2={sx(x0v) + 1.2 * (sx(1) - sx(0))} y2={sy(yP + tangentSlope * 1.2)} stroke="#f472b6" strokeWidth={2.2} />
+                <GeoLine x1={x0v} y1={yP} x2={x0v + 1} y2={yP + tangentSlope} color="#f472b6" width={2.2} coord={coord} transform={transform} W={W} H={H} />
               )}
 
-              {/* 割线（亮蓝，step>=2） */}
+              {/* 割线（亮蓝，贯穿可视区域，step>=2） */}
               {step >= 2 && (
-                <line x1={sx(x0v)} y1={sy(yP)} x2={sx(x0v + hh)} y2={sy(yQ)} stroke="#38bdf8" strokeWidth={2.2} />
+                <GeoLine x1={x0v} y1={yP} x2={x0v + hh} y2={yQ} color="#38bdf8" coord={coord} transform={transform} W={W} H={H} />
               )}
 
-              {/* P 点 / Q 点 */}
-              <g>
-                <circle cx={sx(x0v)} cy={sy(yP)} r={6.5} fill="#60a5fa" stroke="#0f172a" strokeWidth={2} />
-                <text x={sx(x0v) - 12} y={sy(yP) - 10} fontSize={13} fontWeight={700} fill="#93c5fd">P</text>
-                {step >= 1 && (
-                  <>
-                    <circle cx={sx(x0v + hh)} cy={sy(yQ)} r={6} fill="#fbbf24" stroke="#0f172a" strokeWidth={2} />
-                    <text x={sx(x0v + hh) + 6} y={sy(yQ) - 10} fontSize={13} fontWeight={700} fill="#fcd34d">Q</text>
-                  </>
-                )}
-              </g>
+              {/* P 点 / Q 点（可沿曲线拖动，割线/切线/数值联动） */}
+              <GeoPoint
+                label="P" x={x0v} y={yP} color="#60a5fa"
+                constraint="curve" curveY={f}
+                onMove={(wx) => setX0(wx)}
+                coord={coord} transform={transform} svgRef={svgRef} labelDx={-12}
+              />
+              {step >= 1 && (
+                <GeoPoint
+                  label="Q" x={x0v + hh} y={yQ} color="#fbbf24"
+                  constraint="curve" curveY={f}
+                  onMove={(wx) => setH(wx - x0v)}
+                  coord={coord} transform={transform} svgRef={svgRef}
+                />
+              )}
 
               {/* Δx / Δy 文字 */}
               {step >= 2 && (
@@ -224,7 +242,8 @@ export default function DerivativeDemo() {
                   <text x={sx(x0v + hh) + 8} y={(sy(yP) + sy(yQ)) / 2 + 4}>Δy</text>
                 </g>
               )}
-            </svg>
+            </g>
+        </svg>
 
             {/* 动态数据面板 */}
             <div className="absolute bottom-3 left-3 flex items-center gap-2 flex-wrap">

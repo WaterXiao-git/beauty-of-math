@@ -83,16 +83,16 @@ export default function DemoHeader({ breadcrumb, onBreadcrumbClick }: DemoHeader
           <span className="hidden sm:inline">截图</span>
         </button>
 
-        {/* 紫色提问按钮 */}
-        <button
-          type="button"
+        {/* 紫色提问按钮 → 跳转 AI 提问页 */}
+        <Link
+          to="/ask"
           className="inline-flex items-center gap-1.5 px-4 h-9 rounded-full bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-700 shadow-md shadow-indigo-500/20 transition-colors"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 5v14M5 12h14" />
           </svg>
           提问
-        </button>
+        </Link>
 
         {/* 帮助 */}
         <button

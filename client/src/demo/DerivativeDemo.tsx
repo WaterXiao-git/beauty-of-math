@@ -111,14 +111,17 @@ export default function DerivativeDemo() {
     const fp = makeDerivFn(activeCase.expr)
     const xMin = activeCase.domain[0]
     const xMax = activeCase.domain[1]
-    const x0v = Math.min(Math.max(x0, xMin + 0.3), xMax - 0.3)
-    const hh = Math.min(Math.max(0.05, h), xMax - x0v - 0.05)
+    // 可视世界 x 范围（曲线与拖拽边界 = 屏幕边缘，Desmos 风格）
+    const visXMin = xMin + ((-transform.tx / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
+    const visXMax = xMin + (((W - transform.tx) / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
+    const x0v = Math.min(Math.max(x0, visXMin + 0.1), visXMax - 0.1)
+    const hh = Math.min(Math.max(0.05, h), Math.max(0.05, visXMax - x0v - 0.05))
     const yP = f(x0v)
     const yQ = f(x0v + hh)
     const secantSlope = (yQ - yP) / hh
     const tangentSlope = fp(x0v)
     return { f, fp, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff: Math.abs(secantSlope - tangentSlope) }
-  }, [activeCase, x0, h])
+  }, [activeCase, x0, h, transform])
 
   if (loadError) {
     return (
@@ -155,14 +158,18 @@ export default function DerivativeDemo() {
   }
   const grid = calcViewportGrid(transform, W, H, [xMin, xMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
-  // 曲线采样
+  // 曲线采样（可视世界范围，铺满视图；首个有效点 M 起笔）
+  const visWorldXMin = xMin + ((-transform.tx / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
+  const visWorldXMax = xMin + (((W - transform.tx) / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
   const curvePts: string[] = []
   const N = 160
+  let curveStarted = false
   for (let i = 0; i <= N; i++) {
-    const x = xMin + ((xMax - xMin) * i) / N
+    const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
     const y = f(x)
     if (!Number.isFinite(y)) continue
-    curvePts.push((i === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+    curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+    curveStarted = true
   }
 
     return (

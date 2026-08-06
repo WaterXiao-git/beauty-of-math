@@ -53,13 +53,14 @@ function makeFn(expr: string) {
 
 /** 数值搜索可行 δ：找最大 δ 使 x∈[a−δ,a+δ]∩定义域 内 |f(x)−L|<ε（δ 不唯一） */
 function feasibleDelta(f: (x: number) => number, a: number, L: number, eps: number, domain: [number, number]): number {
-  const hi = Math.min(a - domain[0], domain[1] - a)
+  if (!Number.isFinite(L)) return 0
+  const ext = (domain[1] - domain[0]) * 0.5
+  const hi = Math.max(0.1, Math.min(a - (domain[0] - ext), (domain[1] + ext) - a))
   if (hi <= 0) return 0
   const ok = (d: number): boolean => {
     const SAMPLES = 240
     for (let i = 0; i <= SAMPLES; i++) {
       const x = a - d + ((2 * d) / SAMPLES) * i
-      if (x < domain[0] || x > domain[1]) continue
       const y = f(x)
       if (Number.isNaN(y) || Math.abs(y - L) >= eps) return false
     }
@@ -187,7 +188,7 @@ export default function EpsilonDeltaDemo() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-xl font-bold text-white">{config.title}</h2>
-              <p className="text-xs text-slate-400 mt-1">{activeCase.name} · a = {a.toFixed(2)} · L = {L.toFixed(2)}</p>
+              <p className="text-xs text-slate-400 mt-1">{activeCase.name} · a = {a.toFixed(2)} · L = {Number.isFinite(L) ? L.toFixed(2) : '—'}</p>
             </div>
             <div className="flex items-center gap-3 text-xs text-slate-300 shrink-0">
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400" />函数曲线</span>
@@ -245,7 +246,7 @@ export default function EpsilonDeltaDemo() {
                   color="#2563eb"
                   constraint="curve"
                   curveY={f}
-                  onMove={(wx) => setAOverride(Math.min(Math.max(wx, dMin + 0.05), dMax - 0.05))}
+                  onMove={(wx) => setAOverride(Math.min(Math.max(wx, visWorldXMin + 0.1), visWorldXMax - 0.1))}
                   coord={coord}
                   transform={transform}
                   svgRef={svgRef}
@@ -268,7 +269,7 @@ export default function EpsilonDeltaDemo() {
             <div className="absolute bottom-3 left-3 flex items-center gap-2 flex-wrap">
               {[
                 { label: '趋近点', value: `a = ${a.toFixed(2)}` },
-                { label: '极限值', value: `L = ${L.toFixed(2)}` },
+                { label: '极限值', value: Number.isFinite(L) ? `L = ${L.toFixed(2)}` : 'L = —' },
                 { label: '误差 ε', value: epsilon.toFixed(2) },
                 { label: '可行 δ', value: delta > 0 ? `≈ ${delta.toFixed(3)}` : '—' },
               ].map((item) => (
@@ -341,9 +342,11 @@ export default function EpsilonDeltaDemo() {
               </svg>
               <p className="text-[13px] text-gray-600 leading-relaxed">
                 {step >= 4
-                  ? delta > 0
-                    ? `取 δ ≈ ${delta.toFixed(3)}，当 |x−a| < δ 时曲线全部落入 ε 带，极限定义成立。`
-                    : '当前 ε 过小（超出采样精度），请适当增大 ε。'
+                  ? !Number.isFinite(L)
+                    ? '当前 a 处函数无定义，请将目标点拖回函数定义域内。'
+                    : delta > 0
+                      ? `取 δ ≈ ${delta.toFixed(3)}，当 |x−a| < δ 时曲线全部落入 ε 带，极限定义成立。`
+                      : '当前 ε 过小（超出采样精度），请适当增大 ε。'
                   : '推进步骤至「验证定义」，将检查 δ 邻域内曲线是否全部落入 ε 带。'}
               </p>
             </div>

@@ -38,18 +38,20 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
   const { transform, handlers } = usePanZoom()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [a, b] = domain
+  // 固定视图范围 = 案例默认 domain（拖端点只滑动区间，不改变坐标系，避免背景拉伸）
+  const [viewMin, viewMax] = c.domain
   const [yMin, yMax] = c.yRange
   const breakX = (a + b) / 2
   const allSatisfied = conditions.continuous && conditions.differentiable && conditions.equalEndpoints
 
-  // 坐标映射
-  const sx = (x: number) => PAD_L + ((x - a) / (b - a)) * (W - PAD_L - PAD_R)
+  // 坐标映射（固定范围）
+  const sx = (x: number) => PAD_L + ((x - viewMin) / (viewMax - viewMin)) * (W - PAD_L - PAD_R)
   const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
-  const grid = calcViewportGrid(transform, W, H, [a, b], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
+  const grid = calcViewportGrid(transform, W, H, [viewMin, viewMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
   const coord = {
     sx,
     sy,
-    fromSx: (mx: number) => a + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (b - a),
+    fromSx: (mx: number) => viewMin + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (viewMax - viewMin),
     fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
   }
 
@@ -59,7 +61,7 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
   const pathLeft: string[] = []
   const pathRight: string[] = []
   for (let i = 0; i <= N; i++) {
-    const x = a + ((b - a) * i) / N
+    const x = viewMin + ((viewMax - viewMin) * i) / N
     const y = c.fn(x)
     if (!Number.isFinite(y)) continue
     const cmd = (i === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1)

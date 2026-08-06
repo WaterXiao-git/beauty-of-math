@@ -25,6 +25,8 @@ export default function RolleDemo() {
   const [step, setStep] = useState(4)
   const [playing, setPlaying] = useState(false)
   const [xiLocked, setXiLocked] = useState(false)
+  /** 可拖拽区间端点 [a, b]（切案例重置为案例默认 domain） */
+  const [domain, setDomain] = useState<[number, number]>(() => [CASES[0].domain[0], CASES[0].domain[1]])
 
   const activeCase = CASES.find((c) => c.id === caseId) ?? CASES[0]
 
@@ -43,6 +45,7 @@ export default function RolleDemo() {
     if (!next) return
     setCaseId(id)
     setConditions((prev) => ({ ...prev, equalEndpoints: next.naturallyEqual }))
+    setDomain([next.domain[0], next.domain[1]])
     setPlaying(false)
     setStep(4)
   }
@@ -67,6 +70,15 @@ export default function RolleDemo() {
           step={step}
           xiLocked={xiLocked}
           onToggleXiLock={() => setXiLocked((v) => !v)}
+          domain={domain}
+          onMoveEndpoint={(index, wx) => {
+            const xMin = activeCase.domain[0]
+            const xMax = activeCase.domain[1]
+            setDomain((prev) => {
+              if (index === 0) return [Math.min(Math.max(wx, xMin + 0.05), prev[1] - 0.1), prev[1]]
+              return [prev[0], Math.max(Math.min(wx, xMax - 0.05), prev[0] + 0.1)]
+            })
+          }}
         />
 
         {/* 右：参数控制与定理条件面板 */}

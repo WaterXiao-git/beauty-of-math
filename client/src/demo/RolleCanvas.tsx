@@ -1,6 +1,8 @@
 // 深色交互式画板：SVG 曲线 / 端点 / 中值点 / 辅助线 / 公式浮层 / 动态数据面板
+import { useRef } from 'react'
 import MathFormula from '../components/MathFormula/MathFormula'
 import { usePanZoom } from './usePanZoom'
+import GeoPoint from './geoboard/GeoPoint'
 import { calcViewportGrid } from './viewport'
 import type { RolleCase } from './rolleData'
 import { LEGEND } from './rolleData'
@@ -18,6 +20,10 @@ interface RolleCanvasProps {
   step: number
   xiLocked: boolean
   onToggleXiLock: () => void
+  /** 当前区间端点 [a, b]（可拖拽改变） */
+  domain: [number, number]
+  /** 端点拖动回调（index 0=A, 1=B），传世界 x */
+  onMoveEndpoint: (index: 0 | 1, x: number) => void
 }
 
 // SVG 画布尺寸
@@ -28,9 +34,10 @@ const PAD_R = 40
 const PAD_T = 44
 const PAD_B = 52
 
-export default function RolleCanvas({ case: c, conditions, step, xiLocked, onToggleXiLock }: RolleCanvasProps) {
+export default function RolleCanvas({ case: c, conditions, step, xiLocked, onToggleXiLock, domain, onMoveEndpoint }: RolleCanvasProps) {
   const { transform, handlers } = usePanZoom()
-  const [a, b] = c.domain
+  const svgRef = useRef<SVGSVGElement | null>(null)
+  const [a, b] = domain
   const [yMin, yMax] = c.yRange
   const breakX = (a + b) / 2
   const allSatisfied = conditions.continuous && conditions.differentiable && conditions.equalEndpoints
@@ -39,6 +46,12 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
   const sx = (x: number) => PAD_L + ((x - a) / (b - a)) * (W - PAD_L - PAD_R)
   const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
   const grid = calcViewportGrid(transform, W, H, [a, b], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
+  const coord = {
+    sx,
+    sy,
+    fromSx: (mx: number) => a + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (b - a),
+    fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
+  }
 
   // 曲线采样（支持连续性破坏：断口）
   const N = 120
@@ -64,8 +77,8 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
 
   // 等高时水平虚线（y=f(a)）
   const showEqualLine = conditions.equalEndpoints && step >= 2
-  // 中值点 + 水平切线（条件全满足且步进到扫描阶段）
-  const showXi = xi != null && allSatisfied && step >= 3
+  // 中值点 + 水平切线（条件全满足、ξ 在区间内且步进到扫描阶段）
+  const showXi = xi != null && xi > a && xi < b && allSatisfied && step >= 3
 
   return (
     <section className="flex-1 min-w-0 bg-slate-900 rounded-2xl p-4 md:p-6 flex flex-col gap-4">
@@ -87,7 +100,7 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
 
       {/* 画布 */}
       <div className="relative rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden flex-1 min-h-[380px]">
-        <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" {...handlers}>
+        <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" {...handlers}>
           {/* 视口网格与坐标轴（无限延伸） */}
           {grid.verts.map((v, i) => (
             <line key={"v" + i} x1={v.pos} y1={0} x2={v.pos} y2={H} stroke={v.major ? "#334155" : "#1e293b"} strokeWidth={1} />
@@ -132,13 +145,21 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
             />
           )}
 
-          {/* 端点 A / B（亮蓝圆点） */}
+          {/* 端点 A / B：可沿曲线拖动（改变区间 [a, b]，ξ 越界自动隐藏） */}
           {step >= 1 && (
             <g>
-              <circle cx={sx(a)} cy={sy(fa)} r={6} fill="#60a5fa" stroke="#0f172a" strokeWidth={2} />
-              <circle cx={sx(b)} cy={sy(fb)} r={6} fill="#60a5fa" stroke="#0f172a" strokeWidth={2} />
-              <text x={sx(a) - 14} y={sy(fa) - 10} fontSize={13} fontWeight={700} fill="#93c5fd">A</text>
-              <text x={sx(b) + 6} y={sy(fb) - 10} fontSize={13} fontWeight={700} fill="#93c5fd">B</text>
+              <GeoPoint
+                label="A" x={a} y={fa} color="#60a5fa"
+                constraint="curve" curveY={c.fn}
+                onMove={(wx) => onMoveEndpoint(0, wx)}
+                coord={coord} transform={transform} svgRef={svgRef} labelDx={-18} labelDy={-10}
+              />
+              <GeoPoint
+                label="B" x={b} y={fb} color="#60a5fa"
+                constraint="curve" curveY={c.fn}
+                onMove={(wx) => onMoveEndpoint(1, wx)}
+                coord={coord} transform={transform} svgRef={svgRef} labelDx={8} labelDy={-10}
+              />
             </g>
           )}
 

@@ -112,7 +112,7 @@ export default function DerivativeDemo() {
     const xMin = activeCase.domain[0]
     const xMax = activeCase.domain[1]
     const x0v = Math.min(Math.max(x0, xMin + 0.3), xMax - 0.3)
-    const hh = Math.max(0.05, h)
+    const hh = Math.min(Math.max(0.05, h), xMax - x0v - 0.05)
     const yP = f(x0v)
     const yQ = f(x0v + hh)
     const secantSlope = (yQ - yP) / hh

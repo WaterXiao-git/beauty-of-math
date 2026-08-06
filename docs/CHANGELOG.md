@@ -14,6 +14,22 @@
 
 ---
 
+## 2026-08-06 · 演示页拖拽体系完善：修复 Q 点「微动即飞」+ 全部预设接入可拖拽点
+
+**模块**：前端演示画布
+
+**内容**：
+- **修复根因**：svg 用 preserveAspectRatio="xMidYMid meet"，容器宽高比 ≠ viewBox(720×400) 时存在 letterbox 留白，旧换算把 clientX−rect.left 直接当 viewBox 坐标 → 拖拽点/缩放中心偏移，导数页 Q 点「微动即飞」；新增 svgViewBox.ts（clientToViewBox 按 viewBox+实际渲染尺寸换算），useDraggablePoint 拖拽换算与 usePanZoom 滚轮缩放中心同步修正
+- 导数页：Q 点 h 加上界 clamp（拖不出 domain，f(x₀+h) 不再爆炸）
+- ε−δ 页：目标点 a 改为可拖拽（沿曲线约束，拖动联动 L / ε 带 / δ 邻域 / 可行 δ；切案例重置）
+- 罗尔页：A/B 端点改为可拖拽（沿曲线约束，拖动改变区间 [a,b]，ξ 越界自动隐藏；切案例重置 domain）
+
+**涉及文件**：`client/src/demo/svgViewBox.ts`（新增）、`usePanZoom.ts`、`geoboard/useDraggablePoint.ts`、`DerivativeDemo.tsx`、`EpsilonDeltaDemo.tsx`、`RolleCanvas.tsx`、`RolleDemo.tsx`
+
+**验证**：tsc -b --noEmit exit 0；vite build 成功（53.4s）
+
+---
+
 ## 2026-08-06 · 演示页抽屉触角调宽
 
 **模块**：前端演示页

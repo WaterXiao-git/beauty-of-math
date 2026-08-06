@@ -1,6 +1,7 @@
 // 画布交互 hook：滚轮缩放（以鼠标位置为中心）+ 拖拽平移
 // 用于演示页的 SVG 画布；transform 应用到 <g> 包裹层
 import { useRef, useState } from 'react'
+import { clientToViewBox } from './svgViewBox'
 
 export interface PanZoom {
   scale: number
@@ -17,9 +18,10 @@ export function usePanZoom(minScale = 0.5, maxScale = 12) {
   // 滚轮缩放：围绕鼠标位置
   const onWheel = (e: React.WheelEvent<SVGSVGElement>) => {
     e.preventDefault()
-    const rect = e.currentTarget.getBoundingClientRect()
-    const mx = e.clientX - rect.left
-    const my = e.clientY - rect.top
+    const p = clientToViewBox(e.currentTarget, e.clientX, e.clientY)
+    if (!p) return
+    const mx = p.x
+    const my = p.y
     const factor = e.deltaY < 0 ? 1.1 : 0.9
     setTransform((t) => {
       const ns = Math.min(maxScale, Math.max(minScale, t.scale * factor))

@@ -1,12 +1,13 @@
 // ε−δ 极限定义演示（需求 4.1）：配置来自统一接口 /api/knowledge/epsilon-delta
 // 把「x 趋近 a 时 f(x) 趋近 L」转换为 ε 误差带 + δ 邻域，观察 ε 收紧时可行 δ 变化
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { compile } from 'mathjs'
 import DemoHeader from './DemoHeader'
 import { useNavigate } from 'react-router-dom'
 import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
+import GeoPoint from './geoboard/GeoPoint'
 import { calcViewportGrid } from './viewport'
 
 interface DemoCase {
@@ -77,10 +78,13 @@ function feasibleDelta(f: (x: number) => number, a: number, L: number, eps: numb
 export default function EpsilonDeltaDemo() {
   const navigate = useNavigate()
   const { transform, handlers } = usePanZoom()
+  const svgRef = useRef<SVGSVGElement | null>(null)
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
   const [loadError, setLoadError] = useState('')
   const [caseId, setCaseId] = useState('')
   const [epsilon, setEpsilon] = useState(0.6)
+  /** 可拖拽 a 覆盖值（null 用案例预设 anchor） */
+  const [aOverride, setAOverride] = useState<number | null>(null)
   const [step, setStep] = useState(4)
   const [playing, setPlaying] = useState(false)
 
@@ -110,11 +114,11 @@ export default function EpsilonDeltaDemo() {
   const derived = useMemo(() => {
     if (!activeCase) return null
     const f = makeFn(activeCase.expr)
-    const a = activeCase.anchor ?? 1
+    const a = aOverride ?? activeCase.anchor ?? 1
     const L = f(a)
     const delta = feasibleDelta(f, a, L, epsilon, activeCase.domain)
     return { f, a, L, delta }
-  }, [activeCase, epsilon])
+  }, [activeCase, epsilon, aOverride])
 
   if (loadError) {
     return (
@@ -151,6 +155,12 @@ export default function EpsilonDeltaDemo() {
   const visWorldXMin = dMin + ((visMapMin - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
   const visWorldXMax = dMin + ((visMapMax - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
   const grid = calcViewportGrid(transform, W, H, [dMin, dMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
+  const coord = {
+    sx,
+    sy,
+    fromSx: (mx: number) => dMin + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin),
+    fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
+  }
 
   // 曲线采样
   const curvePts: string[] = []
@@ -187,7 +197,7 @@ export default function EpsilonDeltaDemo() {
           </div>
 
           <div className="relative rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden flex-1 min-h-[380px]">
-            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" {...handlers}>
+            <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" {...handlers}>
           {/* 视口网格与坐标轴（无限延伸） */}
           {grid.verts.map((v, i) => (
             <line key={"v" + i} x1={v.pos} y1={0} x2={v.pos} y2={H} stroke={v.major ? "#334155" : "#1e293b"} strokeWidth={1} />
@@ -226,12 +236,22 @@ export default function EpsilonDeltaDemo() {
                 <path d={inBandPts.join(' ')} fill="none" stroke="#34d399" strokeWidth={3.2} strokeLinecap="round" />
               )}
 
-              {/* 目标点 (a, L) */}
+              {/* 目标点 a：可沿曲线拖动（L / ε 带 / δ 邻域 / 可行 δ 联动） */}
               {step >= 1 && (
-                <g>
-                  <circle cx={sx(a)} cy={sy(L)} r={6.5} fill="#ffffff" stroke="#2563eb" strokeWidth={2.5} />
-                  <text x={sx(a) + 10} y={sy(L) - 10} fontSize={13} fontWeight={700} fill="#93c5fd">(a, L)</text>
-                </g>
+                <GeoPoint
+                  label="a"
+                  x={a}
+                  y={L}
+                  color="#2563eb"
+                  constraint="curve"
+                  curveY={f}
+                  onMove={(wx) => setAOverride(Math.min(Math.max(wx, dMin + 0.05), dMax - 0.05))}
+                  coord={coord}
+                  transform={transform}
+                  svgRef={svgRef}
+                  labelDx={10}
+                  labelDy={-10}
+                />
               )}
 
               {/* 坐标刻度 */}
@@ -275,7 +295,7 @@ export default function EpsilonDeltaDemo() {
                 <button
                   key={c.id}
                   type="button"
-                  onClick={() => { setCaseId(c.id); setEpsilon(0.6); setStep(4) }}
+                  onClick={() => { setCaseId(c.id); setEpsilon(0.6); setStep(4); setAOverride(null) }}
                   className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-colors ${c.id === caseId ? 'bg-indigo-600 text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                   {c.name}

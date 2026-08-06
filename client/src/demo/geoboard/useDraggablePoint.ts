@@ -2,6 +2,7 @@
 // 点元素 mousedown 时 stopPropagation，阻止画布平移；mousemove/mouseup 挂 window
 import { useState } from 'react'
 import type { DragPointOptions } from './types'
+import { clientToViewBox } from '../svgViewBox'
 
 export type DragState = 'idle' | 'hover' | 'drag'
 
@@ -14,14 +15,13 @@ export function useDraggablePoint(opts: DragPointOptions) {
     e.preventDefault()
     const svg = opts.svgRef.current
     if (!svg) return
-    const rect = svg.getBoundingClientRect()
     setState('drag')
 
     const onMove = (ev: MouseEvent) => {
-      const mx = ev.clientX - rect.left
-      const my = ev.clientY - rect.top
-      const mapX = (mx - opts.transform.tx) / opts.transform.scale
-      const mapY = (my - opts.transform.ty) / opts.transform.scale
+      const p = clientToViewBox(svg, ev.clientX, ev.clientY)
+      if (!p) return
+      const mapX = (p.x - opts.transform.tx) / opts.transform.scale
+      const mapY = (p.y - opts.transform.ty) / opts.transform.scale
       let wx = opts.coord.fromSx(mapX)
       let wy = opts.coord.fromSy(mapY)
       if (opts.constraint === 'xAxis') wy = 0

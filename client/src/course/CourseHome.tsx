@@ -1,9 +1,8 @@
-// 课程主界面：桌面三栏知识工作区 + 可收起章节目录 + 移动端抽屉
+// 课程主界面：知识工作区 + 不占用主体宽度的章节目录抽屉
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 import { fetchPublishedCourses, fetchPublishedCourseTree } from '../services/contentCatalog'
-import ChapterSidebar from './ChapterSidebar'
 import CourseHeader from './CourseHeader'
 import DrawerSidebar from './DrawerSidebar'
 import KnowledgeMap from './KnowledgeMap'
@@ -48,7 +47,6 @@ function findChapter(chapters: CourseChapter[], pointId: string) {
 export default function CourseHome() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [navigationOpen, setNavigationOpen] = useState(false)
-  const [sidebarVisible, setSidebarVisible] = useState(true)
   const [chapters, setChapters] = useState<CourseChapter[]>(localChapters)
   const selectedPointId = searchParams.get('point') ?? DEFAULT_POINT_ID
 
@@ -99,14 +97,6 @@ export default function CourseHome() {
     setNavigationOpen(false)
   }
 
-  const toggleNavigation = () => {
-    if (window.matchMedia('(min-width: 1024px)').matches) {
-      setSidebarVisible((visible) => !visible)
-      return
-    }
-    setNavigationOpen(true)
-  }
-
   const breadcrumb = point
     ? ['首页', COURSE_TITLE, chapter?.title ?? '', section?.title ?? '', point.title].filter(Boolean)
     : ['首页', COURSE_TITLE]
@@ -132,8 +122,7 @@ export default function CourseHome() {
       <CourseHeader
         breadcrumb={breadcrumb}
         onBreadcrumbClick={handleBreadcrumbClick}
-        onOpenNavigation={toggleNavigation}
-        navigationVisible={sidebarVisible}
+        onOpenNavigation={() => setNavigationOpen(true)}
       />
 
       <DrawerSidebar
@@ -146,15 +135,6 @@ export default function CourseHome() {
 
       {point && (
         <div className="flex min-h-0 flex-1 gap-4 p-3 md:p-4">
-          {sidebarVisible && (
-            <ChapterSidebar
-              chapters={chapters}
-              selectedPointId={point.id}
-              onSelectPoint={selectPoint}
-              onCollapse={() => setSidebarVisible(false)}
-            />
-          )}
-
           <main className="flex min-w-0 flex-1 flex-col gap-4 overflow-y-auto">
             <KnowledgeMap
               point={point}

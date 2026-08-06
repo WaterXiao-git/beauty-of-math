@@ -10,8 +10,6 @@ interface CourseHeaderProps {
   onBreadcrumbClick?: (index: number) => void
   /** 打开隐藏的章节与知识点抽屉 */
   onOpenNavigation?: () => void
-  /** 桌面端章节目录是否处于展开状态 */
-  navigationVisible?: boolean
 }
 
 export default function CourseHeader({
@@ -19,7 +17,6 @@ export default function CourseHeader({
   askActive = false,
   onBreadcrumbClick,
   onOpenNavigation,
-  navigationVisible,
 }: CourseHeaderProps) {
   const last = breadcrumb.length - 1
   return (
@@ -31,13 +28,12 @@ export default function CourseHeader({
             type="button"
             onClick={onOpenNavigation}
             className="inline-flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-            aria-label={navigationVisible ? '收起章节目录' : '展开章节目录'}
-            aria-pressed={navigationVisible}
+            aria-label="打开章节与知识点"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
               <path d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-            <span className="hidden sm:inline">{navigationVisible ? '收起目录' : '课程目录'}</span>
+            <span className="hidden sm:inline">课程目录</span>
           </button>
         )}
         <Link to="/" className="flex items-center gap-2.5 shrink-0">

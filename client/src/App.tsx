@@ -21,6 +21,10 @@ function lazyRetry<T extends { default: React.ComponentType }>(
   })
 }
 
+const AskPage = lazyRetry(() => import('./ask/AskPage'))
+const RolleDemo = lazyRetry(() => import('./demo/RolleDemo'))
+const DemoPage = lazyRetry(() => import('./demo/DemoPage'))
+const TempExperiment = lazyRetry(() => import('./demo/TempExperiment'))
 const FourierExperiment = lazyRetry(() => import('./experiments/fourier/FourierExperiment'))
 const TrigExperiment = lazyRetry(() => import('./experiments/trigonometry/TrigExperiment'))
 const CalculusExperiment = lazyRetry(() => import('./experiments/calculus/CalculusExperiment'))
@@ -339,6 +343,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            <Route path="ask" element={<AskPage />} />
+            <Route path="rolle" element={<RolleDemo />} />
+            <Route path="demo/:pointId" element={<DemoPage />} />
+            <Route path="temp/:specId" element={<TempExperiment />} />
             <Route path="fourier" element={<FourierExperiment />} />
             <Route path="trigonometry" element={<TrigExperiment />} />
             <Route path="calculus" element={<CalculusExperiment />} />

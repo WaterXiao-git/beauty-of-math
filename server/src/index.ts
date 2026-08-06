@@ -1,7 +1,12 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
 import experimentsRouter from './routes/experiments.js'
 import bugsRouter from './routes/bugs.js'
+import knowledgeRouter from './routes/knowledge.js'
+import routeRouter from './routes/route.js'
+import answerRouter from './routes/answer.js'
+import generateRouter from './routes/generate.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -14,6 +19,10 @@ app.use(express.json())
 
 app.use('/api/experiments', experimentsRouter)
 app.use('/api/bugs', bugsRouter)
+app.use('/api/knowledge', knowledgeRouter)
+app.use('/api/route', routeRouter)
+app.use('/api/answer', answerRouter)
+app.use('/api/generate', generateRouter)
 
 // 管理员认证接口
 app.post('/api/admin/login', (req, res) => {

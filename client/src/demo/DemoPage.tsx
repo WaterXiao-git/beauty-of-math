@@ -1,8 +1,11 @@
 // 统一演示容器：/demo/:pointId
 // 按知识点 demoId 渲染对应模板容器；未实现模板按需求 2.2 说明原因并给出替代路径
-import { useParams, Link } from 'react-router-dom'
+// 左侧抽屉式侧边栏：收起时左侧留「目录」触角标志，点击弹出章节知识点抽屉（跳转 /demo/:pointId）
+import { useState } from 'react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import type { ComponentType } from 'react'
 import CourseHeader from '../course/CourseHeader'
+import DrawerSidebar from '../course/DrawerSidebar'
 import { COURSE_TITLE, findChapterOf, findPoint, findSectionOf } from '../course/courseData'
 import RolleDemo from './RolleDemo'
 import EpsilonDeltaDemo from './EpsilonDeltaDemo'
@@ -13,6 +16,26 @@ const demoRegistry: Record<string, ComponentType> = {
   rolle: RolleDemo,
   'epsilon-delta': EpsilonDeltaDemo,
   derivative: DerivativeDemo,
+}
+
+/** 收起态左侧「目录」触角：点击弹出抽屉侧边栏 */
+function DrawerTab({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label="打开章节目录"
+      title="章节目录"
+      className="absolute left-0 top-1/2 -translate-y-1/2 z-40 h-14 w-6 flex items-center justify-center rounded-r-xl bg-white/90 backdrop-blur-sm border border-l-0 border-gray-200 shadow-md hover:bg-indigo-600 hover:border-indigo-600 hover:translate-x-0.5 transition-all group"
+    >
+      <svg
+        className="w-3.5 h-3.5 text-gray-500 group-hover:text-white transition-colors"
+        viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round"
+      >
+        <path d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  )
 }
 
 /** 未实现模板的占位页（需求 2.2：说明原因 + 替代学习路径） */
@@ -77,14 +100,40 @@ function DemoPlaceholder({ pointId }: { pointId: string }) {
 
 export default function DemoPage() {
   const { pointId = '' } = useParams()
+  const navigate = useNavigate()
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const point = findPoint(pointId)
 
-  // 已实现演示：直接渲染对应模板容器
-  if (point?.demoId && demoRegistry[point.demoId]) {
-    const Demo = demoRegistry[point.demoId]
-    return <Demo />
+  // 抽屉选中知识点 → 跳转对应演示页（DrawerSidebar 内部选中后自动调 onClose）
+  const handleSelectPoint = (id: string) => {
+    setDrawerOpen(false)
+    navigate('/demo/' + id)
   }
 
-  // 未实现 / 未找到：占位页（说明原因 + 替代路径）
-  return <DemoPlaceholder pointId={pointId} />
+  // 已实现演示：直接渲染对应模板容器
+  let content
+  if (point?.demoId && demoRegistry[point.demoId]) {
+    const Demo = demoRegistry[point.demoId]
+    content = <Demo />
+  } else {
+    // 未实现 / 未找到：占位页（说明原因 + 替代路径）
+    content = <DemoPlaceholder pointId={pointId} />
+  }
+
+  return (
+    <div className="relative h-full">
+      {content}
+
+      {/* 收起态左侧触角：点击弹出章节目录抽屉 */}
+      {!drawerOpen && <DrawerTab onClick={() => setDrawerOpen(true)} />}
+
+      {/* 抽屉式侧边栏（章节知识点目录，选中跳转 /demo/:pointId） */}
+      <DrawerSidebar
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        selectedPointId={pointId}
+        onSelectPoint={handleSelectPoint}
+      />
+    </div>
+  )
 }

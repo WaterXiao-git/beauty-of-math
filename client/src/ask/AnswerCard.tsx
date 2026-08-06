@@ -22,8 +22,6 @@ export default function AnswerCard({ question, onRefine }: AnswerCardProps) {
 
   useEffect(() => {
     let cancelled = false
-    setState('loading')
-    setError('')
     fetch('/api/answer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

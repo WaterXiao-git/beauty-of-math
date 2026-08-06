@@ -23,7 +23,6 @@ interface TempSpec {
 
 function svgCartesian(spec: TempSpec): string {
   const W = 820, H = 520, PAD = 56
-  const xs = spec.points.map((p) => p.x)
   const ys = spec.points.map((p) => p.y)
   const xMin = spec.domain[0], xMax = spec.domain[1]
   const yMin = Math.min(...ys, -1) * 1.1, yMax = Math.max(...ys, 1) * 1.1
@@ -41,7 +40,7 @@ function svgCartesian(spec: TempSpec): string {
   body{margin:0;font-family:system-ui,sans-serif;background:#fff}
   .bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#334155}
   .bar b{color:#1d4ed8}</style></head><body>
-  <div class="bar"><span><b>${spec.title}</b>　y = ${spec.formula}</span><span>${spec.points.length} 采样点</span></div>
+  <div class="bar"><span><b>${spec.title}</b> · y = ${spec.formula}</span><span>${spec.points.length} 采样点</span></div>
   <svg viewBox="0 0 ${W} ${H}" width="100%" height="calc(100% - 41px)" xmlns="http://www.w3.org/2000/svg">
     ${grid.join('')}
     <line x1="${PAD}" y1="${sy(0)}" x2="${W - PAD}" y2="${sy(0)}" stroke="#94a3b8" stroke-width="1.4"/>
@@ -72,7 +71,7 @@ function svgPolar(spec: TempSpec): string {
   body{margin:0;font-family:system-ui,sans-serif;background:#fff}
   .bar{display:flex;justify-content:space-between;padding:10px 16px;border-bottom:1px solid #eef2f7;font-size:13px;color:#334155}
   .bar b{color:#1d4ed8}</style></head><body>
-  <div class="bar"><span><b>${spec.title}</b>　r = ${spec.formula}</span><span>极坐标</span></div>
+  <div class="bar"><span><b>${spec.title}</b> · r = ${spec.formula}</span><span>极坐标</span></div>
   <svg viewBox="0 0 ${W} ${H}" width="100%" height="calc(100% - 41px)" xmlns="http://www.w3.org/2000/svg">
     ${circles}
     <line x1="0" y1="${cy}" x2="${W}" y2="${cy}" stroke="#e2e8f0"/>

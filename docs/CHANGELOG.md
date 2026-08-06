@@ -1,3 +1,14 @@
+## 2026-08-06 · 同步课程平台前端并兼容现有 Agent 后端
+
+**模块**：课程主页、AI 提问页、统一演示页、服务端接口
+
+**内容**：合入 `WaterXiao-git/beauty-of-math` 的 `feat/frontend-course-demo-and-conventions` 前端成果；新增课程—章节—知识点三栏主页、AI 提问页、统一演示容器、临时实验页及 geoboard 交互画板。冲突处理中保留现有 `/api/agent/*` 路由和双模型配置，同时挂载新版前端依赖的 `/api/route`、`/api/knowledge`、`/api/answer`、`/api/generate` 兼容接口，并合并双方依赖。
+
+**涉及文件**：`client/src/course/`、`client/src/ask/`、`client/src/demo/`、`client/src/App.tsx`、`client/src/components/Layout/Layout.tsx`、`server/src/index.ts`、`server/src/data/`、`server/src/routes/`、`server/src/services/`、`server/package.json`
+
+**验证**：课程完整性 300/300；前端 TypeScript、Vite 生产构建（3664 modules）、ESLint、255 个测试文件 / 1851 项测试全部通过；后端构建、Manifest 300/300、175 项测试全部通过；`/api/health`、`/api/knowledge/:id`、`/api/route` 冒烟检查返回 200
+
+---
 ## 2026-08-06 · 演示页面包屑可点击
 
 **模块**：前端演示页

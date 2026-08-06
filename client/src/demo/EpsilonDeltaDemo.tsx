@@ -1,6 +1,7 @@
 // ε−δ 极限定义演示（需求 4.1）：配置来自统一接口 /api/knowledge/epsilon-delta
 // 把「x 趋近 a 时 f(x) 趋近 L」转换为 ε 误差带 + δ 邻域，观察 ε 收紧时可行 δ 变化
 import { useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { compile } from 'mathjs'
 import DemoHeader from './DemoHeader'
 import PlayerBar from './PlayerBar'
@@ -75,7 +76,7 @@ function feasibleDelta(f: (x: number) => number, a: number, L: number, eps: numb
 
 export default function EpsilonDeltaDemo() {
   const navigate = useNavigate()
-  const { transform, handlers, consumeDrag } = usePanZoom()
+  const { transform, handlers } = usePanZoom()
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
   const [loadError, setLoadError] = useState('')
   const [caseId, setCaseId] = useState('')
@@ -150,8 +151,6 @@ export default function EpsilonDeltaDemo() {
   const visWorldXMin = dMin + ((visMapMin - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
   const visWorldXMax = dMin + ((visMapMax - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
   const grid = calcViewportGrid(transform, W, H, [dMin, dMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
-  const inEps = (x: number) => Math.abs(f(x) - L) < epsilon
-
   // 曲线采样
   const curvePts: string[] = []
   const inBandPts: string[] = []

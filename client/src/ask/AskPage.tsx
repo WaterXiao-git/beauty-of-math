@@ -128,7 +128,7 @@ export default function AskPage() {
       })
       if (!res.ok) {
         const j = await res.json().catch(() => ({}))
-        throw new Error(j.error ?? HTTP )
+        throw new Error(j.error ?? `HTTP ${res.status}`)
       }
       const spec = await res.json()
       if (spec?.id) {
@@ -158,7 +158,7 @@ export default function AskPage() {
           />
         )
       case 'answer':
-        return <AnswerCard question={route.question} onRefine={focusInput} />
+        return <AnswerCard key={route.question} question={route.question} onRefine={focusInput} />
       case 'ai':
         return <GenerateConfirm route={route} onConfirmGenerate={handleConfirmGenerate} onRefine={focusInput} generating={generating} />
       case 'no-match':

@@ -1,11 +1,12 @@
 // 罗尔定理交互演示页：深色画板（左）+ 控制面板（右）+ 底部播放控制条
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import DemoHeader from './DemoHeader'
 import RolleCanvas from './RolleCanvas'
 import type { Conditions } from './RolleCanvas'
 import RolleControl from './RolleControl'
 import PlayerBar from './PlayerBar'
-import { CASES, judgmentText, stepDescription } from './rolleData'
+import { CASES, STEPS, judgmentText, stepDescription } from './rolleData'
 
 const CONDITION_LABELS: Record<keyof Conditions, string> = {
   continuous: '闭区间连续',

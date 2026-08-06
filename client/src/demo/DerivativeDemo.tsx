@@ -1,6 +1,7 @@
 // 导数的几何意义演示（需求 4.2）：配置来自统一接口 /api/knowledge/derivative
 // 固定点 P + 移动点 Q，观察 h→0 时割线斜率趋近切线斜率（差商极限）
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { compile, derivative as mathDerivative } from 'mathjs'
 import DemoHeader from './DemoHeader'
 import PlayerBar from './PlayerBar'
@@ -69,7 +70,7 @@ function makeDerivFn(expr: string) {
 
 export default function DerivativeDemo() {
   const navigate = useNavigate()
-  const { transform, handlers, consumeDrag } = usePanZoom()
+  const { transform, handlers } = usePanZoom()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
   const [loadError, setLoadError] = useState('')
@@ -116,7 +117,7 @@ export default function DerivativeDemo() {
     const yQ = f(x0v + hh)
     const secantSlope = (yQ - yP) / hh
     const tangentSlope = fp(x0v)
-    return { f, fp, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff: Math.abs(secantSlope - tangentSlope) }
+    return { f, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff: Math.abs(secantSlope - tangentSlope) }
   }, [activeCase, x0, h])
 
   if (loadError) {
@@ -141,7 +142,7 @@ export default function DerivativeDemo() {
     )
   }
 
-  const { f, fp, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff } = derived
+  const { f, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff } = derived
   const [xMin, xMax] = activeCase.domain
   const [yMin, yMax] = activeCase.yRange
   const sx = (x: number) => PAD_L + ((x - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R)

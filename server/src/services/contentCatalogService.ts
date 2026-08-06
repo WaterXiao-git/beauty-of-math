@@ -16,8 +16,9 @@ export interface PublishedKnowledgePointSummary {
   summary: string
   aliases: string[]
   tags: string[]
-  contentVersion: string
-  demoPath: string
+  availability: 'cataloged' | 'published'
+  contentVersion: string | null
+  demoPath: string | null
   templateKey: string | null
 }
 
@@ -44,6 +45,16 @@ function isPublicPublished(
   )
 }
 
+function isPublicNavigableKnowledgePoint(
+  knowledgePoint: KnowledgePoint,
+): boolean {
+  return (
+    knowledgePoint.visibility === 'public' &&
+    (knowledgePoint.status === 'cataloged' ||
+      knowledgePoint.status === 'published')
+  )
+}
+
 function getPrimaryTemplate(
   bundle: KnowledgePointVersionBundle,
 ): TemplateDefinition | null {
@@ -67,11 +78,30 @@ function toKnowledgeSummary(
   knowledgePoint: KnowledgePoint,
   repository: InMemoryContentRepository,
 ): PublishedKnowledgePointSummary | null {
+  if (!isPublicNavigableKnowledgePoint(knowledgePoint)) {
+    return null
+  }
+
+  const baseSummary = {
+    id: knowledgePoint.id,
+    code: knowledgePoint.code,
+    title: knowledgePoint.title,
+    summary: knowledgePoint.summary,
+    aliases: knowledgePoint.aliases,
+    tags: knowledgePoint.tags,
+  }
+
   if (
-    !isPublicPublished(knowledgePoint) ||
+    knowledgePoint.status === 'cataloged' ||
     !knowledgePoint.currentPublishedVersionId
   ) {
-    return null
+    return {
+      ...baseSummary,
+      availability: 'cataloged',
+      contentVersion: null,
+      demoPath: null,
+      templateKey: null,
+    }
   }
 
   const bundle = repository.getBundleByVersionId(
@@ -85,12 +115,8 @@ function toKnowledgeSummary(
   const template = getPrimaryTemplate(bundle)
 
   return {
-    id: knowledgePoint.id,
-    code: knowledgePoint.code,
-    title: knowledgePoint.title,
-    summary: knowledgePoint.summary,
-    aliases: knowledgePoint.aliases,
-    tags: knowledgePoint.tags,
+    ...baseSummary,
+    availability: 'published',
     contentVersion: bundle.version.contentVersion,
     demoPath: `/demo/${knowledgePoint.id}`,
     templateKey: template?.key ?? null,
@@ -149,7 +175,7 @@ export function listPublishedCourses(
 ) {
   const knowledgePoints = repository
     .listKnowledgePoints()
-    .filter(isPublicPublished)
+    .filter(isPublicNavigableKnowledgePoint)
 
   return repository
     .listCourses()
@@ -178,6 +204,11 @@ export function listPublishedCourses(
         knowledgePointCount: knowledgePoints.filter(
           (knowledgePoint) =>
             chapterIds.has(knowledgePoint.chapterId),
+        ).length,
+        publishedKnowledgePointCount: knowledgePoints.filter(
+          (knowledgePoint) =>
+            chapterIds.has(knowledgePoint.chapterId) &&
+            knowledgePoint.status === 'published',
         ).length,
       }
     })

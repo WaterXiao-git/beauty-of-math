@@ -23,6 +23,7 @@
 - 已加入 geoboard 交互画板基础能力，支持可拖拽点、曲线约束、贯穿线、画布平移与缩放；罗尔定理、ε−δ 和导数几何意义已提供统一演示样例。
 - 已建立课程、章节/小节、知识点、内容版本、案例、步骤和模板绑定的数据模型；首批三个演示知识点已经迁移为经过校验的 `1.0.0` 发布 Bundle。
 - 已增加可替换的内存内容仓储和 `/api/content` 只读接口，支持课程统计、层级目录、当前发布内容与历史版本读取。
+- 后端课程目录已扩展为 4 个章节、11 个小节和 18 个知识点，并区分 15 个 `cataloged` 目录项与 3 个 `published` 正式演示，避免把待制作内容误报为已发布页面。
 - 课程首页已按客户示意改为知识工作区：章节目录在桌面端和移动端均默认隐藏，点击顶部“课程目录”后以带遮罩的可搜索抽屉覆盖展开，不会挤压知识地图、同小节卡片和当前知识点详情。
 - 第一章已重组为“函数 / 极限 / 连续函数”三个小节，补齐函数表示法、函数性质、极限体系和连续函数性质等三级知识点；知识点选择写入 URL，支持浏览器前进、后退与链接分享。
 - 300 个正式实验迁移到独立 `/experiments` 目录页，通过 `/api/content/experiments` 浏览、搜索和筛选；已迁移知识点使用后端发布摘要与版本，但保留课程大纲的稳定导航标题。
@@ -257,7 +258,7 @@ npm run dev:server
 | `POST` | `/api/generate` | 新版提问页使用的临时实验生成接口 |
 | `GET` | `/api/content/courses` | 获取公开发布课程及章节、知识点数量 |
 | `GET` | `/api/content/experiments?q=&difficulty=&topic=&offset=&limit=` | 分页浏览、搜索并筛选 300 个正式实验 |
-| `GET` | `/api/content/courses/:courseId/tree` | 获取“章节—小节—知识点”发布目录树 |
+| `GET` | `/api/content/courses/:courseId/tree` | 获取完整“章节—小节—知识点”目录树，并返回 `cataloged/published` 可用状态 |
 | `GET` | `/api/content/knowledge-points/:id` | 获取知识点当前发布 Bundle 和主模板 |
 | `GET` | `/api/content/knowledge-points/:id/versions` | 获取知识点发布版本历史 |
 | `GET` | `/api/content/knowledge-points/:id/versions/:contentVersion` | 获取指定内容版本 Bundle |

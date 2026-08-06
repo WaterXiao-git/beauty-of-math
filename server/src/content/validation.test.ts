@@ -385,6 +385,23 @@ test(
       validateContentCatalog(snapshot),
       [],
     )
+
+    const catalogedSnapshot = structuredClone(snapshot)
+    catalogedSnapshot.knowledgePoints[0].status = 'cataloged'
+    catalogedSnapshot.knowledgePoints[0].currentPublishedVersionId = null
+    catalogedSnapshot.versions = []
+    assert.deepEqual(
+      validateContentCatalog(catalogedSnapshot),
+      [],
+    )
+
+    catalogedSnapshot.knowledgePoints[0].currentPublishedVersionId =
+      bundle.version.id
+    assert.ok(
+      validateContentCatalog(catalogedSnapshot).some(
+        (issue) => issue.code === 'cataloged-version-pointer',
+      ),
+    )
   },
 )
 

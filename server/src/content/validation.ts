@@ -378,15 +378,28 @@ export function validateContentCatalog(
     }
 
     if (
-      knowledgePoint.status === 'published' &&
+      (knowledgePoint.status === 'cataloged' ||
+        knowledgePoint.status === 'published') &&
       chapter.status !== 'published'
     ) {
       addIssue(
         issues,
         'unpublished-parent',
         `knowledgePoints.${knowledgePoint.id}.status`,
-        '已发布知识点的所属章节也必须已发布',
+        '已进入目录或已发布知识点的所属章节也必须已发布',
       )
+    }
+
+    if (knowledgePoint.status === 'cataloged') {
+      if (knowledgePoint.currentPublishedVersionId) {
+        addIssue(
+          issues,
+          'cataloged-version-pointer',
+          `knowledgePoints.${knowledgePoint.id}.currentPublishedVersionId`,
+          '仅进入目录的知识点不能指向已发布内容版本',
+        )
+      }
+      continue
     }
 
     if (knowledgePoint.status !== 'published') {

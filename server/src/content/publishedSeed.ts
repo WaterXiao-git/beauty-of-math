@@ -1,10 +1,13 @@
 import { createHash } from 'node:crypto'
 
 import { knowledgePoints as legacyKnowledgePoints } from '../data/knowledge.js'
+import {
+  createCourseNavigationChapters,
+  createCourseNavigationKnowledgePoints,
+} from './courseNavigationSeed.js'
 
 import type {
   AcceptanceCriterion,
-  Chapter,
   ContentCatalogSnapshot,
   Course,
   FormulaDefinition,
@@ -25,13 +28,6 @@ const IMPLEMENTATION_VERSION =
 
 interface ContentBlueprint {
   configId: string
-  chapterId: string
-  chapterCode: string
-  sectionId: string
-  sectionCode: string
-  knowledgeCode: string
-  aliases: string[]
-  tags: string[]
   prerequisites: string[]
   implementationRef: string
   capabilities: string[]
@@ -48,13 +44,6 @@ interface ContentBlueprint {
 const blueprints: ContentBlueprint[] = [
   {
     configId: 'epsilon-delta',
-    chapterId: 'chapter-functions-limits',
-    chapterCode: 'functions-limits-continuity',
-    sectionId: 'section-function-limit',
-    sectionCode: 'function-limit',
-    knowledgeCode: 'epsilon-delta-definition',
-    aliases: ['函数的极限', 'ε-δ 定义', 'epsilon delta'],
-    tags: ['微积分', '极限', '函数'],
     prerequisites: ['函数', '数列极限'],
     implementationRef:
       'client/src/demo/EpsilonDeltaDemo.tsx',
@@ -115,13 +104,6 @@ const blueprints: ContentBlueprint[] = [
   },
   {
     configId: 'derivative',
-    chapterId: 'chapter-derivatives',
-    chapterCode: 'derivatives-differentials',
-    sectionId: 'section-derivative-concept',
-    sectionCode: 'derivative-concept',
-    knowledgeCode: 'derivative-geometric-meaning',
-    aliases: ['导数', '割线趋近切线', '瞬时变化率'],
-    tags: ['微积分', '导数', '切线'],
     prerequisites: ['函数极限', '函数图像'],
     implementationRef:
       'client/src/demo/DerivativeDemo.tsx',
@@ -211,13 +193,6 @@ const blueprints: ContentBlueprint[] = [
   },
   {
     configId: 'rolle',
-    chapterId: 'chapter-mean-value-theorems',
-    chapterCode: 'mean-value-theorems',
-    sectionId: 'section-differential-mvt',
-    sectionCode: 'differential-mean-value-theorems',
-    knowledgeCode: 'rolle-theorem',
-    aliases: ['罗尔定理', '微分中值定理', '水平切线'],
-    tags: ['微积分', '中值定理', '导数'],
     prerequisites: ['连续函数', '导数'],
     implementationRef:
       'client/src/demo/RolleDemo.tsx',
@@ -319,77 +294,20 @@ const course: Course = {
   updatedAt: PUBLISHED_AT,
 }
 
-function createChapters(): Chapter[] {
-  return blueprints.flatMap((blueprint, index) => {
-    const config = legacyKnowledgePoints.find(
-      (item) => item.id === blueprint.configId,
-    )
-
-    if (!config) {
-      throw new Error(
-        `Missing legacy knowledge config: ${blueprint.configId}`,
-      )
-    }
-
-    const sortOrder = index + 1
-
-    return [
-      {
-        id: blueprint.chapterId,
-        courseId: course.id,
-        parentChapterId: null,
-        code: blueprint.chapterCode,
-        title: config.chapter,
-        description: `${config.chapter}课程章节。`,
-        status: 'published',
-        sortOrder,
-        createdAt: PUBLISHED_AT,
-        updatedAt: PUBLISHED_AT,
-      },
-      {
-        id: blueprint.sectionId,
-        courseId: course.id,
-        parentChapterId: blueprint.chapterId,
-        code: blueprint.sectionCode,
-        title: config.section ?? config.title,
-        description: `${config.title}所在课程小节。`,
-        status: 'published',
-        sortOrder: 1,
-        createdAt: PUBLISHED_AT,
-        updatedAt: PUBLISHED_AT,
-      },
-    ]
-  })
-}
-
 function createKnowledgePoint(
   blueprint: ContentBlueprint,
 ): KnowledgePoint {
-  const config = legacyKnowledgePoints.find(
+  const knowledgePoint = createCourseNavigationKnowledgePoints().find(
     (item) => item.id === blueprint.configId,
   )
 
-  if (!config) {
+  if (!knowledgePoint) {
     throw new Error(
-      `Missing legacy knowledge config: ${blueprint.configId}`,
+      `Missing course navigation knowledge point: ${blueprint.configId}`,
     )
   }
 
-  return {
-    id: config.id,
-    chapterId: blueprint.sectionId,
-    code: blueprint.knowledgeCode,
-    title: config.title,
-    summary: config.summary,
-    aliases: blueprint.aliases,
-    tags: blueprint.tags,
-    status: 'published',
-    visibility: 'public',
-    currentPublishedVersionId:
-      `version:${config.id}:1.0.0`,
-    createdAt: PUBLISHED_AT,
-    updatedAt: PUBLISHED_AT,
-  }
+  return knowledgePoint
 }
 
 function createAcceptanceCriteria(
@@ -707,14 +625,13 @@ export interface PublishedContentSeed {
 
 export function createPublishedContentSeed(): PublishedContentSeed {
   const bundles = blueprints.map(createBundle)
+  const knowledgePoints = createCourseNavigationKnowledgePoints()
 
   return {
     snapshot: {
       courses: [course],
-      chapters: createChapters(),
-      knowledgePoints: bundles.map(
-        (bundle) => bundle.knowledgePoint,
-      ),
+      chapters: createCourseNavigationChapters(),
+      knowledgePoints,
       versions: bundles.map(
         (bundle) => bundle.version,
       ),

@@ -43,14 +43,15 @@ export function mergePublishedCourseTree(
         if (!published) return { ...point }
 
         syncedPointIds.add(point.id)
+        const isPublished = published.availability === 'published'
         return {
           ...point,
           summary: published.summary,
           template: published.templateKey ?? point.template,
-          demoId: published.id,
+          demoId: isPublished ? published.id : point.demoId,
           backendId: published.id,
-          contentVersion: published.contentVersion,
-          source: 'published' as const,
+          contentVersion: published.contentVersion ?? undefined,
+          source: isPublished ? ('published' as const) : ('catalog' as const),
         }
       }),
     })),

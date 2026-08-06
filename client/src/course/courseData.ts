@@ -37,7 +37,7 @@ export interface KnowledgePoint {
   /** 当前发布内容版本 */
   contentVersion?: string
   /** 数据来源标记 */
-  source?: 'published'
+  source?: 'catalog' | 'published'
 }
 
 /** 小节（二级节点） */

@@ -1,3 +1,14 @@
+## 2026-08-06 · 后端完整课程导航目录
+
+**模块**：内容领域模型、课程目录种子、内容仓储服务、前端内容适配
+
+**内容**：新增 `cataloged` 目录状态，将高等数学（上册）补齐为 4 个章节、11 个小节和 18 个知识点；3 个已有完整 Bundle 保持 `published`，其余 15 个知识点作为公开目录项返回但不提供伪造演示路径。课程统计增加正式发布数量，课程树知识点增加 `availability` 以及可空的内容版本和演示路径；前端适配层能够覆盖全部目录摘要，并只为正式发布内容绑定统一演示页。
+
+**涉及文件**：`server/src/content/`、`server/src/services/contentCatalogService.ts`、`client/src/services/contentCatalog.ts`、`client/src/course/courseContentAdapter.ts`、`README.md`、`docs/knowledge-content-data-model.md`
+
+**验证**：服务端完整测试 186/186、Manifest 300/300 和 TypeScript 构建通过；前端完整测试 1852/1852、TypeScript、ESLint 与生产构建通过；运行中 API 冒烟检查返回 4 个章节、11 个小节、18 个知识点（3 published / 15 cataloged）。
+
+---
 ## 2026-08-06 · 恢复隐藏式章节目录
 
 **模块**：课程首页、课程目录抽屉

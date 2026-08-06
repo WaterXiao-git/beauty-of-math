@@ -29,12 +29,25 @@ const tree: PublishedCourseTree = {
           children: [],
           knowledgePoints: [
             {
+              id: 'function',
+              code: 'function-concept',
+              title: '函数的概念',
+              summary: '来自后端目录的函数摘要',
+              aliases: ['函数'],
+              tags: ['函数'],
+              availability: 'cataloged',
+              contentVersion: null,
+              demoPath: null,
+              templateKey: null,
+            },
+            {
               id: 'epsilon-delta',
               code: 'epsilon-delta-definition',
               title: 'ε−δ 极限定义（已发布）',
               summary: '来自后端的正式摘要',
               aliases: [],
               tags: ['极限'],
+              availability: 'published',
               contentVersion: '1.0.0',
               demoPath: '/demo/epsilon-delta',
               templateKey: 'epsilon-delta',
@@ -47,7 +60,7 @@ const tree: PublishedCourseTree = {
 }
 
 describe('mergePublishedCourseTree', () => {
-  it('overlays migrated points and keeps local points as fallback', () => {
+  it('区分后端目录项、正式发布内容和本地回退内容', () => {
     const result = mergePublishedCourseTree(chapters, tree)
     const points = result.chapters.flatMap((chapter) =>
       chapter.sections.flatMap((section) => section.points),
@@ -59,6 +72,8 @@ describe('mergePublishedCourseTree', () => {
     expect(limitPoint?.summary).toBe('来自后端的正式摘要')
     expect(limitPoint?.source).toBe('published')
     expect(result.syncedPointIds.has('limit-of-function')).toBe(true)
-    expect(points.find((point) => point.id === 'function')?.source).toBeUndefined()
+    expect(points.find((point) => point.id === 'function')?.source).toBe('catalog')
+    expect(points.find((point) => point.id === 'function')?.demoId).toBeUndefined()
+    expect(points.find((point) => point.id === 'function-representation')?.source).toBeUndefined()
   })
 })

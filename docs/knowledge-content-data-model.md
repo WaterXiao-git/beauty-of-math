@@ -23,6 +23,7 @@ V1 只确定稳定的领域协议和约束，不绑定 LowDB 或 PostgreSQL。�
 ### 2.1 稳定身份与可变内容分离
 
 - `KnowledgePoint` 是长期稳定的知识点身份和目录入口。
+- `cataloged` 知识点已进入公开课程目录，但尚未拥有可执行的审核版本；`published` 知识点必须绑定完整发布版本。
 - `KnowledgePointVersion` 是一次可审核、可发布、可复现的内容快照。
 - 案例、参数、步骤和模板绑定全部属于具体知识点版本。
 - `published` 版本不可原位修改；修改必须从旧版本创建新 `draft`。
@@ -191,6 +192,15 @@ kp-rolle-theorem
 ```
 
 它只保存标题、摘要、别名、标签和当前发布版本指针，不直接保存可变教学内容。
+
+知识点目录状态补充说明：
+
+- `draft`：目录元数据仍在编辑，不对学生可见；
+- `cataloged`：章节位置、标题和摘要已经确认，可以出现在课程导航中，但 `currentPublishedVersionId` 必须为空；
+- `published`：已经完成内容审核，必须指向一个包含案例、步骤和模板绑定的发布版本；
+- `archived`：从当前课程导航中下线。
+
+课程树接口会同时返回 `cataloged` 和 `published` 项，并通过 `availability`、可空的 `contentVersion` 与 `demoPath` 明确区分。详情与版本接口只允许读取 `published` 内容。
 
 ### 4.4 KnowledgePointVersion
 
@@ -419,13 +429,14 @@ Agent 路由索引最终应由已发布 `KnowledgePointVersionBundle` 生成，�
 
 已完成：
 
-1. 为三个首批知识点创建 V1 已发布 Bundle；
-2. 增加可替换的内存 Repository；
-3. 实现课程列表、目录树、当前发布内容和版本历史只读接口。
+1. 建立 4 个章节、11 个小节和 18 个知识点的完整课程导航目录；
+2. 为三个首批知识点创建 V1 已发布 Bundle，其余 15 项保持 `cataloged`；
+3. 增加可替换的内存 Repository；
+4. 实现课程列表、目录树、当前发布内容和版本历史只读接口。
 
 后续顺序：
 
 1. 将 Repository 替换为 LowDB 原型适配器；
 2. 实现草稿保存、校验、审核和发布命令；
-3. 让新版课程前端从 `/api/content` 读取目录与知识点；
+3. 将剩余 `cataloged` 知识点逐个补齐案例、步骤和模板后发布；
 4. 再接入内容表单与上下文 AI 助教。

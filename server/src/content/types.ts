@@ -2,6 +2,7 @@ export const CONTENT_SCHEMA_VERSION = 1 as const
 
 export const CATALOG_PUBLICATION_STATUSES = [
   'draft',
+  'cataloged',
   'published',
   'archived',
 ] as const

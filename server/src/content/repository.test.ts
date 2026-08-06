@@ -32,9 +32,10 @@ test(
       description:
         '以函数、极限、导数和微分中值定理为主线的交互式课程。',
       sortOrder: 1,
-      chapterCount: 3,
-      sectionCount: 3,
-      knowledgePointCount: 3,
+      chapterCount: 4,
+      sectionCount: 11,
+      knowledgePointCount: 18,
+      publishedKnowledgePointCount: 3,
     })
   },
 )
@@ -48,18 +49,21 @@ test(
     )
 
     assert.ok(tree)
-    assert.equal(tree.chapters.length, 3)
-    assert.equal(tree.chapters[0].children.length, 1)
-    assert.equal(
-      tree.chapters[0].children[0]
-        .knowledgePoints[0].id,
-      'epsilon-delta',
+    assert.equal(tree.chapters.length, 4)
+    assert.equal(tree.chapters[0].children.length, 3)
+
+    const points = tree.chapters.flatMap((chapter) =>
+      chapter.children.flatMap((section) => section.knowledgePoints),
     )
-    assert.equal(
-      tree.chapters[0].children[0]
-        .knowledgePoints[0].demoPath,
-      '/demo/epsilon-delta',
-    )
+    const functionPoint = points.find((point) => point.id === 'function')
+    const limitPoint = points.find((point) => point.id === 'epsilon-delta')
+
+    assert.equal(points.length, 18)
+    assert.equal(functionPoint?.availability, 'cataloged')
+    assert.equal(functionPoint?.contentVersion, null)
+    assert.equal(functionPoint?.demoPath, null)
+    assert.equal(limitPoint?.availability, 'published')
+    assert.equal(limitPoint?.demoPath, '/demo/epsilon-delta')
   },
 )
 
@@ -72,6 +76,7 @@ test(
     )
 
     assert.ok(detail)
+    assert.equal(detail.knowledgePoint.title, '导数')
     assert.equal(detail.version.contentVersion, '1.0.0')
     assert.match(
       detail.version.contentHash ?? '',
@@ -84,6 +89,18 @@ test(
       detail.primaryTemplate?.implementationRef,
       'client/src/demo/DerivativeDemo.tsx',
     )
+  },
+)
+
+test(
+  '仅进入课程目录的知识点不会伪装成已发布演示',
+  () => {
+    const detail = getPublishedKnowledgePoint(
+      'function',
+      createRepository(),
+    )
+
+    assert.equal(detail, null)
   },
 )
 

@@ -6,6 +6,7 @@ export interface PublishedCourseSummary {
   chapterCount: number
   sectionCount: number
   knowledgePointCount: number
+  publishedKnowledgePointCount: number
 }
 
 export interface PublishedKnowledgePointSummary {
@@ -15,8 +16,9 @@ export interface PublishedKnowledgePointSummary {
   summary: string
   aliases: string[]
   tags: string[]
-  contentVersion: string
-  demoPath: string
+  availability: 'cataloged' | 'published'
+  contentVersion: string | null
+  demoPath: string | null
   templateKey: string | null
 }
 

@@ -21,6 +21,8 @@ const demoRegistry: Record<string, ComponentType> = {
   'epsilon-delta': EpsilonDeltaDemo,
   derivative: DerivativeDemo,
   'function-plot': FunctionPlotDemo,
+  'quadratic-function': FunctionPlotDemo,
+  'absolute-value-function': FunctionPlotDemo,
 }
 
 /** 未实现模板的占位页（需求 2.2：说明原因 + 替代学习路径） */

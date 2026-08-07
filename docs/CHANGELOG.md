@@ -14,6 +14,18 @@
 
 ---
 
+## 2026-08-06 · 修复：二次函数/绝对值函数演示注册缺失（误显示建设中）
+
+**模块**：前端演示入口
+
+**内容**：DemoPage demoRegistry 补注册 quadratic-function / absolute-value-function → FunctionPlotDemo（组件内按 pointId 加载配置），两演示可正常打开
+
+**涉及文件**：`client/src/demo/DemoPage.tsx`
+
+**验证**：tsc -b --noEmit exit 0
+
+---
+
 ## 2026-08-06 · 批量迁移第一批：FunctionPlotDemo 泛化 + 二次函数/绝对值函数
 
 **模块**：前端演示模板 + server 配置层

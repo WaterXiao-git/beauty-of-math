@@ -197,6 +197,30 @@ export const chapters: CourseChapter[] = [
             related: ['函数'],
             demoId: 'composite-function',
           },
+          {
+            id: 'trigonometric-function',
+            title: '三角函数',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: '三角函数波形',
+            summary:
+              'y = A·sin(f·x + φ)：A 振幅、f 频率（周期 T=2π/f）、φ 初相；正弦与余弦相差 π/2。',
+            goals: ['掌握振幅/频率/相移', '理解周期公式', '认识 sin/cos 关系'],
+            related: ['函数'],
+            demoId: 'trigonometric-function',
+          },
+          {
+            id: 'conic-sections',
+            title: '圆锥曲线',
+            status: 'not-started',
+            previewLevel: 'C',
+            template: '离心率联动',
+            summary:
+              '椭圆/双曲线/抛物线统称圆锥曲线，离心率 e=c/a 分类：0<e<1 椭圆、e=1 抛物线、e>1 双曲线。',
+            goals: ['识别三类曲线方程', '掌握离心率分类', '理解焦点与准线'],
+            related: ['函数'],
+            demoId: 'conic-sections',
+          },
         ],
       },
       {
@@ -390,6 +414,7 @@ export const chapters: CourseChapter[] = [
             goals: ['理解泰勒公式的推导思想', '掌握常用函数的麦克劳林展开', '会用泰勒公式求极限与近似值'],
             related: ['导数', '极限的运算法则'],
             experimentPath: '/taylor',
+            demoId: 'taylor-approximation',
           },
         ],
       },

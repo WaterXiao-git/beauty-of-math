@@ -14,6 +14,22 @@
 
 ---
 
+## 2026-08-06 · 批量迁移第五批：三角函数 / 圆锥曲线 / 泰勒公式（纯配置）
+
+**模块**：server 配置层 / 课程数据
+
+**内容**（内容对齐原知识点旧页）：
+- **三角函数**（/demo/trigonometric-function）：A·sin(f·x+φ) 与 A·cos(f·x+φ) 双曲线，A/f/φ 滑块，面板显示振幅/频率/周期/初相（对应旧页参数 amplitude/frequency/phase 与公式卡 sin²+cos²=1）
+- **圆锥曲线**（/demo/conic-sections）：椭圆（横/竖）/双曲线/抛物线 4 案例，a/b/p 滑块，上下支 expr+expr2，tips 覆盖焦点/离心率/渐近线（对应旧页定义与教学步骤）
+- **泰勒公式**（/demo/taylor-approximation）：原函数 + 泰勒多项式双曲线，eˣ 2/4 阶、sin x 3/5 阶 4 案例（对应旧页函数选择与阶数参数）；课程知识点「泰勒公式」挂 demoId
+- courseData 新增「三角函数」「圆锥曲线」知识点；DemoPage 注册 3 行；全程零前端模板改动（验证配置驱动产能）
+
+**涉及文件**：`server/src/data/knowledge.ts`、`client/src/course/courseData.ts`、`client/src/demo/DemoPage.tsx`
+
+**验证**：server tsc 0；client tsc 0；vite build 成功（1m）；三个新接口实测 200（各 4 案例 + dataItems/tips）
+
+---
+
 ## 2026-08-06 · FunctionPlotDemo 改造为纯配置驱动通用模板 + 配置指南
 
 **模块**：前端演示模板 / 配置体系

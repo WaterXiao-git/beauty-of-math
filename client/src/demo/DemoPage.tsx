@@ -1,7 +1,7 @@
 // 统一演示容器：/demo/:pointId
 // 按知识点 demoId 渲染对应模板容器；未实现模板按需求 2.2 说明原因并给出替代路径
 // 左侧抽屉式侧边栏：收起时左侧留「目录」触角标志，点击弹出章节知识点抽屉（跳转 /demo/:pointId）
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import type { ComponentType } from 'react'
 import CourseHeader from '../course/CourseHeader'
@@ -12,6 +12,8 @@ import DrawerTab from './DrawerTab'
 import EpsilonDeltaDemo from './EpsilonDeltaDemo'
 import DerivativeDemo from './DerivativeDemo'
 import FunctionPlotDemo from './FunctionPlotDemo'
+import AiCopilot from './AiCopilot'
+import type { AiCopilotContext } from './AiCopilot'
 
 /** 已实现的演示模板注册表：demoId -> 演示页组件 */
 const demoRegistry: Record<string, ComponentType> = {
@@ -85,7 +87,25 @@ export default function DemoPage() {
   const { pointId = '' } = useParams()
   const navigate = useNavigate()
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const [aiOpen, setAiOpen] = useState(false)
   const point = findPoint(pointId)
+
+  // AI 助教上下文：按当前演示模板映射（后续可改为从演示页状态实时提取）
+  const aiContext = useMemo<AiCopilotContext>(() => {
+    const t = point?.title ?? '未知知识点'
+    switch (point?.demoId) {
+      case 'epsilon-delta':
+        return { pointTitle: t, formula: 'lim(x→a) f(x) = L', currentLabel: 'a', currentValue: '1.00', limitLabel: 'L', limitValue: 'f(a)' }
+      case 'derivative':
+        return { pointTitle: t, formula: "f'(x₀) = lim(h→0) (f(x₀+h)−f(x₀))/h", currentLabel: 'x₀', currentValue: '0.50', limitLabel: "f'(x₀)", limitValue: '切线斜率' }
+      case 'rolle':
+        return { pointTitle: t, formula: 'f(a)=f(b) ⇒ ∃ξ∈(a,b), f′(ξ)=0', currentLabel: 'ξ', currentValue: '0.00', limitLabel: "f'(ξ)", limitValue: '0' }
+      case 'function-plot':
+        return { pointTitle: t, formula: 'y = k·x + b', currentLabel: 'k', currentValue: '1.00', limitLabel: 'b', limitValue: '0.00' }
+      default:
+        return { pointTitle: t, formula: '—', currentLabel: '—', currentValue: '—', limitLabel: '—', limitValue: '—' }
+    }
+  }, [point])
 
   // 抽屉选中知识点 → 跳转对应演示页（DrawerSidebar 内部选中后自动调 onClose）
   const handleSelectPoint = (id: string) => {
@@ -117,6 +137,25 @@ export default function DemoPage() {
         selectedPointId={pointId}
         onSelectPoint={handleSelectPoint}
       />
+
+      {/* 右侧悬浮 AI 助教入口（收起态） */}
+      {!aiOpen && (
+        <button
+          type="button"
+          onClick={() => setAiOpen(true)}
+          className="fixed right-0 top-1/2 -translate-y-1/2 z-40 h-16 w-9 flex items-center justify-center rounded-l-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md hover:shadow-lg transition-all group"
+          aria-label="打开 AI 数学助教"
+          title="AI 数学助教"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z" />
+            <path d="M19 14l.9 2.6L22.5 17.5l-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9L19 14z" opacity={0.7} />
+          </svg>
+        </button>
+      )}
+
+      {/* AI 数学助教侧边栏（右侧悬浮/可收起） */}
+      <AiCopilot open={aiOpen} onClose={() => setAiOpen(false)} context={aiContext} />
     </div>
   )
 }

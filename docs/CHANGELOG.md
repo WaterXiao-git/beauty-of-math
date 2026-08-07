@@ -14,6 +14,20 @@
 
 ---
 
+## 2026-08-06 · 演示页接入 AI 数学助教侧边栏（右侧悬浮/可收起）
+
+**模块**：前端演示页
+
+**内容**：
+- 新增 AiCopilot 组件（AI Copilot Sidebar，按 UI 描述实现）：fixed right-0 top-16 bottom-0 纯白抽屉（border-l + shadow-lg），头部（星光图标 + 「AI 数学助教」+ 关闭）、当前上下文卡（「当前上下文」可收起/展开；知识点/公式/当前项/极限值 4 项，灰底圆角）、对话消息列表（用户右侧灰气泡 + AI 左侧蓝紫气泡，支持 MathFormula 渲染 LaTeX，AI 气泡底部 复制/点赞/点踩 工具栏）、底部胶囊输入框 + 圆形蓝色发送按钮（本地模拟回复，后续接 /api/answer）
+- DemoPage 统一接入：右侧悬浮「✦」入口按钮（收起态），展开/收起动画；上下文数据按当前演示模板映射（ε−δ/导数/罗尔/function-plot 各自提供公式与当前值），4 个演示页 + 占位页全部生效
+
+**涉及文件**：`client/src/demo/AiCopilot.tsx`（新增）、`DemoPage.tsx`
+
+**验证**：tsc -b --noEmit exit 0；vite build 成功（55.4s）
+
+---
+
 ## 2026-08-06 · 阶段2试点：一次函数图像（function-plot 模板，配置驱动 + 统一排版）
 
 **模块**：前端演示模板 + server 配置层

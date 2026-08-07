@@ -14,6 +14,22 @@
 
 ---
 
+## 2026-08-06 · FunctionPlotDemo 改造为纯配置驱动通用模板 + 配置指南
+
+**模块**：前端演示模板 / 配置体系
+
+**内容**：
+- 模板全面配置化：数据面板项（dataItems：expr 基于 params 求值 / text 支持 {参数} 插值）、观察提示（tips 插值）、图例（legend）、概念公式（formula）均**配置优先**，原 shape 判断降级为兜底（向后兼容全部 11 个演示）
+- 新增 docs/CONFIG_GUIDE.md：配置编写指南（最小模板/内置 shape 表/注册三步）
+- function-plot 配置改为配置驱动示例（dataItems=4/tips=3/legend=3/formula），验证链路
+- 后续新增演示只需填配置（knowledge.ts + courseData + registry 一行），前端零改动
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`、`server/src/data/knowledge.ts`、`docs/CONFIG_GUIDE.md`（新增）
+
+**验证**：client tsc 0；server tsc 0；vite build 成功（1m2s）；/api/knowledge/function-plot 实测返回 formula/dataItems(4)/tips(3)/legend(3)
+
+---
+
 ## 2026-08-06 · 批量迁移第四批：分段函数 + 复合函数
 
 **模块**：前端演示模板 / server 配置层

@@ -16,6 +16,14 @@ export interface KnowledgeCase {
   expr2?: string
   /** 分段函数定义（shape=piecewise；每段表达式与区间，参数化） */
   pieces?: { expr: string; from?: number | null; to?: number | null }[]
+  /** 概念要点公式（KaTeX） */
+  formula?: string
+  /** 画布图例 */
+  legend?: { color: string; label: string }[]
+  /** 数据面板项（expr 用 mathjs 基于 params 求值；text 静态，支持 {参数名} 插值） */
+  dataItems?: { label: string; expr?: string; text?: string }[]
+  /** 观察提示（text 支持 {参数名} 插值） */
+  tips?: { icon?: string; text: string }[]
   /** 定义域 [a, b] */
   domain: [number, number]
   /** 视图 y 范围 [min, max] */
@@ -69,6 +77,14 @@ export interface KnowledgeConfig {
   template: 'epsilon-delta' | 'derivative' | 'theorem-demo' | 'function-plot'
   /** 知识点简介 */
   summary: string
+  /** 概念要点公式（KaTeX，case 未指定时用） */
+  formula?: string
+  /** 画布图例 */
+  legend?: { color: string; label: string }[]
+  /** 数据面板项（expr 用 mathjs 基于 params 求值；text 静态，支持 {参数名} 插值） */
+  dataItems?: { label: string; expr?: string; text?: string }[]
+  /** 观察提示（text 支持 {参数名} 插值） */
+  tips?: { icon?: string; text: string }[]
   /** 学习目标 */
   goals: string[]
   /** 审核后的默认案例 id（需求 1.3：首次进入先显示审核默认案例） */
@@ -280,6 +296,23 @@ export const knowledgePoints: KnowledgeConfig[] = [
       '会由 k、b 判断单调性并求出与坐标轴的交点',
     ],
     defaultCase: 'k1b0',
+    formula: 'y = kx + b',
+    legend: [
+      { color: '#60a5fa', label: '直线' },
+      { color: '#c084fc', label: 'y 截距' },
+      { color: '#fbbf24', label: 'x 截距' },
+    ],
+    dataItems: [
+      { label: '斜率 k', expr: 'k' },
+      { label: 'y 截距', expr: 'b' },
+      { label: 'x 截距', expr: '-b/k' },
+      { label: '截距点', text: '(0, {b})' },
+    ],
+    tips: [
+      { icon: '📈', text: '斜率 {k}，y 截距 {b}：直线由这两者完全确定。' },
+      { icon: '🖱️', text: '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' },
+      { icon: '🎯', text: 'x 截距 = −b/k：拖动 x 截距点可直观验证该关系。' },
+    ],
     cases: [
       {
         id: 'k1b0',

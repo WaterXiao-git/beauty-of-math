@@ -35,6 +35,14 @@ interface DemoCase {
   expr2?: string
   /** 分段函数定义（shape=piecewise；每段表达式与区间，参数化） */
   pieces?: { expr: string; from?: number | null; to?: number | null }[]
+  /** 概念要点公式（KaTeX） */
+  formula?: string
+  /** 画布图例 */
+  legend?: { color: string; label: string }[]
+  /** 数据面板项（expr 用 mathjs 基于 params 求值；text 静态文本） */
+  dataItems?: { label: string; expr?: string; text?: string }[]
+  /** 观察提示（text 支持 {参数名} 插值） */
+  tips?: { icon?: string; text: string }[]
   domain: [number, number]
   yRange: [number, number]
   params?: Record<string, number>
@@ -55,6 +63,14 @@ interface KnowledgeConfig {
   id: string
   title: string
   summary: string
+  /** 概念要点公式（KaTeX，case 未指定时用） */
+  formula?: string
+  /** 画布图例 */
+  legend?: { color: string; label: string }[]
+  /** 数据面板项（expr 用 mathjs 基于 params 求值；text 静态，支持 {参数名} 插值） */
+  dataItems?: { label: string; expr?: string; text?: string }[]
+  /** 观察提示（text 支持 {参数名} 插值） */
+  tips?: { icon?: string; text: string }[]
   goals: string[]
   defaultCase: string
   cases: DemoCase[]
@@ -246,9 +262,22 @@ export default function FunctionPlotDemo() {
 
   const setParam = (key: string, value: number) => setParams((prev) => ({ ...prev, [key]: value }))
 
-  // 数据面板项
+  // 数据面板项：dataItems 配置优先（expr 基于 params 求值 / text 静态），否则按 shape 兜底
   const panelItems: { label: string; value: string }[] = []
-  if (shape === 'linear') {
+  if (config.dataItems && config.dataItems.length > 0) {
+    for (const it of config.dataItems) {
+      let value = it.text ?? '—'
+      if (it.expr) {
+        try {
+          const v = compile(it.expr).evaluate(params)
+          value = Number.isFinite(v) ? (Number.isInteger(v) ? String(v) : v.toFixed(2)) : '—'
+        } catch {
+          value = '—'
+        }
+      }
+      panelItems.push({ label: it.label, value })
+    }
+  } else if (shape === 'linear') {
     panelItems.push(
       { label: '斜率 k', value: slope.toFixed(2) },
       { label: 'y 截距', value: yIntercept.toFixed(2) },
@@ -305,6 +334,14 @@ export default function FunctionPlotDemo() {
     )
   }
 
+  // 观察提示：tips 配置优先（{参数名} 插值），否则 shape 兜底
+  const observeTips = config.tips && config.tips.length > 0
+    ? config.tips.map((t) => ({
+        icon: t.icon ?? '✨',
+        text: t.text.replace(/\{(\w+)\}/g, (_m: string, key: string) => (params[key] ?? 0).toFixed(2)),
+      }))
+    : []
+
   // 教学判断文案
   const judgmentText =
     shape === 'linear'
@@ -340,6 +377,15 @@ export default function FunctionPlotDemo() {
               <p className="text-xs text-slate-400 mt-1">{activeCase.name} · {Object.entries(params).map(([k, v]) => `${k} = ${v.toFixed(2)}`).join(' · ')}</p>
             </div>
             <div className="flex items-center gap-3 text-xs text-slate-300 shrink-0">
+              {config.legend && config.legend.length > 0 ? (
+                config.legend.map((l, i) => (
+                  <span key={i} className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full" style={{ background: l.color }} />
+                    {l.label}
+                  </span>
+                ))
+              ) : (
+                <>
               <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400" />曲线</span>
               {shape === 'quadratic' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-400" />顶点</span>}
               {shape === 'quadratic' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400" />根</span>}
@@ -351,6 +397,8 @@ export default function FunctionPlotDemo() {
               {shape === 'rational' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gray-400" />渐近线</span>}
               {shape === 'inverse-pair' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-400" />函数 f</span>}
               {shape === 'inverse-pair' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400" />反函数 f⁻¹</span>}
+                </>
+              )}
             </div>
           </div>
 
@@ -511,7 +559,7 @@ export default function FunctionPlotDemo() {
         {/* 右：控制面板（Card Stack） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
-          <ConceptCard formula={shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : shape === 'inverse-pair' ? 'y = f(x) \\iff x = f^{-1}(y)' : shape === 'composite' ? 'y = f(g(x))' : 'y = f_i(x), x \\in D_i'}>
+          <ConceptCard formula={activeCase.formula ?? config.formula ?? (shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : shape === 'inverse-pair' ? 'y = f(x) \\iff x = f^{-1}(y)' : shape === 'composite' ? 'y = f(g(x))' : 'y = f_i(x), x \\in D_i')}>
             {config.summary}
           </ConceptCard>
 
@@ -557,7 +605,10 @@ export default function FunctionPlotDemo() {
 
           {/* 观察提示 */}
           <ObserveTipCard
-            tips={[
+            tips={
+              observeTips.length > 0
+                ? observeTips
+                : [
               {
                 icon: '📈',
                 text:
@@ -569,7 +620,8 @@ export default function FunctionPlotDemo() {
               },
               { icon: '🖱️', text: shape === 'linear' ? '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' : '拖动背景平移 / 滚轮缩放观察曲线；调节参数滑块看图像变化。' },
               { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : shape === 'rational' ? 'x→h 时 |y|→∞（垂直渐近线），x→∞ 时 y→k（水平渐近线）。' : shape === 'inverse-pair' ? '反函数图像关于 y=x 对称；拖背景平移观察对称性。' : shape === 'piecewise' ? '分段点 x₀ 处：左右极限与 f(x₀) 相等则连续，否则间断。' : shape === 'composite' ? '复合求值顺序：x → g(x) → f(g(x))；观察内层值域是否落入外层定义域。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
-            ]}
+              ]
+            }
           />
         </aside>
       </div>

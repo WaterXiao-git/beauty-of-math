@@ -221,6 +221,18 @@ export const chapters: CourseChapter[] = [
             related: ['函数'],
             demoId: 'conic-sections',
           },
+          {
+            id: 'function-transform',
+            title: '函数的变换',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: '平移伸缩翻折',
+            summary:
+              'g(x) = a·f(b(x−h)) + k：h/k 管平移、a/b 管伸缩、负号带来翻折。',
+            goals: ['掌握变换参数语义', '理解平移不改形状', '会用变换式描述图像'],
+            related: ['函数'],
+            demoId: 'function-transform',
+          },
         ],
       },
       {
@@ -415,6 +427,18 @@ export const chapters: CourseChapter[] = [
             related: ['导数', '极限的运算法则'],
             experimentPath: '/taylor',
             demoId: 'taylor-approximation',
+          },
+          {
+            id: 'power-series',
+            title: '幂级数',
+            status: 'not-started',
+            previewLevel: 'C',
+            template: '部分和逼近',
+            summary:
+              '幂级数 Σaₙxⁿ 在收敛半径 |x|<R 内逼近精确函数，区间外发散。',
+            goals: ['理解部分和逼近', '掌握收敛半径', '对比常见级数'],
+            related: ['泰勒公式'],
+            demoId: 'power-series',
           },
         ],
       },

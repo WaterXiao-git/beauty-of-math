@@ -31,6 +31,8 @@ const demoRegistry: Record<string, ComponentType> = {
   'trigonometric-function': FunctionPlotDemo,
   'conic-sections': FunctionPlotDemo,
   'taylor-approximation': FunctionPlotDemo,
+  'function-transform': FunctionPlotDemo,
+  'power-series': FunctionPlotDemo,
 }
 
 /** 未实现模板的占位页（需求 2.2：说明原因 + 替代学习路径） */

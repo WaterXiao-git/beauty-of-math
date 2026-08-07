@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-08-06 · 批量迁移第六批：函数变换 / 幂级数（纯配置）
+
+**模块**：server 配置层 / 课程数据
+
+**内容**（内容对齐原知识点旧页）：
+- **函数变换**（/demo/function-transform）：g(x)=a·f(b(x−h))+k 参数化，a/b/h/k 四滑块，基函数 x²/sin/|x|/x³ 4 案例（基曲线 + 变换曲线双线对比，对应旧页基函数按钮与参数面板）
+- **幂级数**（/demo/power-series）：精确函数 + 部分和双曲线，5 案例（几何级数 4/8 项、eˣ 4 项、ln(1+x)、arctan），tips 覆盖收敛半径（对应旧页级数选项与项数）
+- courseData 新增「函数的变换」（1.1）「幂级数」（3.2 泰勒公式小节）知识点；DemoPage 注册 2 行；前端模板零改动
+
+**涉及文件**：`server/src/data/knowledge.ts`、`client/src/course/courseData.ts`、`client/src/demo/DemoPage.tsx`
+
+**验证**：双端 tsc 0；vite build 成功（58.9s）；两新接口实测 200（4/5 案例 + 双曲线）
+
+---
+
 ## 2026-08-06 · 曲线曲率自适应细分（Desmos 式，极限/函数曲线更精细）
 
 **模块**：前端演示画布

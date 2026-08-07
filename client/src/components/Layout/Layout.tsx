@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom'
 import Sidebar from './Sidebar'
+import ExperimentShell from '../../demo/ExperimentShell'
 import { NarrationProvider, useNarrationOptional } from '../../contexts/NarrationContext'
 import { NarrationController } from '../NarrationController'
 import { BugReportButton } from '../BugReport'
@@ -17,6 +18,11 @@ function LayoutContent() {
     location.pathname === '/rolle' ||
     location.pathname.startsWith('/demo/') ||
     location.pathname.startsWith('/temp/')
+  // 旧实验页：非课程平台且非 admin/valentine 的路由套统一外壳（DemoHeader + 抽屉）
+  const isLegacyExperiment =
+    !isCourseShell &&
+    !location.pathname.startsWith('/admin') &&
+    !location.pathname.startsWith('/valentine')
   const isNarrationMode = narration?.playbackState.isNarrationMode || false
   const isPresenterMode = narration?.playbackState.isPresenterMode || false
 
@@ -26,8 +32,8 @@ function LayoutContent() {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      {/* 移动端顶部导航栏（首页由 CourseHome 自带 Header 接管） */}
-      {!isCourseShell && (
+      {/* 移动端顶部导航栏（首页由 CourseHome 自带 Header 接管；旧实验页由外壳接管） */}
+      {!isCourseShell && !isLegacyExperiment && (
         <header className="fixed top-0 left-0 right-0 z-40 md:hidden bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white shadow-lg">
           <div className="flex items-center px-4 py-3 gap-3">
             {isExperimentPage ? (
@@ -62,7 +68,7 @@ function LayoutContent() {
       )}
 
       {/* 移动端遮罩层 */}
-      {sidebarOpen && !isCourseShell && (
+      {sidebarOpen && !isCourseShell && !isLegacyExperiment && (
         <div
           className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden"
           onClick={() => setSidebarOpen(false)}
@@ -70,19 +76,20 @@ function LayoutContent() {
       )}
 
       {/* 侧边栏（首页使用 CourseHome 的章节目录，隐藏全局侧栏） */}
-      {!isCourseShell && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
+      {!isCourseShell && !isLegacyExperiment && <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />}
 
       {/* 主内容区：首页全屏（CourseHome 自带 Header/三栏），其余页面保持原布局 */}
-      <main
-        className={
-          isCourseShell
-            ? 'flex-1 min-h-0'
-            : `flex-1 overflow-auto md:ml-0 pt-14 md:pt-0 transition-all duration-300 ${isNarrationMode ? 'pb-20' : ''}`
-        }
-      >
-        {isCourseShell ? (
+      {isCourseShell ? (
+        <main className="flex-1 min-h-0">
           <Outlet />
-        ) : (
+        </main>
+      ) : isLegacyExperiment ? (
+        /* 旧实验页：统一外壳（DemoHeader / 内容区 / 触角 / 抽屉） */
+        <ExperimentShell />
+      ) : (
+        <main
+          className={`flex-1 overflow-auto md:ml-0 pt-14 md:pt-0 transition-all duration-300 ${isNarrationMode ? 'pb-20' : ''}`}
+        >
           <div className="min-h-full p-4 md:p-8 flex flex-col">
             <div className="animate-fade-in flex-1">
               <Outlet />
@@ -103,8 +110,8 @@ function LayoutContent() {
               </p>
             </footer>
           </div>
-        )}
-      </main>
+        </main>
+      )}
 
       {/* 底部讲解控制条 - 仅在非演示模式下显示 */}
       {isNarrationMode && !isPresenterMode && <NarrationController />}

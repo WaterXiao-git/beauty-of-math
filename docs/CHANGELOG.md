@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-08-06 · 旧实验页外壳化（300+ 页统一 DemoHeader + 抽屉触角）
+
+**模块**：前端布局
+
+**内容**：
+- 新增 ExperimentShell：旧实验页（/linear-function 等 300+ 独立路由）统一外壳 = DemoHeader（面包屑「首页 / 交互实验 / 实验名」+ 提问跳转）+ 内容区（滚动 + 原内边距）+ 左侧触角 + 章节抽屉（选中跳 /demo/:pointId）；实验名从 experiments/catalog.ts 映射
+- 提取公共 DrawerTab 组件（fixed 定位，滚动内容下仍贴屏幕左缘），DemoPage 改共用
+- Layout：新增 isLegacyExperiment 分支（非课程平台且非 /admin、/valentine 的路由），旧实验页不再渲染移动端 header / 全局深色侧栏，改由外壳接管；Bug 报告按钮与讲解控制条保留
+
+**涉及文件**：`client/src/demo/ExperimentShell.tsx`、`DrawerTab.tsx`（新增）、`client/src/demo/DemoPage.tsx`、`client/src/components/Layout/Layout.tsx`
+
+**验证**：tsc -b --noEmit exit 0；vite build 成功（1m14s）
+
+---
+
 ## 2026-08-06 · 演示页拖拽边界统一为可视范围 + 修罗尔页背景拉伸 / 导数页曲线不完整
 
 **模块**：前端演示画布

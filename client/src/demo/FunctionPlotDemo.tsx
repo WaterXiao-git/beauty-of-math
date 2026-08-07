@@ -9,6 +9,11 @@ import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
 import { calcViewportGrid } from './viewport'
+import ConceptCard from './ui/ConceptCard'
+import SegmentedControl from './ui/SegmentedControl'
+import SliderRow from './ui/SliderRow'
+import SwitchRow from './ui/SwitchRow'
+import ObserveTipCard from './ui/ObserveTipCard'
 
 interface DemoCase {
   id: string
@@ -65,6 +70,8 @@ export default function FunctionPlotDemo() {
   const [b, setB] = useState(0)
   const [step, setStep] = useState(4)
   const [playing, setPlaying] = useState(false)
+  /** 显示斜率三角形（Δx=1, Δy=k） */
+  const [showTri, setShowTri] = useState(true)
 
   // 加载统一接口配置
   useEffect(() => {
@@ -186,7 +193,7 @@ export default function FunctionPlotDemo() {
               {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
               <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
                 {/* 斜率三角形（Δx=1, Δy=k） */}
-                {step >= 3 && (
+                {showTri && step >= 3 && (
                   <g>
                     <polygon
                       points={`${sx(0)},${sy(b)} ${sx(1)},${sy(b)} ${sx(1)},${sy(b + k)}`}
@@ -251,72 +258,68 @@ export default function FunctionPlotDemo() {
           </div>
         </section>
 
-        {/* 右：控制面板 */}
+        {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-bold text-gray-800 mb-2">概念说明</h3>
-            <p className="text-[13px] text-gray-600 leading-relaxed">{config.summary}</p>
-          </section>
+          {/* 概念要点 */}
+          <ConceptCard formula={"y = kx + b"}>
+            {config.summary}
+          </ConceptCard>
 
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-bold text-gray-800 mb-3">案例与参数</h3>
-            <div className="flex flex-wrap gap-1.5 rounded-xl bg-gray-100 p-1 mb-4">
-              {config.cases.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => {
-                    setCaseId(c.id)
-                    setK(c.params?.k ?? 1)
-                    setB(c.params?.b ?? 0)
-                    setStep(4)
-                  }}
-                  className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-colors ${c.id === caseId ? 'bg-indigo-600 text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  {c.name}
-                </button>
-              ))}
-            </div>
-
+          {/* 实验控制 */}
+          <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 className="text-sm font-bold text-gray-800 mb-3">实验控制</h3>
             <div className="mb-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] font-medium text-gray-700">斜率 k</span>
-                <span className="text-xs font-mono text-indigo-600 font-semibold">{k.toFixed(2)}</span>
-              </div>
-              <input type="range" min={-4} max={4} step={0.1} value={k} onChange={(e) => setK(parseFloat(e.target.value))} className="w-full" />
-              <p className="text-[11px] text-gray-400 mt-1">k 为正上升 · k 为负下降 · |k| 越大越陡</p>
+              <SegmentedControl
+                options={config.cases.map((c) => ({ id: c.id, label: c.name }))}
+                value={caseId}
+                onChange={(id) => {
+                  const next = config.cases.find((c) => c.id === id)
+                  setCaseId(id)
+                  setK(next?.params?.k ?? 1)
+                  setB(next?.params?.b ?? 0)
+                  setStep(4)
+                }}
+              />
             </div>
 
-            <div className="mb-2">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] font-medium text-gray-700">截距 b</span>
-                <span className="text-xs font-mono text-indigo-600 font-semibold">{b.toFixed(2)}</span>
-              </div>
-              <input type="range" min={-4} max={4} step={0.1} value={b} onChange={(e) => setB(parseFloat(e.target.value))} className="w-full" />
-              <p className="text-[11px] text-gray-400 mt-1">直线与 y 轴交点 (0, b)</p>
+            <SliderRow
+              label="斜率 k"
+              value={k}
+              min={-4}
+              max={4}
+              step={0.1}
+              onChange={setK}
+              hint="k 为正上升 · k 为负下降 · |k| 越大越陡"
+            />
+
+            <SliderRow
+              label="截距 b"
+              value={b}
+              min={-4}
+              max={4}
+              step={0.1}
+              onChange={setB}
+              hint="直线与 y 轴交点 (0, b)"
+            />
+            <div className="border-t border-gray-100 pt-1 mt-1">
+              <SwitchRow label="显示斜率三角形" desc="Δx=1, Δy=k 的直角三角形" checked={showTri} onChange={setShowTri} />
             </div>
           </section>
 
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-gray-800">教学判断</h3>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${k > 0 ? 'bg-emerald-50 text-emerald-600' : k < 0 ? 'bg-orange-50 text-orange-600' : 'bg-gray-100 text-gray-500'}`}>
-                {trend}
-              </span>
-            </div>
-            <div className="flex items-start gap-2.5 px-3.5 py-3 rounded-xl border bg-blue-50/60 border-blue-100">
-              <svg className="w-4 h-4 shrink-0 mt-0.5 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 20l16-16M8 4h12v12" />
-              </svg>
-              <p className="text-[13px] text-gray-600 leading-relaxed">
-                {k === 0
-                  ? `k=0：y = ${b.toFixed(1)} 为水平直线，与 x 轴无交点（x 截距不存在）。`
-                  : xIntercept !== null
-                    ? `斜率 ${k.toFixed(2)}（${trend}），y 截距 (${0}, ${b.toFixed(1)})，x 截距 (${xIntercept.toFixed(2)}, 0)。`
-                    : '拖动点或滑块观察直线变化。'}
-              </p>
-            </div>
-          </section>
+          {/* 观察提示 */}
+          <ObserveTipCard
+            tips={[
+              {
+                icon: '📈',
+                text:
+                  k === 0
+                    ? `k=0：y = ${b.toFixed(1)} 为水平直线，与 x 轴无交点。`
+                    : `斜率 ${k.toFixed(2)}（${trend}），y 截距 (0, ${b.toFixed(1)})，x 截距 (${xIntercept?.toFixed(2)}, 0)。`,
+              },
+              { icon: '🖱️', text: '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' },
+              { icon: '🎯', text: 'x 截距 = −b/k：拖动 x 截距点可直观验证该关系。' },
+            ]}
+          />
         </aside>
       </div>
 

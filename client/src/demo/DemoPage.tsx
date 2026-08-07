@@ -138,19 +138,19 @@ export default function DemoPage() {
         onSelectPoint={handleSelectPoint}
       />
 
-      {/* 右侧悬浮 AI 助教入口（收起态） */}
+      {/* AI 助教 FAB（右下角悬浮，紫色渐变胶囊） */}
       {!aiOpen && (
         <button
           type="button"
           onClick={() => setAiOpen(true)}
-          className="fixed right-0 top-1/2 -translate-y-1/2 z-40 h-16 w-9 flex items-center justify-center rounded-l-xl bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-md hover:shadow-lg transition-all group"
-          aria-label="打开 AI 数学助教"
-          title="AI 数学助教"
+          className="fixed bottom-24 right-5 z-40 inline-flex items-center gap-2 px-4 h-11 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white text-sm font-semibold shadow-lg shadow-purple-500/30 hover:shadow-xl hover:scale-105 active:scale-95 transition-all"
+          aria-label="问 AI 助教"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z" />
             <path d="M19 14l.9 2.6L22.5 17.5l-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9L19 14z" opacity={0.7} />
           </svg>
+          问 AI 助教
         </button>
       )}
 

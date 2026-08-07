@@ -10,6 +10,11 @@ import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
 import GeoLine from './geoboard/GeoLine'
 import { calcViewportGrid } from './viewport'
+import ConceptCard from './ui/ConceptCard'
+import SegmentedControl from './ui/SegmentedControl'
+import SliderRow from './ui/SliderRow'
+import SwitchRow from './ui/SwitchRow'
+import ObserveTipCard from './ui/ObserveTipCard'
 
 interface DemoCase {
   id: string
@@ -79,6 +84,8 @@ export default function DerivativeDemo() {
   const [h, setH] = useState(0.8)
   const [step, setStep] = useState(4)
   const [playing, setPlaying] = useState(false)
+  /** 显示辅助线（Δx / Δy 虚线标注） */
+  const [showAux, setShowAux] = useState(true)
 
   useEffect(() => {
     fetch('/api/knowledge/derivative')
@@ -207,7 +214,7 @@ export default function DerivativeDemo() {
         
     
               {/* Δx / Δy 标注（虚线三角形） */}
-              {step >= 2 && (
+              {showAux && step >= 2 && (
                 <g stroke="#94a3b8" strokeWidth={1.1} strokeDasharray="5 4">
                   <line x1={sx(x0v + hh)} y1={sy(yP)} x2={sx(x0v)} y2={sy(yP)} />
                   <line x1={sx(x0v + hh)} y1={sy(yP)} x2={sx(x0v + hh)} y2={sy(yQ)} />
@@ -244,7 +251,7 @@ export default function DerivativeDemo() {
               )}
 
               {/* Δx / Δy 文字 */}
-              {step >= 2 && (
+              {showAux && step >= 2 && (
                 <g fontSize={11} fill="#cbd5e1">
                   <text x={sx(x0v) + (sx(x0v + hh) - sx(x0v)) / 2 - 6} y={sy(yP) + 16}>Δx = h</text>
                   <text x={sx(x0v + hh) + 8} y={(sy(yP) + sy(yQ)) / 2 + 4}>Δy</text>
@@ -270,82 +277,61 @@ export default function DerivativeDemo() {
           </div>
         </section>
 
-        {/* 右：控制面板 */}
+        {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-bold text-gray-800 mb-2">概念说明</h3>
-            <p className="text-[13px] text-gray-600 leading-relaxed">{config.summary}</p>
-          </section>
+          {/* 概念要点 */}
+          <ConceptCard formula={"f'(x_0) = \\lim_{h \\to 0} \\frac{f(x_0+h)-f(x_0)}{h}"}>
+            {config.summary}
+          </ConceptCard>
 
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-bold text-gray-800 mb-3">案例与参数</h3>
-            <div className="flex rounded-xl bg-gray-100 p-1 mb-4">
-              {config.cases.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => { setCaseId(c.id); setH(0.8); setX0(c.anchor ?? 0); setStep(4) }}
-                  className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-colors ${c.id === caseId ? 'bg-indigo-600 text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  {c.name}
-                </button>
-              ))}
-            </div>
-
+          {/* 实验控制 */}
+          <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 className="text-sm font-bold text-gray-800 mb-3">实验控制</h3>
             <div className="mb-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] font-medium text-gray-700">固定点 x₀</span>
-                <span className="text-xs font-mono text-indigo-600 font-semibold">{x0v.toFixed(2)}</span>
-              </div>
-              <input
-                type="range"
-                min={Math.round((xMin + 0.3) * 10) / 10}
-                max={Math.round((xMax - 0.3) * 10) / 10}
-                step={0.1}
-                value={x0v}
-                onChange={(e) => setX0(parseFloat(e.target.value))}
-                className="w-full"
+              <SegmentedControl
+                options={config.cases.map((c) => ({ id: c.id, label: c.name }))}
+                value={caseId}
+                onChange={(id) => { setCaseId(id); setH(0.8); setX0(activeCase?.anchor ?? 0); setStep(4) }}
               />
             </div>
-
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] font-medium text-gray-700">步长 h（h ≠ 0）</span>
-                <span className="text-xs font-mono text-indigo-600 font-semibold">{hh.toFixed(2)}</span>
-              </div>
-              <input
-                type="range"
-                min={0.05}
-                max={2}
-                step={0.05}
-                value={hh}
-                onChange={(e) => setH(parseFloat(e.target.value))}
-                className="w-full"
-              />
-              <p className="text-[11px] text-gray-400 mt-1">h 减小时，Q 沿曲线靠近 P，割线逼近切线</p>
+            <SliderRow
+              label="固定点 x₀"
+              value={x0v}
+              min={Math.round((xMin + 0.3) * 10) / 10}
+              max={Math.round((xMax - 0.3) * 10) / 10}
+              step={0.1}
+              onChange={setX0}
+            />
+            <SliderRow
+              label="步长 h（h ≠ 0）"
+              value={hh}
+              min={0.05}
+              max={2}
+              step={0.05}
+              onChange={setH}
+              hint="h 减小时，Q 沿曲线靠近 P，割线逼近切线"
+            />
+            <div className="border-t border-gray-100 pt-1 mt-1">
+              <SwitchRow label="显示辅助线" desc="Δx / Δy 虚线标注" checked={showAux} onChange={setShowAux} />
+            </div>
+            <div className="px-3.5 py-2.5 rounded-xl bg-purple-50/70 border border-purple-100 text-center mt-3">
+              <span className="text-sm font-semibold text-purple-700">f′(x₀) = {tangentSlope.toFixed(3)}</span>
             </div>
           </section>
 
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-gray-800">教学判断</h3>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${step >= 4 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
-                {step >= 4 ? '趋近完成' : '进行中'}
-              </span>
-            </div>
-            <div className={`flex items-start gap-2.5 px-3.5 py-3 rounded-xl border mb-3 ${diff < 0.15 ? 'bg-emerald-50/60 border-emerald-100' : 'bg-blue-50/60 border-blue-100'}`}>
-              <svg className={`w-4 h-4 shrink-0 mt-0.5 ${diff < 0.15 ? 'text-emerald-500' : 'text-blue-500'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 12l2 2 4-4m5.2 2a9 9 0 1 1-2.6-6.4" />
-              </svg>
-              <p className="text-[13px] text-gray-600 leading-relaxed">
-                割线斜率 {secantSlope.toFixed(3)}，切线斜率 {tangentSlope.toFixed(3)}，差值 {diff.toFixed(3)}。
-                {diff < 0.15 ? ' h 足够小时割线已趋近切线，差商趋近导数。' : ' 继续减小 h，割线将趋近切线。'}
-              </p>
-            </div>
-            <div className="px-3.5 py-2.5 rounded-xl bg-indigo-50/70 border border-indigo-100 text-center">
-              <span className="text-sm font-semibold text-indigo-700">f′(x₀) = {tangentSlope.toFixed(3)}</span>
-            </div>
-          </section>
+          {/* 观察提示 */}
+          <ObserveTipCard
+            tips={[
+              { icon: '🎯', text: '拖动 P 点（改 x₀）或 Q 点（改 h），观察割线逼近切线。' },
+              {
+                icon: '🔍',
+                text:
+                  `割线斜率 ${secantSlope.toFixed(3)}，切线斜率 ${tangentSlope.toFixed(3)}，差值 ${diff.toFixed(3)}。` +
+                  (diff < 0.15 ? ' h 足够小时割线已趋近切线，差商趋近导数。' : ' 继续减小 h，割线将趋近切线。'),
+              },
+              { icon: '⚠️', text: 'h 越小割线越接近切线——点「播放」让 h 自动递减，观察极限过程。' },
+            ]}
+          />
         </aside>
       </div>
 

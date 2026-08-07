@@ -70,27 +70,39 @@ export default function AiCopilot({ open, onClose, context }: AiCopilotProps & {
   const [messages, setMessages] = useState<AiMessage[]>(SAMPLE_MESSAGES)
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState<Record<number, 'up' | 'down' | null>>({})
+  const [loading, setLoading] = useState(false)
 
-  const send = () => {
+  // 真实问答：/api/answer（DeepSeek 主 + Qwen 备，双模型）
+  const send = async () => {
     const q = input.trim()
-    if (!q) return
+    if (!q || loading) return
     setMessages((m) => [...m, { role: 'user', time: now(), text: q }])
     setInput('')
-    // 本地模拟回复（真实问答后续接 /api/answer）
-    setTimeout(() => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/answer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: q, core: context.pointTitle }),
+      })
+      if (!res.ok) throw new Error('HTTP ' + res.status)
+      const data = await res.json()
+      const blocks: AiBlock[] = []
+      if (data.summary) blocks.push({ type: 'text', content: data.summary })
+      if (Array.isArray(data.keyPoints) && data.keyPoints.length > 0) {
+        blocks.push({ type: 'text', content: data.keyPoints.map((k: string) => '· ' + k).join('\n') })
+      }
+      if (data.example) blocks.push({ type: 'text', content: '示例：' + data.example })
+      if (blocks.length === 0) blocks.push({ type: 'text', content: '抱歉，暂时没有生成有效回答，请换个问法再试。' })
+      setMessages((m) => [...m, { role: 'ai', time: now(), blocks }])
+    } catch (e) {
       setMessages((m) => [
         ...m,
-        {
-          role: 'ai',
-          time: now(),
-          blocks: [
-            { type: 'text', content: '已收到你的问题：' },
-            { type: 'formula', content: q },
-            { type: 'text', content: '建议结合画布交互验证：拖拽点或调节右侧参数，观察数值面板与图像实时联动。' },
-          ],
-        },
+        { role: 'ai', time: now(), blocks: [{ type: 'text', content: 'AI 服务暂时不可用（' + String(e) + '），请稍后再试。' }] },
       ])
-    }, 600)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const copyText = (m: AiMessage) => {
@@ -202,7 +214,7 @@ export default function AiCopilot({ open, onClose, context }: AiCopilotProps & {
                       <MathFormula formula={b.content} displayMode={false} className="text-gray-800" />
                     </div>
                   ) : (
-                    <p key={i} className="text-[13px]">{b.content}</p>
+                    <p key={i} className="text-[13px]" style={{ whiteSpace: 'pre-line' }}>{b.content}</p>
                   ),
                 )}
               </div>
@@ -241,6 +253,18 @@ export default function AiCopilot({ open, onClose, context }: AiCopilotProps & {
               )}
             </div>
           ))}
+          {loading && (
+            <div className="flex flex-col items-start">
+              <div className="flex items-center gap-1.5 mb-1 text-[11px] text-gray-400 px-1">
+                <span className="w-4 h-4 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-[8px] text-white font-bold shrink-0">AI</span>
+                <span className="text-gray-500 font-medium">AI 助教</span>
+                <span>· {now()}</span>
+              </div>
+              <div className="px-3 py-2.5 rounded-2xl rounded-tl-sm bg-indigo-50/60 border border-gray-100 text-gray-400 text-sm">
+                思考中<span className="animate-pulse">…</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* 底部输入区 */}

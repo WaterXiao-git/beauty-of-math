@@ -14,6 +14,24 @@
 
 ---
 
+## 2026-08-06 · AI 助教接真实 DeepSeek + 演示页 UI 升级（Apple/Linear 风格三卡布局）
+
+**模块**：前端演示页 / AI 助教
+
+**内容**：
+- **AI 助教接真实问答**：发送走 POST /api/answer（DeepSeek 主 + Qwen 备），携带当前知识点上下文；新增「思考中」加载气泡与错误降级；keyPoints 换行渲染
+- **共享 UI 组件集**（client/src/demo/ui/）：ConceptCard（白毛玻璃+左侧紫 accent 条+圆角 22px+「概念要点/严格定义」标题左右分布+淡紫 #F5F3FF 公式块）、SegmentedControl（iOS 分段胶囊，选中紫色渐变）、SliderRow（标题左+数值右+紫色滑块）、SwitchRow（iOS Switch，标题+说明左）、ObserveTipCard（淡蓝气泡 ✨+文字，16px 圆角）
+- **右侧面板统一三卡**：概念要点 / 实验控制 / 观察提示，四个演示页全部接入；ε−δ 页新增「显示辅助线」「突出有效曲线段」开关，导数页新增「显示辅助线(Δx/Δy)」开关，function-plot 新增「显示斜率三角形」开关
+- **PlayerBar**：播放按钮紫色渐变、步进连线（完成绿/当前段绿→紫渐变/未完成灰）、当前节点紫色渐变
+- **AI 助教入口改右下角 FAB**：「✨ 问 AI 助教」紫色渐变胶囊（原右侧竖条按钮）
+- 罗尔页 RolleControl 重构为三卡（定理条件概念卡+实验控制 Segmented+条件 Switch+观察提示），移除旧「向 AI 助教提问」冗余按钮
+
+**涉及文件**：`client/src/demo/ui/`（ConceptCard/SegmentedControl/SliderRow/SwitchRow/ObserveTipCard，新增）、`AiCopilot.tsx`、`PlayerBar.tsx`、`DemoPage.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`、`RolleControl.tsx`、`FunctionPlotDemo.tsx`
+
+**验证**：tsc -b --noEmit exit 0；vite build 成功（1m15s）
+
+---
+
 ## 2026-08-06 · 演示页接入 AI 数学助教侧边栏（右侧悬浮/可收起）
 
 **模块**：前端演示页

@@ -9,6 +9,11 @@ import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
 import { calcViewportGrid } from './viewport'
+import ConceptCard from './ui/ConceptCard'
+import SegmentedControl from './ui/SegmentedControl'
+import SliderRow from './ui/SliderRow'
+import SwitchRow from './ui/SwitchRow'
+import ObserveTipCard from './ui/ObserveTipCard'
 
 interface DemoCase {
   id: string
@@ -86,6 +91,10 @@ export default function EpsilonDeltaDemo() {
   const [epsilon, setEpsilon] = useState(0.6)
   /** 可拖拽 a 覆盖值（null 用案例预设 anchor） */
   const [aOverride, setAOverride] = useState<number | null>(null)
+  /** 显示辅助线（ε 带 / δ 带） */
+  const [showGuides, setShowGuides] = useState(true)
+  /** 突出有效曲线段（δ 内满足条件的曲线高亮） */
+  const [showBand, setShowBand] = useState(true)
   const [step, setStep] = useState(4)
   const [playing, setPlaying] = useState(false)
 
@@ -175,7 +184,7 @@ export default function EpsilonDeltaDemo() {
     // 首个有效点用 M 起笔（避免定义域外 NaN 导致 path 以 L 开头而整条不显示）
     curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
     curveStarted = true
-    if (step >= 4 && Math.abs(x - a) < delta) inBandPts.push((inBandPts.length === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+    if (showBand && step >= 4 && Math.abs(x - a) < delta) inBandPts.push((inBandPts.length === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
   }
 
   return (
@@ -212,7 +221,7 @@ export default function EpsilonDeltaDemo() {
         
     
               {/* ε 误差带（L±ε 区域） */}
-              {step >= 2 && (
+              {showGuides && step >= 2 && (
                 <g>
                   <rect x={visMapMin} y={sy(L + epsilon)} width={visMapMax - visMapMin} height={sy(L - epsilon) - sy(L + epsilon)} fill="#38bdf8" opacity={0.12} />
                   <line x1={visMapMin} y1={sy(L + epsilon)} x2={visMapMax} y2={sy(L + epsilon)} stroke="#7dd3fc" strokeWidth={1.2} strokeDasharray="5 4" />
@@ -222,7 +231,7 @@ export default function EpsilonDeltaDemo() {
               )}
 
               {/* δ 邻域（a±δ 竖带） */}
-              {step >= 3 && delta > 0 && (
+              {showGuides && step >= 3 && delta > 0 && (
                 <g>
                   <rect x={sx(a - delta)} y={visYMapMin} width={sx(a + delta) - sx(a - delta)} height={visYMapMax - visYMapMin} fill="#fbbf24" opacity={0.1} />
                   <line x1={sx(a - delta)} y1={visYMapMin} x2={sx(a - delta)} y2={visYMapMax} stroke="#fcd34d" strokeWidth={1.2} strokeDasharray="5 4" />
@@ -233,7 +242,7 @@ export default function EpsilonDeltaDemo() {
               {/* 函数曲线 */}
               {curvePts.length > 0 && <path d={curvePts.join(' ')} fill="none" stroke="#60a5fa" strokeWidth={2.6} strokeLinecap="round" />}
               {/* 验证步骤：δ 内曲线高亮绿色 */}
-              {step >= 4 && inBandPts.length > 1 && (
+              {showBand && step >= 4 && inBandPts.length > 1 && (
                 <path d={inBandPts.join(' ')} fill="none" stroke="#34d399" strokeWidth={3.2} strokeLinecap="round" />
               )}
 
@@ -259,8 +268,8 @@ export default function EpsilonDeltaDemo() {
               <g fontSize={11} fill="#64748b">
                 <text x={sx(a) - 3} y={sy(0) + 18} textAnchor="middle">a</text>
                 <text x={sx(dMin) + 10} y={sy(L) - 6}>L</text>
-                {step >= 2 && <text x={sx(dMin) + 10} y={sy(L + epsilon) + 12} fontSize={10}>L+ε</text>}
-                {step >= 2 && <text x={sx(dMin) + 10} y={sy(L - epsilon) - 4} fontSize={10}>L−ε</text>}
+                {showGuides && step >= 2 && <text x={sx(dMin) + 10} y={sy(L + epsilon) + 12} fontSize={10}>L+ε</text>}
+                {showGuides && step >= 2 && <text x={sx(dMin) + 10} y={sy(L - epsilon) - 4} fontSize={10}>L−ε</text>}
               </g>
             </g>
         </svg>
@@ -282,75 +291,62 @@ export default function EpsilonDeltaDemo() {
           </div>
         </section>
 
-        {/* 右：控制面板 */}
+        {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-bold text-gray-800 mb-2">概念说明</h3>
-            <p className="text-[13px] text-gray-600 leading-relaxed">{config.summary}</p>
-          </section>
+          {/* 概念要点 */}
+          <ConceptCard formula={'\\lim_{x \\to a} f(x) = L'}>
+            {config.summary}
+          </ConceptCard>
 
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-bold text-gray-800 mb-3">案例与参数</h3>
-            <div className="flex rounded-xl bg-gray-100 p-1 mb-4">
-              {config.cases.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => { setCaseId(c.id); setEpsilon(0.6); setStep(4); setAOverride(null) }}
-                  className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-colors ${c.id === caseId ? 'bg-indigo-600 text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}
-                >
-                  {c.name}
-                </button>
-              ))}
-            </div>
-
+          {/* 实验控制 */}
+          <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 className="text-sm font-bold text-gray-800 mb-3">实验控制</h3>
             <div className="mb-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] font-medium text-gray-700">误差 ε</span>
-                <span className="text-xs font-mono text-indigo-600 font-semibold">{epsilon.toFixed(2)}</span>
-              </div>
-              <input
-                type="range"
-                min={0.05}
-                max={0.8}
-                step={0.05}
-                value={epsilon}
-                onChange={(e) => setEpsilon(parseFloat(e.target.value))}
-                className="w-full"
+              <SegmentedControl
+                options={config.cases.map((c) => ({ id: c.id, label: c.name }))}
+                value={caseId}
+                onChange={(id) => { setCaseId(id); setEpsilon(0.6); setStep(4); setAOverride(null) }}
               />
-              <p className="text-[11px] text-gray-400 mt-1">ε 收紧时，可行 δ 会随之变小</p>
             </div>
-
-            <div className="px-3.5 py-2.5 rounded-xl bg-indigo-50/70 border border-indigo-100 text-center">
-              <span className="text-sm font-semibold text-indigo-700">
+            <SliderRow
+              label="挑战精度 ε"
+              value={epsilon}
+              min={0.05}
+              max={0.8}
+              step={0.05}
+              onChange={setEpsilon}
+              hint="ε 收紧时，可行 δ 会随之变小"
+            />
+            <div className="border-t border-gray-100 pt-1 mt-2">
+              <SwitchRow label="显示辅助线" desc="ε 误差带与 δ 邻域虚线" checked={showGuides} onChange={setShowGuides} />
+              <SwitchRow label="突出有效曲线段" desc="δ 邻域内满足条件的曲线高亮" checked={showBand} onChange={setShowBand} />
+            </div>
+            <div className="px-3.5 py-2.5 rounded-xl bg-purple-50/70 border border-purple-100 text-center mt-3">
+              <span className="text-sm font-semibold text-purple-700">
                 可行 δ ≈ {delta > 0 ? delta.toFixed(3) : '—'}{' '}
-                <span className="text-[11px] font-normal text-indigo-400">（δ 不唯一）</span>
+                <span className="text-[11px] font-normal text-purple-400">（δ 不唯一）</span>
               </span>
             </div>
           </section>
 
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-gray-800">教学判断</h3>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${step >= 4 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
-                {step >= 4 ? '定义成立' : '进行中'}
-              </span>
-            </div>
-            <div className={`flex items-start gap-2.5 px-3.5 py-3 rounded-xl border mb-1 ${step >= 4 ? 'bg-emerald-50/60 border-emerald-100' : 'bg-blue-50/60 border-blue-100'}`}>
-              <svg className={`w-4 h-4 shrink-0 mt-0.5 ${step >= 4 ? 'text-emerald-500' : 'text-blue-500'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-                {step >= 4 ? <path d="M9 12l2 2 4-4m5.2 2a9 9 0 1 1-2.6-6.4" /> : <circle cx="12" cy="12" r="10" />}
-              </svg>
-              <p className="text-[13px] text-gray-600 leading-relaxed">
-                {step >= 4
-                  ? !Number.isFinite(L)
-                    ? '当前 a 处函数无定义，请将目标点拖回函数定义域内。'
-                    : delta > 0
-                      ? `取 δ ≈ ${delta.toFixed(3)}，当 |x−a| < δ 时曲线全部落入 ε 带，极限定义成立。`
-                      : '当前 ε 过小（超出采样精度），请适当增大 ε。'
-                  : '推进步骤至「验证定义」，将检查 δ 邻域内曲线是否全部落入 ε 带。'}
-              </p>
-            </div>
-          </section>
+          {/* 观察提示 */}
+          <ObserveTipCard
+            tips={[
+              { icon: '🎯', text: '拖动画布上的 a 点，或拖动背景平移 / 滚轮缩放，观察 L、ε 带与 δ 邻域联动。' },
+              {
+                icon: '🔍',
+                text:
+                  step >= 4
+                    ? !Number.isFinite(L)
+                      ? '当前 a 处函数无定义，请将目标点拖回函数定义域内。'
+                      : delta > 0
+                        ? `取 δ ≈ ${delta.toFixed(3)}，当 |x−a| < δ 时曲线全部落入 ε 带，定义成立。`
+                        : '当前 ε 过小（超出采样精度），请适当增大 ε。'
+                    : '推进步骤至「验证定义」，将检查 δ 邻域内曲线是否全部落入 ε 带。',
+              },
+              { icon: '⚠️', text: 'ε 越小可行 δ 越小——收紧 ε 试试，绿色高亮段会随之变窄。' },
+            ]}
+          />
         </aside>
       </div>
 

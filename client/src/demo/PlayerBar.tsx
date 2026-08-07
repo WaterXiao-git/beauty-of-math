@@ -39,7 +39,7 @@ export default function PlayerBar({ steps, step, playing, onPrev, onNext, onTogg
         <button
           type="button"
           onClick={onTogglePlay}
-          className="w-12 h-12 rounded-full bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 hover:bg-indigo-700 hover:scale-105 active:scale-95 transition-all"
+          className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white flex items-center justify-center shadow-lg shadow-purple-500/30 hover:scale-105 active:scale-95 transition-all"
           aria-label={playing ? '暂停' : '播放'}
         >
           {playing ? (
@@ -91,7 +91,7 @@ export default function PlayerBar({ steps, step, playing, onPrev, onNext, onTogg
                   <span
                     className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
                       isActive
-                        ? 'bg-indigo-600 border-indigo-600 text-white shadow-lg shadow-indigo-500/30 scale-110'
+                        ? 'bg-gradient-to-r from-purple-500 to-indigo-500 border-transparent text-white shadow-lg shadow-purple-500/30 scale-110'
                         : isDone
                           ? 'bg-emerald-500 border-emerald-500 text-white'
                           : 'bg-white border-gray-200 text-gray-400'
@@ -110,7 +110,15 @@ export default function PlayerBar({ steps, step, playing, onPrev, onNext, onTogg
                   </span>
                 </div>
                 {i < steps.length - 1 && (
-                  <div className={`flex-1 h-0.5 -mt-4 mx-1 rounded ${isDone ? 'bg-emerald-400' : 'bg-gray-200'}`} />
+                  <div
+                    className={`flex-1 h-0.5 -mt-4 mx-1 rounded ${
+                      isDone
+                        ? 'bg-emerald-400'
+                        : n === step
+                          ? 'bg-gradient-to-r from-emerald-400 to-purple-500'
+                          : 'bg-gray-200'
+                    }`}
+                  />
                 )}
               </div>
             )

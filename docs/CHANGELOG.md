@@ -14,6 +14,22 @@
 
 ---
 
+## 2026-08-06 · 补齐课程剩余章节：9 个知识点全部接入统一演示
+
+**模块**：server 配置层 / 课程数据
+
+**内容**：
+- **新 shape×2**：sequence（数列散点，随播放逐步揭示、收敛趋势）应用于数列的极限；riemann（黎曼和矩形，n 滑块 4-100，左和/梯形和）应用于定积分
+- **纯配置×7**：无穷小与无穷大（1/x 曲线）、极限的运算法则、两个重要极限（sin x/x 与 (1+1/x)ˣ）、连续函数（含间断案例）、微分（dataItems 计算 dy/Δy/误差）、函数图形描绘、不定积分（原函数+被积函数双曲线）
+- courseData 9 个知识点挂 demoId（数列的极限/无穷小/运算法则/重要极限/连续函数/微分/图形描绘/不定积分/定积分）；registry 9 行
+- 至此课程 16 个原始知识点**全部**有统一演示入口
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`、`server/src/data/knowledge.ts`、`client/src/course/courseData.ts`、`client/src/demo/DemoPage.tsx`
+
+**验证**：双端 tsc 0；vite build 成功（1m2s）；/api/knowledge/limit-of-sequence（shape=sequence）、definite-integral（shape=riemann）等实测 200
+
+---
+
 ## 2026-08-06 · 牛顿迭代法演示（shape=newton，课程 ch3-s4）
 
 **模块**：前端演示模板 / server 配置层

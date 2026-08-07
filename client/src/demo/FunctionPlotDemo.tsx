@@ -18,7 +18,7 @@ import ObserveTipCard from './ui/ObserveTipCard'
 import GridTicks from './ui/GridTicks'
 import StepStatusCard from './ui/StepStatusCard'
 
-type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite' | 'newton'
+type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite' | 'newton' | 'sequence' | 'riemann'
 
 interface ParamRange {
   label?: string
@@ -193,6 +193,28 @@ export default function FunctionPlotDemo() {
           : []
     const trend = shape === 'linear' ? (slope > 0 ? '单调递增' : slope < 0 ? '单调递减' : '常函数') : ''
     const openUp = shape === 'quadratic' && a > 0
+    // 黎曼和：左和/右和/梯形和
+    let riemannSum: { left: number; right: number; trap: number; dx: number } | null = null
+    if (shape === 'riemann') {
+      const ra = p.a ?? 0
+      const rb = p.b ?? 1
+      const rn = Math.max(2, Math.round(p.n ?? 20))
+      const dx = (rb - ra) / rn
+      let left = 0
+      let right = 0
+      let trap = 0
+      for (let i = 0; i < rn; i++) {
+        const xl = ra + i * dx
+        const xr = xl + dx
+        const fl = f(xl)
+        const fr = f(xr)
+        if (!Number.isFinite(fl) || !Number.isFinite(fr)) continue
+        left += fl * dx
+        right += fr * dx
+        trap += ((fl + fr) / 2) * dx
+      }
+      riemannSum = { left, right, trap, dx }
+    }
     // 牛顿迭代序列：xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ)
     let newtonSeq: number[] = []
     if (shape === 'newton') {
@@ -210,7 +232,7 @@ export default function FunctionPlotDemo() {
         x = xn
       }
     }
-    return { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, a, b, c, newtonSeq }
+    return { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, a, b, c, newtonSeq, riemannSum }
   }, [activeCase, params])
 
   if (loadError) {
@@ -235,7 +257,7 @@ export default function FunctionPlotDemo() {
     )
   }
 
-  const { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, newtonSeq } = derived
+  const { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, newtonSeq, riemannSum } = derived
   const markers = activeCase.markers ?? {}
   const map = buildWorldMap([xMin, xMax], [yMin, yMax], W, H, PAD_L, PAD_R, PAD_T, PAD_B)
   const sx = map.sx
@@ -386,6 +408,20 @@ export default function FunctionPlotDemo() {
       { label: 'x₂', value: newtonSeq[2]?.toFixed(4) ?? '—' },
       { label: 'x₃', value: newtonSeq[3]?.toFixed(4) ?? '—' },
     )
+  } else if (shape === 'sequence') {
+    panelItems.push(
+      { label: 'a₁', value: f(1)?.toFixed(4) ?? '—' },
+      { label: 'a₅', value: f(5)?.toFixed(4) ?? '—' },
+      { label: 'a₁₀', value: f(10)?.toFixed(4) ?? '—' },
+      { label: 'a₂₀', value: f(20)?.toFixed(4) ?? '—' },
+    )
+  } else if (shape === 'riemann') {
+    panelItems.push(
+      { label: '分割数 n', value: String(Math.max(2, Math.round(params.n ?? 20))) },
+      { label: 'Δx', value: riemannSum?.dx.toFixed(4) ?? '—' },
+      { label: '左和', value: riemannSum?.left.toFixed(4) ?? '—' },
+      { label: '梯形和', value: riemannSum?.trap.toFixed(4) ?? '—' },
+    )
   }
 
   // 观察提示：tips 配置优先（{参数名} 插值），否则 shape 兜底
@@ -418,7 +454,11 @@ export default function FunctionPlotDemo() {
                   ? '复合函数 y = f(g(x))：先计算内层 g(x)，再代入外层 f(u)，注意 g(x) 需落在外层定义域内。'
                   : shape === 'newton'
                     ? `牛顿迭代收敛到根 ≈ ${newtonSeq[newtonSeq.length - 1]?.toFixed(4) ?? '—'}（误差 |xₙ₊₁−xₙ| < 1e-10）。`
-                    : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
+                    : shape === 'sequence'
+                      ? `数列前 ${step * 5} 项${step >= 4 ? '：观察是否趋近极限（随 n 增大 aₙ 趋于常数则收敛）' : '，点播放或推进步骤观察更多项'}。`
+                      : shape === 'riemann'
+                        ? `分割数 n = ${Math.max(2, Math.round(params.n ?? 20))}：黎曼和（梯形 ≈ ${riemannSum?.trap.toFixed(4) ?? '—'}）随 n 增大逼近定积分。`
+                        : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
@@ -455,6 +495,8 @@ export default function FunctionPlotDemo() {
               {shape === 'inverse-pair' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400" />反函数 f⁻¹</span>}
               {shape === 'newton' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-300" />迭代点 xₙ</span>}
               {shape === 'newton' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-400" />曲线上点</span>}
+              {shape === 'sequence' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-300" />数列点</span>}
+              {shape === 'riemann' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-400/50" />黎曼矩形</span>}
                 </>
               )}
             </div>
@@ -495,6 +537,35 @@ export default function FunctionPlotDemo() {
                     <line x1={visMapMin} y1={sy(params.k ?? 0)} x2={visMapMax} y2={sy(params.k ?? 0)} stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="6 4" />
                   </>
                 )}
+
+                {/* riemann：黎曼和矩形 */}
+                {shape === 'riemann' && (() => {
+                  const ra = params.a ?? 0
+                  const rb = params.b ?? 1
+                  const rn = Math.max(2, Math.round(params.n ?? 20))
+                  const dx = (rb - ra) / rn
+                  const rects: { x0: number; x1: number; y: number }[] = []
+                  for (let i = 0; i < rn; i++) {
+                    const xl = ra + i * dx
+                    const y = f(xl)
+                    if (!Number.isFinite(y)) continue
+                    rects.push({ x0: xl, x1: xl + dx, y })
+                  }
+                  return (
+                    <g>
+                      {rects.map((r, i) => (
+                        <rect
+                          key={i}
+                          x={sx(r.x0)}
+                          y={sy(Math.max(0, r.y))}
+                          width={Math.max(0.5, sx(r.x1) - sx(r.x0))}
+                          height={Math.max(0.5, Math.abs(sy(0) - sy(r.y)))}
+                          fill="#a78bfa" opacity={0.22} stroke="#a78bfa" strokeWidth={0.5}
+                        />
+                      ))}
+                    </g>
+                  )
+                })()}
 
                 {/* 指数对数/反函数对：y=x 对称虚线 */}
                 {(shape === 'exp-log' || shape === 'inverse-pair') && (
@@ -571,6 +642,17 @@ export default function FunctionPlotDemo() {
                   />
                 )}
 
+                {/* sequence：数列散点（显示前 step*5 项） */}
+                {shape === 'sequence' && (
+                  <g>
+                    {Array.from({ length: step * 5 }, (_, i) => i + 1).map((n) => {
+                      const y = f(n)
+                      if (!Number.isFinite(y)) return null
+                      return <circle key={n} cx={sx(n)} cy={sy(y)} r={4} fill="#fbbf24" stroke="#0f172a" strokeWidth={1.2} />
+                    })}
+                  </g>
+                )}
+
                 {/* 牛顿迭代：x 轴上迭代点 + 曲线上对应点（显示前 step 步） */}
                 {shape === 'newton' && newtonSeq.slice(0, Math.min(step + 1, newtonSeq.length)).map((x, i) => (
                   <g key={i}>
@@ -627,7 +709,7 @@ export default function FunctionPlotDemo() {
         {/* 右：控制面板（Card Stack） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
-          <ConceptCard formula={activeCase.formula ?? config.formula ?? (shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : shape === 'inverse-pair' ? 'y = f(x) \\iff x = f^{-1}(y)' : shape === 'composite' ? 'y = f(g(x))' : shape === 'newton' ? 'x_{n+1} = x_n - \\frac{f(x_n)}{f\'(x_n)}' : 'y = f_i(x), x \\in D_i')}>
+          <ConceptCard formula={activeCase.formula ?? config.formula ?? (shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : shape === 'inverse-pair' ? 'y = f(x) \\iff x = f^{-1}(y)' : shape === 'composite' ? 'y = f(g(x))' : shape === 'newton' ? 'x_{n+1} = x_n - \\frac{f(x_n)}{f\'(x_n)}' : shape === 'sequence' ? 'a_n = f(n),\\ n \\in \\mathbb{N}' : shape === 'riemann' ? '\\int_a^b f(x)\\, dx \\approx \\sum f(x_i)\\Delta x' : 'y = f_i(x), x \\in D_i')}>
             {config.summary}
           </ConceptCard>
 
@@ -687,7 +769,7 @@ export default function FunctionPlotDemo() {
                       : judgmentText,
               },
               { icon: '🖱️', text: shape === 'linear' ? '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' : '拖动背景平移 / 滚轮缩放观察曲线；调节参数滑块看图像变化。' },
-              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : shape === 'rational' ? 'x→h 时 |y|→∞（垂直渐近线），x→∞ 时 y→k（水平渐近线）。' : shape === 'inverse-pair' ? '反函数图像关于 y=x 对称；拖背景平移观察对称性。' : shape === 'piecewise' ? '分段点 x₀ 处：左右极限与 f(x₀) 相等则连续，否则间断。' : shape === 'composite' ? '复合求值顺序：x → g(x) → f(g(x))；观察内层值域是否落入外层定义域。' : shape === 'newton' ? '几何意义：过 (xₙ, f(xₙ)) 作切线，切线与 x 轴交点即 xₙ₊₁。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
+              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : shape === 'rational' ? 'x→h 时 |y|→∞（垂直渐近线），x→∞ 时 y→k（水平渐近线）。' : shape === 'inverse-pair' ? '反函数图像关于 y=x 对称；拖背景平移观察对称性。' : shape === 'piecewise' ? '分段点 x₀ 处：左右极限与 f(x₀) 相等则连续，否则间断。' : shape === 'composite' ? '复合求值顺序：x → g(x) → f(g(x))；观察内层值域是否落入外层定义域。' : shape === 'newton' ? '几何意义：过 (xₙ, f(xₙ)) 作切线，切线与 x 轴交点即 xₙ₊₁。' : shape === 'sequence' ? '黄色点为数列项 (n, aₙ)：点播放或推进步骤逐项揭示，观察收敛趋势。' : shape === 'riemann' ? '紫色矩形为黎曼和：调大分割数 n，矩形总面积的梯形近似逼近定积分。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
               ]
             }
           />

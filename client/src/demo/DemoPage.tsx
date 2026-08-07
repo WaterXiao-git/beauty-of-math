@@ -34,6 +34,15 @@ const demoRegistry: Record<string, ComponentType> = {
   'function-transform': FunctionPlotDemo,
   'power-series': FunctionPlotDemo,
   'newton-method': FunctionPlotDemo,
+  'limit-of-sequence': FunctionPlotDemo,
+  'infinitesimal': FunctionPlotDemo,
+  'limit-laws': FunctionPlotDemo,
+  'two-important-limits': FunctionPlotDemo,
+  'continuity': FunctionPlotDemo,
+  'differential': FunctionPlotDemo,
+  'graphing': FunctionPlotDemo,
+  'indefinite-integral': FunctionPlotDemo,
+  'definite-integral': FunctionPlotDemo,
 }
 
 /** 未实现模板的占位页（需求 2.2：说明原因 + 替代学习路径） */

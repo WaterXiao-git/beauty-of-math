@@ -37,7 +37,7 @@ export interface KnowledgeCase {
   /** 参数范围（滑块自动生成；key 对应 params） */
   paramRanges?: Record<string, { label?: string; min: number; max: number; step: number }>
   /** 画布形状（function-plot 模板：linear / quadratic / absolute / exp-log） */
-  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite' | 'newton'
+  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite' | 'newton' | 'sequence' | 'riemann'
   /** 画布标注开关（function-plot 模板） */
   markers?: {
     xIntercept?: boolean
@@ -1381,6 +1381,343 @@ export const knowledgePoints: KnowledgeConfig[] = [
       duration: '约 25 分钟',
       templates: ['牛顿迭代可视化', '切线逼近零点'],
     },
+    version: 1,
+  },
+  // 18. 数列的极限（shape=sequence 散点）
+  {
+    id: 'limit-of-sequence',
+    title: '数列的极限',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '数列的极限',
+    template: 'function-plot',
+    summary:
+      '当项数 n 无限增大时，数列 {aₙ} 的项无限趋近常数 A，则称 A 为数列极限（ε−N 语言）。黄色散点为数列项，随 n 增大观察收敛或发散。',
+    formula: '\\lim_{n \\to \\infty} a_n = A',
+    goals: ['理解数列极限的 ε−N 定义', '能判断数列收敛或发散', '观察收敛趋势'],
+    legend: [
+      { color: '#fbbf24', label: '数列点 (n, aₙ)' },
+      { color: '#60a5fa', label: '连续趋势线' },
+    ],
+    tips: [
+      { icon: '🔍', text: '黄色点为数列项：点播放或推进步骤，逐批揭示更多项观察趋势。' },
+      { icon: '📏', text: '收敛：aₙ 趋于常数 A；发散：不趋于任何常数。' },
+      { icon: '🎯', text: 'ε−N 语言：对任意 ε>0，存在 N 使 n>N 时 |aₙ−A|<ε。' },
+    ],
+    defaultCase: 'seq-1n',
+    cases: [
+      { id: 'seq-1n', name: 'aₙ = 1/n', expr: '1/x', domain: [0.5, 21], yRange: [-0.3, 1.3], shape: 'sequence', desc: '收敛到 0：aₙ = 1/n' },
+      { id: 'seq-1p', name: 'aₙ = 1 + 1/n', expr: '1+1/x', domain: [0.5, 21], yRange: [0.6, 2.4], shape: 'sequence', desc: '收敛到 1' },
+      { id: 'seq-ratio', name: 'aₙ = n/(n+1)', expr: 'x/(x+1)', domain: [0.5, 21], yRange: [0.2, 1.15], shape: 'sequence', desc: '收敛到 1（从下方逼近）' },
+      { id: 'seq-div', name: 'aₙ = n（发散）', expr: 'x', domain: [0.5, 21], yRange: [-2, 22], shape: 'sequence', desc: '无界发散：不收敛' },
+    ],
+    steps: [
+      { id: 'identify', title: '识别数列', desc: 'aₙ = f(n)：n 取正整数，黄色点为数列项' },
+      { id: 'more', title: '观察更多项', desc: '点播放逐批显示 5→20 项，看趋势' },
+      { id: 'limit', title: '判断收敛', desc: 'aₙ 趋于常数 A 则收敛，否则发散' },
+      { id: 'eps', title: 'ε−N 验证', desc: '|aₙ−A|<ε 对足够大的 n 恒成立' },
+    ],
+    meta: { difficulty: '入门难度', duration: '约 20 分钟', templates: ['数列散点', '收敛趋势'] },
+    version: 1,
+  },
+  // 19. 无穷小与无穷大
+  {
+    id: 'infinitesimal',
+    title: '无穷小与无穷大',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '无穷小与无穷大',
+    template: 'function-plot',
+    summary:
+      '极限为 0 的变量称为无穷小量；绝对值无限增大的变量称为无穷大量。1/x 在 x→∞ 时为无穷小，x 本身为无穷大。',
+    formula: '\\lim_{x \\to \\infty} \\frac{1}{x} = 0',
+    goals: ['理解无穷小与无穷大的概念', '掌握无穷小的阶的比较', '会用等价无穷小代换'],
+    legend: [{ color: '#60a5fa', label: '曲线' }],
+    dataItems: [
+      { label: 'f(2)', expr: '1/x', text: '—' },
+    ],
+    tips: [
+      { icon: '🌱', text: '无穷小：极限为 0 的变量（如 1/x、1/x² 当 x→∞）。' },
+      { icon: '🌋', text: '无穷大：绝对值无限增大（如 x、x² 当 x→∞），其倒数为无穷小。' },
+      { icon: '🧮', text: '等价无穷小代换是求极限的常用技巧（sin x ~ x，x→0）。' },
+    ],
+    defaultCase: 'inf-1x',
+    cases: [
+      { id: 'inf-1x', name: '1/x（无穷小）', expr: '1/x', domain: [0.5, 10], yRange: [-0.3, 2], desc: 'x→∞ 时趋于 0' },
+      { id: 'inf-1x2', name: '1/x²（无穷小）', expr: '1/x^2', domain: [0.5, 10], yRange: [-0.3, 2], desc: '更快趋于 0' },
+      { id: 'inf-x', name: 'x（无穷大）', expr: 'x', domain: [0.5, 10], yRange: [-1, 12], desc: 'x→∞ 时无限增大' },
+      { id: 'inf-x2', name: 'x²（无穷大）', expr: 'x^2', domain: [0.5, 10], yRange: [-2, 30], desc: '更快增大' },
+    ],
+    steps: [
+      { id: 'identify', title: '识别类型', desc: '曲线趋于 0 为无穷小，趋于 ∞ 为无穷大' },
+      { id: 'compare', title: '阶的比较', desc: '1/x² 比 1/x 更快趋于 0（高阶无穷小）' },
+      { id: 'reciprocal', title: '互为倒数', desc: '无穷小的倒数是无穷大，反之亦然' },
+      { id: 'apply', title: '等价代换', desc: 'x→0 时 sin x ~ x、tan x ~ x' },
+    ],
+    meta: { difficulty: '入门难度', duration: '约 15 分钟', templates: ['无穷小曲线', '阶比较'] },
+    version: 1,
+  },
+  // 20. 极限的运算法则
+  {
+    id: 'limit-laws',
+    title: '极限的运算法则',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '极限的运算法则',
+    template: 'function-plot',
+    summary:
+      '极限满足四则运算：和的极限 = 极限的和，积的极限 = 极限的积，商的极限（分母不为 0）= 极限的商。示例曲线展示各类极限过程。',
+    formula: '\\lim(f+g) = \\lim f + \\lim g',
+    goals: ['掌握极限四则运算法则', '会求 0/0、∞/∞ 未定式', '理解法则的适用条件'],
+    legend: [{ color: '#60a5fa', label: '曲线' }],
+    tips: [
+      { icon: '➕', text: '和的极限：lim(f+g) = lim f + lim g。' },
+      { icon: '✖️', text: '积的极限：lim(f·g) = lim f · lim g；常数因子可提出。' },
+      { icon: '➗', text: '商的极限：lim(f/g) = lim f / lim g（lim g ≠ 0）。' },
+    ],
+    defaultCase: 'law-sum',
+    cases: [
+      { id: 'law-sum', name: '1 + 1/x → 1', expr: '1+1/x', domain: [0.5, 10], yRange: [0.8, 2.2], desc: '和的极限：1 + 0 = 1' },
+      { id: 'law-diff', name: '2 − 1/x → 2', expr: '2-1/x', domain: [0.5, 10], yRange: [1.2, 2.2], desc: '差的极限' },
+      { id: 'law-prod', name: '(1+1/x)² → 1', expr: '(1+1/x)^2', domain: [0.5, 10], yRange: [1, 2.6], desc: '积的极限：1·1 = 1' },
+      { id: 'law-quot', name: '1/(1+1/x) → 1', expr: '1/(1+1/x)', domain: [0.5, 10], yRange: [0.5, 1.1], desc: '商的极限：分母极限 ≠ 0' },
+    ],
+    steps: [
+      { id: 'identify', title: '识别法则', desc: '先求各部分极限，再按法则组合' },
+      { id: 'sum', title: '和差法则', desc: 'lim(f±g) = lim f ± lim g' },
+      { id: 'prod', title: '乘积法则', desc: 'lim(f·g) = lim f · lim g' },
+      { id: 'quot', title: '商法则', desc: '分母极限非零才可用' },
+    ],
+    meta: { difficulty: '入门难度', duration: '约 15 分钟', templates: ['极限运算', '四则法则'] },
+    version: 1,
+  },
+  // 21. 两个重要极限
+  {
+    id: 'two-important-limits',
+    title: '两个重要极限',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '两个重要极限',
+    template: 'function-plot',
+    summary:
+      '两个重要极限：lim(x→0) sin x / x = 1 与 lim(x→∞) (1 + 1/x)ˣ = e。前者在 x=0 处为可去间断点，后者曲线趋近 e ≈ 2.718。',
+    formula: '\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1,\\quad \\lim_{x \\to \\infty} (1+\\frac{1}{x})^x = e',
+    goals: ['牢记两个重要极限的形式', '理解其几何与数值意义', '会凑型用重要极限求极限'],
+    legend: [{ color: '#60a5fa', label: '曲线' }],
+    tips: [
+      { icon: '🎯', text: 'sin x / x 在 x=0 无定义但极限为 1（可去间断点）。' },
+      { icon: '💹', text: '(1 + 1/x)ˣ 随 x→∞ 趋近 e ≈ 2.718。' },
+      { icon: '🧩', text: '凑型：lim sin(3x)/(3x) = 1 等变形技巧。' },
+    ],
+    defaultCase: 'lim-sinx',
+    cases: [
+      { id: 'lim-sinx', name: 'sin x / x', expr: 'sin(x)/x', domain: [-4, 4], yRange: [-0.5, 1.2], desc: 'x→0 极限 1（0 处无定义断开）' },
+      { id: 'lim-tanx', name: 'tan x / x', expr: 'tan(x)/x', domain: [-2.5, 2.5], yRange: [-0.5, 2.5], desc: 'x→0 极限 1' },
+      { id: 'lim-e', name: '(1+1/x)ˣ', expr: '(1+1/x)^x', domain: [0.5, 20], yRange: [1.5, 3.2], desc: 'x→∞ 趋近 e ≈ 2.718' },
+      { id: 'lim-e2', name: '(1+2/x)ˣ', expr: '(1+2/x)^x', domain: [0.5, 20], yRange: [1.5, 8], desc: '趋近 e² ≈ 7.389' },
+    ],
+    steps: [
+      { id: 'identify', title: '识别极限', desc: '第一重要极限 sin x / x → 1（x→0）' },
+      { id: 'second', title: '第二重要极限', desc: '(1 + 1/x)ˣ → e（x→∞）' },
+      { id: 'shape', title: '凑型技巧', desc: '把式子凑成重要极限的标准形式' },
+      { id: 'apply', title: '综合应用', desc: 'lim(1+a/x)ˣ = eᵃ 等推广' },
+    ],
+    meta: { difficulty: '入门难度', duration: '约 20 分钟', templates: ['重要极限曲线', 'e 的逼近'] },
+    version: 1,
+  },
+  // 22. 连续函数
+  {
+    id: 'continuity',
+    title: '连续函数',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数的连续性',
+    template: 'function-plot',
+    summary:
+      '函数在 x₀ 连续：lim(x→x₀) f(x) = f(x₀)，即极限存在且等于函数值。连续函数具有介值性与最值性。',
+    formula: '\\lim_{x \\to x_0} f(x) = f(x_0)',
+    goals: ['理解连续的定义（极限=函数值）', '掌握间断点分类', '会用闭区间连续函数性质'],
+    legend: [{ color: '#60a5fa', label: '曲线' }],
+    tips: [
+      { icon: '🖊️', text: '连续：曲线可一笔画过；间断：在某点断开或跳变。' },
+      { icon: '🔍', text: '1/x 在 x=0 无定义（无穷间断）；sin x / x 在 0 为可去间断。' },
+      { icon: '🎯', text: '闭区间连续函数有介值性：f(a) 与 f(b) 之间的值都能取到。' },
+    ],
+    defaultCase: 'cont-square',
+    cases: [
+      { id: 'cont-square', name: 'x²（连续）', expr: 'x^2', domain: [-3, 3], yRange: [-1, 10], desc: '处处连续' },
+      { id: 'cont-abs', name: '|x|（连续）', expr: 'abs(x)', domain: [-3, 3], yRange: [-1, 3.5], desc: '连续但 x=0 处不可导' },
+      { id: 'cont-1x', name: '1/x（间断）', expr: '1/x', domain: [-3, 3], yRange: [-4, 4], shape: 'rational', markers: { xIntercept: false, yIntercept: false }, desc: 'x=0 无穷间断' },
+      { id: 'cont-sinx', name: 'sin x / x（可去间断）', expr: 'sin(x)/x', domain: [-4, 4], yRange: [-0.5, 1.2], desc: 'x=0 无定义但极限存在' },
+    ],
+    steps: [
+      { id: 'identify', title: '识别连续', desc: '曲线无断开即连续' },
+      { id: 'def', title: '极限=函数值', desc: 'lim f(x) = f(x₀) 三条件缺一不可' },
+      { id: 'type', title: '间断点分类', desc: '可去/跳跃/无穷间断' },
+      { id: 'apply', title: '闭区间性质', desc: '介值性、最值性（闭区间连续函数）' },
+    ],
+    meta: { difficulty: '入门难度', duration: '约 20 分钟', templates: ['连续性可视化', '间断点分类'] },
+    version: 1,
+  },
+  // 23. 微分（Δy ≈ dy 线性主部）
+  {
+    id: 'differential',
+    title: '微分',
+    course: '高等数学（上册）',
+    chapter: '导数与微分',
+    section: '微分的概念',
+    template: 'function-plot',
+    summary:
+      '微分是函数增量的线性主部：Δy = f(x₀+Δx) − f(x₀) ≈ dy = f′(x₀)·Δx。Δx 越小时近似越精确，误差为 Δx 的高阶无穷小。',
+    formula: 'dy = f\'(x_0)\\, dx',
+    goals: ['理解微分是增量的线性主部', '掌握 Δy 与 dy 的关系', '会用微分做近似计算'],
+    legend: [{ color: '#60a5fa', label: 'y = x²' }],
+    dataItems: [
+      { label: 'x₀', expr: 'x0' },
+      { label: 'Δx', expr: 'dx' },
+      { label: 'dy = 2x₀·Δx', expr: '2*x0*dx' },
+      { label: 'Δy', expr: '(x0+dx)^2-x0^2' },
+      { label: '误差 |Δy−dy|', expr: 'abs((x0+dx)^2-x0^2-2*x0*dx)' },
+    ],
+    tips: [
+      { icon: '📐', text: 'dy = f′(x₀)·Δx 是切线纵坐标增量；Δy 是曲线实际增量。' },
+      { icon: '🎯', text: 'Δx 越小，dy 越接近 Δy（误差是 Δx 的高阶无穷小）。' },
+      { icon: '🧮', text: '一阶微分形式不变性：dy = f′(u)·du 对中间变量也成立。' },
+    ],
+    defaultCase: 'diff-x1',
+    cases: [
+      { id: 'diff-x1', name: 'x₀ = 1', expr: 'x^2', domain: [-1, 3], yRange: [-1, 9], params: { x0: 1, dx: 0.5 }, paramRanges: { x0: { label: 'x₀', min: 0.2, max: 2.5, step: 0.1 }, dx: { label: 'Δx', min: 0.05, max: 1.5, step: 0.05 } }, desc: 'f(x)=x² 在 x₀=1 处：dy=1.0, Δy=1.25' },
+      { id: 'diff-x2', name: 'x₀ = 2', expr: 'x^2', domain: [-1, 3.5], yRange: [-1, 12], params: { x0: 2, dx: 0.5 }, paramRanges: { x0: { label: 'x₀', min: 0.2, max: 3, step: 0.1 }, dx: { label: 'Δx', min: 0.05, max: 1.5, step: 0.05 } }, desc: 'x₀=2：dy=2.0, Δy=2.25' },
+      { id: 'diff-x3', name: 'x₀ = 3', expr: 'x^2', domain: [-1, 4.5], yRange: [-1, 20], params: { x0: 3, dx: 0.3 }, paramRanges: { x0: { label: 'x₀', min: 0.2, max: 4, step: 0.1 }, dx: { label: 'Δx', min: 0.05, max: 1.5, step: 0.05 } }, desc: 'x₀=3 小 Δx：dy 与 Δy 更接近' },
+    ],
+    steps: [
+      { id: 'identify', title: '认识微分', desc: 'dy = f′(x₀)·Δx：线性主部' },
+      { id: 'compare', title: 'Δy 与 dy', desc: 'Δy 是实际增量，dy 是切线近似' },
+      { id: 'error', title: '误差', desc: '|Δy−dy| 随 Δx 减小而更快减小' },
+      { id: 'apply', title: '近似计算', desc: 'f(x₀+Δx) ≈ f(x₀) + f′(x₀)·Δx' },
+    ],
+    meta: { difficulty: '中等难度', duration: '约 20 分钟', templates: ['微分线性主部', 'Δy 与 dy 对比'] },
+    version: 1,
+  },
+  // 24. 函数图形的描绘
+  {
+    id: 'graphing',
+    title: '函数图形描绘',
+    course: '高等数学（上册）',
+    chapter: '微分中值定理与导数的应用',
+    section: '函数图形的描绘',
+    template: 'function-plot',
+    summary:
+      '借助导数描绘函数图形：f′(x) 定单调性（>0 递增、<0 递减），f″(x) 定凹凸性（>0 凹向上、<0 凸向下），极值点与拐点处一阶/二阶导为零。',
+    formula: 'f\'(x) > 0 \\Rightarrow \\uparrow,\\quad f\'\'(x) > 0 \\Rightarrow \\cup',
+    goals: ['掌握用导数判断单调性与凹凸性', '会求极值与拐点', '能综合描绘函数图形'],
+    legend: [{ color: '#60a5fa', label: '曲线' }],
+    tips: [
+      { icon: '📈', text: 'f′(x)>0 递增、f′(x)<0 递减；f′(x)=0 可能为极值点。' },
+      { icon: '🍵', text: 'f″(x)>0 凹向上（∪）、f″(x)<0 凸向下（∩）；f″=0 可能为拐点。' },
+      { icon: '🧭', text: 'x³−3x 在 x=±1 有极值，x³ 单调递增无极值。' },
+    ],
+    defaultCase: 'graph-cube',
+    cases: [
+      { id: 'graph-cube', name: 'x³（单调）', expr: 'x^3', domain: [-2.5, 2.5], yRange: [-16, 16], desc: '全域递增，拐点 (0,0)' },
+      { id: 'graph-extrema', name: 'x³−3x（极值）', expr: 'x^3-3*x', domain: [-2.5, 2.5], yRange: [-4, 4], desc: 'x=±1 极值，(-1,2) 极大、(1,−2) 极小' },
+      { id: 'graph-bounded', name: '1/(1+x²)（有界）', expr: '1/(1+x^2)', domain: [-4, 4], yRange: [-0.5, 1.3], desc: '有界连续，x=0 取最大值 1' },
+      { id: 'graph-sin', name: 'sin x（周期）', expr: 'sin(x)', domain: [-7, 7], yRange: [-1.5, 1.5], desc: '极值点 x=π/2+2kπ' },
+    ],
+    steps: [
+      { id: 'identify', title: '定义域', desc: '先确定定义域、奇偶性、周期性' },
+      { id: 'deriv', title: '一阶导', desc: 'f′ 定单调区间与极值点' },
+      { id: 'second', title: '二阶导', desc: 'f″ 定凹凸性与拐点' },
+      { id: 'sketch', title: '综合描绘', desc: '结合渐近线与关键点画出图形' },
+    ],
+    meta: { difficulty: '中等难度', duration: '约 25 分钟', templates: ['导数与图形', '极值凹凸'] },
+    version: 1,
+  },
+  // 25. 不定积分（原函数族）
+  {
+    id: 'indefinite-integral',
+    title: '不定积分',
+    course: '高等数学（上册）',
+    chapter: '不定积分与定积分',
+    section: '不定积分',
+    template: 'function-plot',
+    summary:
+      '不定积分是导数的逆运算：∫f(x)dx = F(x) + C，其中 F′(x) = f(x)。粉色为被积函数 f，蓝色为原函数 F（一组平行曲线，差一个常数 C）。',
+    formula: '\\int f(x)\\, dx = F(x) + C',
+    goals: ['理解原函数与不定积分', '掌握换元与分部积分法', '理解积分常数 C'],
+    legend: [
+      { color: '#60a5fa', label: '原函数 F(x)' },
+      { color: '#ec4899', label: '被积函数 f(x)' },
+    ],
+    tips: [
+      { icon: '🔄', text: 'F′(x) = f(x)：原函数求导回到被积函数。' },
+      { icon: '➕', text: '不定积分是一族曲线：F(x) + C 相差任意常数。' },
+      { icon: '🧮', text: '换元积分法与分部积分法是两大核心方法。' },
+    ],
+    defaultCase: 'int-square',
+    cases: [
+      { id: 'int-square', name: '∫x²dx = x³/3', expr: 'x^3/3', expr2: 'x^2', domain: [-3, 3], yRange: [-9, 9], desc: 'F(x)=x³/3，f(x)=x²' },
+      { id: 'int-sin', name: '∫sin x dx = −cos x', expr: '-cos(x)', expr2: 'sin(x)', domain: [-4, 4], yRange: [-2, 2], desc: 'F=−cos x，f=sin x' },
+      { id: 'int-ln', name: '∫1/x dx = ln|x|', expr: 'log(abs(x))', expr2: '1/x', domain: [0.3, 4], yRange: [-3, 3], desc: 'F=ln|x|，f=1/x' },
+    ],
+    steps: [
+      { id: 'identify', title: '认识原函数', desc: 'F′(x) = f(x)，蓝线为 F、粉线为 f' },
+      { id: 'family', title: '积分常数', desc: 'F(x)+C 是一族平行曲线' },
+      { id: 'method', title: '基本方法', desc: '直接积分、换元、分部' },
+      { id: 'apply', title: '应用', desc: '不定积分是求定积分的基础' },
+    ],
+    meta: { difficulty: '中等难度', duration: '约 20 分钟', templates: ['原函数族', '积分与导数互逆'] },
+    version: 1,
+  },
+  // 26. 定积分（shape=riemann 面积逼近）
+  {
+    id: 'definite-integral',
+    title: '定积分',
+    course: '高等数学（上册）',
+    chapter: '不定积分与定积分',
+    section: '定积分',
+    template: 'function-plot',
+    summary:
+      '定积分是函数在区间上的累加极限：∫ₐᵇ f(x) dx = lim Σ f(xᵢ)Δx。紫色矩形为黎曼和，分割数 n 越大，梯形和越逼近真实面积（牛顿—莱布尼茨公式）。',
+    formula: '\\int_a^b f(x)\\, dx = \\lim_{n \\to \\infty} \\sum_{i=1}^{n} f(x_i)\\Delta x',
+    goals: ['理解定积分的分割—求和—取极限定义', '掌握牛顿—莱布尼茨公式', '会用定积分求面积'],
+    legend: [
+      { color: '#a78bfa', label: '黎曼矩形' },
+      { color: '#60a5fa', label: '曲线 f(x)' },
+    ],
+    dataItems: [
+      { label: '分割数 n', expr: 'n' },
+    ],
+    tips: [
+      { icon: '⬛', text: '紫色矩形为黎曼和：调大分割数 n，总面积逼近定积分。' },
+      { icon: '📏', text: '梯形和 ≈ 左和与右和的平均，收敛更快。' },
+      { icon: '⚡', text: '牛顿—莱布尼茨公式：∫ₐᵇ f(x)dx = F(b) − F(a)。' },
+    ],
+    defaultCase: 'riemann-square',
+    cases: [
+      {
+        id: 'riemann-square', name: '∫₀¹ x²dx', expr: 'x^2', domain: [-0.2, 1.3], yRange: [-0.3, 1.4],
+        params: { a: 0, b: 1, n: 20 }, paramRanges: { n: { label: '分割数 n', min: 4, max: 100, step: 2 } },
+        shape: 'riemann', desc: '精确值 1/3 ≈ 0.3333',
+      },
+      {
+        id: 'riemann-sin', name: '∫₀^π sin x dx', expr: 'sin(x)', domain: [-0.3, 3.5], yRange: [-0.3, 1.4],
+        params: { a: 0, b: 3.141592653589793, n: 20 }, paramRanges: { n: { label: '分割数 n', min: 4, max: 100, step: 2 } },
+        shape: 'riemann', desc: '精确值 2',
+      },
+      {
+        id: 'riemann-ln', name: '∫₁² (1/x)dx', expr: '1/x', domain: [0.9, 2.2], yRange: [-0.3, 1.3],
+        params: { a: 1, b: 2, n: 20 }, paramRanges: { n: { label: '分割数 n', min: 4, max: 100, step: 2 } },
+        shape: 'riemann', desc: '精确值 ln 2 ≈ 0.6931',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '分割', desc: '把 [a,b] 分成 n 等份，Δx = (b−a)/n' },
+      { id: 'rect', title: '作矩形', desc: '紫色矩形高度取 f(xᵢ)' },
+      { id: 'sum', title: '求和取极限', desc: 'n→∞ 时黎曼和趋于定积分' },
+      { id: 'nlb', title: '牛顿—莱布尼茨', desc: '∫ₐᵇ f(x)dx = F(b) − F(a)' },
+    ],
+    meta: { difficulty: '中等难度', duration: '约 30 分钟', templates: ['黎曼和逼近', '定积分面积'] },
     version: 1,
   },
 ]

@@ -9,7 +9,7 @@ import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
 import GeoLine from './geoboard/GeoLine'
-import { buildWorldMap, calcViewportGrid } from './viewport'
+import { buildWorldMap, calcViewportGrid, refineCurve } from './viewport'
 import ConceptCard from './ui/ConceptCard'
 import SegmentedControl from './ui/SegmentedControl'
 import SliderRow from './ui/SliderRow'
@@ -167,14 +167,21 @@ export default function DerivativeDemo() {
   const visWorldXMin = map.fromSx(-transform.tx / transform.scale)
   const visWorldXMax = map.fromSx((W - transform.tx) / transform.scale)
   const curvePts: string[] = []
-  const N = 160
-  let curveStarted = false
+  const N = 300
+  const refineTol = (yMax - yMin) / 300
+  const rawPts: { x: number; y: number }[] = []
   for (let i = 0; i <= N; i++) {
     const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
     const y = f(x)
     if (!Number.isFinite(y)) continue
-    curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
-    curveStarted = true
+    rawPts.push({ x, y })
+  }
+  if (rawPts.length > 0) {
+    let started = false
+    for (const p of refineCurve(rawPts, f, refineTol)) {
+      curvePts.push((started ? 'L' : 'M') + sx(p.x).toFixed(1) + ' ' + sy(p.y).toFixed(1))
+      started = true
+    }
   }
 
     return (

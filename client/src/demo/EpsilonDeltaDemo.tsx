@@ -8,7 +8,7 @@ import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
-import { buildWorldMap, calcViewportGrid } from './viewport'
+import { buildWorldMap, calcViewportGrid, refineCurve } from './viewport'
 import ConceptCard from './ui/ConceptCard'
 import SegmentedControl from './ui/SegmentedControl'
 import SliderRow from './ui/SliderRow'
@@ -170,19 +170,26 @@ export default function EpsilonDeltaDemo() {
   const grid = calcViewportGrid(transform, W, H, [dMin, dMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
   const coord = { sx, sy, fromSx: map.fromSx, fromSy: map.fromSy }
 
-  // 曲线采样
+  // 曲线采样（均匀 + 曲率自适应细分，Desmos 式）
   const curvePts: string[] = []
   const inBandPts: string[] = []
-  const N = 160
+  const N = 300
+  const refineTol = (yMax - yMin) / 300
+  const rawPts: { x: number; y: number }[] = []
   let curveStarted = false
   for (let i = 0; i <= N; i++) {
     const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
     const y = f(x)
     if (!Number.isFinite(y)) continue
-    // 首个有效点用 M 起笔（避免定义域外 NaN 导致 path 以 L 开头而整条不显示）
-    curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
-    curveStarted = true
+    rawPts.push({ x, y })
     if (showBand && step >= 4 && Math.abs(x - a) < delta) inBandPts.push((inBandPts.length === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+  }
+  if (rawPts.length > 0) {
+    const refined = refineCurve(rawPts, f, refineTol)
+    for (const p of refined) {
+      curvePts.push((curveStarted ? 'L' : 'M') + sx(p.x).toFixed(1) + ' ' + sy(p.y).toFixed(1))
+      curveStarted = true
+    }
   }
 
   return (

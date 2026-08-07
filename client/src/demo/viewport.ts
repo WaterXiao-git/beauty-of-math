@@ -132,3 +132,40 @@ export function calcViewportGrid(
 
   return { verts, hors, axisX, axisY }
 }
+
+
+// ============ 曲率自适应采样 ============
+
+export interface CurvePt {
+  x: number
+  y: number
+}
+
+/**
+ * 曲率自适应细分（Desmos 式）：对相邻两点中点相对线性插值的偏差超过 tol 的区间插入中点。
+ * passes 轮后曲线在弯曲剧烈处自动加密、平缓处保持稀疏。
+ * @param pts 有效采样点（无 NaN）
+ * @param fn 原函数（用于取中点值）
+ * @param tol 偏差容差（世界单位；建议 (yMax-yMin)/300）
+ * @param passes 细分轮数
+ */
+export function refineCurve(pts: CurvePt[], fn: (x: number) => number, tol: number, passes = 2): CurvePt[] {
+  let out = pts
+  for (let pass = 0; pass < passes; pass++) {
+    const next: CurvePt[] = []
+    for (let i = 0; i < out.length; i++) {
+      next.push(out[i])
+      if (i + 1 < out.length) {
+        const a = out[i]
+        const b = out[i + 1]
+        const xm = (a.x + b.x) / 2
+        const ym = fn(xm)
+        if (Number.isFinite(ym) && Math.abs(ym - (a.y + b.y) / 2) > tol) {
+          next.push({ x: xm, y: ym })
+        }
+      }
+    }
+    out = next
+  }
+  return out
+}

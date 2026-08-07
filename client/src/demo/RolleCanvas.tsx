@@ -4,7 +4,7 @@ import MathFormula from '../components/MathFormula/MathFormula'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
 import GridTicks from './ui/GridTicks'
-import { buildWorldMap, calcViewportGrid } from './viewport'
+import { buildWorldMap, calcViewportGrid, refineCurve } from './viewport'
 import type { RolleCase } from './rolleData'
 import { LEGEND } from './rolleData'
 
@@ -57,14 +57,22 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
   const gapW = conditions.continuous ? 0 : (b - a) / 60
   const pathLeft: string[] = []
   const pathRight: string[] = []
+  const refineTol = (yMax - yMin) / 300
+  const leftPts: { x: number; y: number }[] = []
+  const rightPts: { x: number; y: number }[] = []
   for (let i = 0; i <= N; i++) {
     const x = viewMin + ((viewMax - viewMin) * i) / N
     const y = c.fn(x)
     if (!Number.isFinite(y)) continue
-    const cmd = (i === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1)
     if (!conditions.continuous && Math.abs(x - breakX) < gapW) continue // 断口
-    if (x < breakX) pathLeft.push(cmd)
-    else pathRight.push(cmd)
+    if (x < breakX) leftPts.push({ x, y })
+    else rightPts.push({ x, y })
+  }
+  for (const p of refineCurve(leftPts, c.fn, refineTol)) {
+    pathLeft.push((pathLeft.length === 0 ? 'M' : 'L') + sx(p.x).toFixed(1) + ' ' + sy(p.y).toFixed(1))
+  }
+  for (const p of refineCurve(rightPts, c.fn, refineTol)) {
+    pathRight.push((pathRight.length === 0 ? 'M' : 'L') + sx(p.x).toFixed(1) + ' ' + sy(p.y).toFixed(1))
   }
   const curveLeft = pathLeft.join(' ')
   const curveRight = pathRight.join(' ')

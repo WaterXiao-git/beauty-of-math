@@ -9,7 +9,7 @@ import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
-import { buildWorldMap, calcViewportGrid } from './viewport'
+import { buildWorldMap, calcViewportGrid, refineCurve } from './viewport'
 import ConceptCard from './ui/ConceptCard'
 import SegmentedControl from './ui/SegmentedControl'
 import SliderRow from './ui/SliderRow'
@@ -228,36 +228,55 @@ export default function FunctionPlotDemo() {
   const segments: { fn: (x: number) => number; from: number; to: number }[] = activeCase.pieces && shape === 'piecewise'
     ? activeCase.pieces.map((p) => ({ fn: makeParamFn(p.expr, params), from: p.from ?? visWorldXMin, to: p.to ?? visWorldXMax }))
     : [{ fn: f, from: visWorldXMin, to: visWorldXMax }]
+  // 曲线采样：均匀采样 + 曲率自适应细分（Desmos 式，弯曲处加密）
+  const N = 300
+  const refineTol = (yMax - yMin) / 300
   const curvePts: string[] = []
-  const N = 200
   let curveStarted = false
-  let prevX: number | null = null
   for (const seg of segments) {
-    curveStarted = false
-    prevX = null
+    const segPts: { x: number; y: number }[] = []
+    let prevX: number | null = null
+    const flushSeg = () => {
+      if (segPts.length === 0) return
+      const refined = refineCurve(segPts, seg.fn, refineTol)
+      for (const p of refined) {
+        curvePts.push((curveStarted ? 'L' : 'M') + sx(p.x).toFixed(1) + ' ' + sy(p.y).toFixed(1))
+        curveStarted = true
+      }
+      segPts.length = 0
+    }
     for (let i = 0; i <= N; i++) {
       const x = seg.from + ((seg.to - seg.from) * i) / N
       if (rationalH !== null && prevX !== null && (prevX - rationalH) * (x - rationalH) < 0) {
-        curveStarted = false // 跨垂直渐近线，断开
+        flushSeg() // 跨垂直渐近线，断开
       }
       const y = seg.fn(x)
       if (!Number.isFinite(y) || Math.abs(y) > yLimit) {
-        curveStarted = false // 无定义/超限点，断开（避免正负无穷连线）
+        flushSeg() // 无定义/超限点，断开（避免正负无穷连线）
         continue
       }
       prevX = x
-      curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
-      curveStarted = true
+      segPts.push({ x, y })
     }
+    flushSeg()
   }
   const curvePts2: string[] = []
-  let curve2Started = false
-  for (let i = 0; i <= N; i++) {
-    const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
-    const y = f2?.(x)
-    if (y == null || !Number.isFinite(y) || Math.abs(y) > yLimit) continue
-    curvePts2.push((curve2Started ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
-    curve2Started = true
+  if (f2) {
+    const pts2: { x: number; y: number }[] = []
+    for (let i = 0; i <= N; i++) {
+      const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
+      const y = f2(x)
+      if (!Number.isFinite(y) || Math.abs(y) > yLimit) continue
+      pts2.push({ x, y })
+    }
+    if (pts2.length > 0) {
+      const refined2 = refineCurve(pts2, f2, refineTol)
+      let started = false
+      for (const p of refined2) {
+        curvePts2.push((started ? 'L' : 'M') + sx(p.x).toFixed(1) + ' ' + sy(p.y).toFixed(1))
+        started = true
+      }
+    }
   }
 
   const setParam = (key: string, value: number) => setParams((prev) => ({ ...prev, [key]: value }))

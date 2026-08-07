@@ -14,6 +14,20 @@
 
 ---
 
+## 2026-08-06 · 曲线曲率自适应细分（Desmos 式，极限/函数曲线更精细）
+
+**模块**：前端演示画布
+
+**内容**：
+- viewport.ts 新增 refineCurve：对相邻点中点相对线性插值偏差超 tol 的区间插入中点（2 轮细分），弯曲剧烈处自动加密、平缓处保持稀疏
+- 四个画布（ε−δ / 导数 / 罗尔 / FunctionPlotDemo）曲线采样全部改为「均匀 300 点 + 自适应细分」，极限附近与曲率大的区域（√x 拐点、泰勒多项式边缘、反比例渐近线附近）显示更贴近真实曲线；分段/渐近线断开逻辑保留
+
+**涉及文件**：`client/src/demo/viewport.ts`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`、`RolleCanvas.tsx`、`FunctionPlotDemo.tsx`
+
+**验证**：tsc exit 0；vite build 成功（58.5s）
+
+---
+
 ## 2026-08-06 · 批量迁移第五批：三角函数 / 圆锥曲线 / 泰勒公式（纯配置）
 
 **模块**：server 配置层 / 课程数据

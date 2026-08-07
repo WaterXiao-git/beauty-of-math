@@ -14,6 +14,18 @@
 
 ---
 
+## 2026-08-06 · 当前步骤卡行距修复（三行不再遮挡）
+
+**模块**：前端演示页布局
+
+**内容**：StepStatusCard 改为统一 gap-1.5 垂直间距 + 描述单行 truncate（悬停 title 显示全文）+ 放大行距（标题 leading-snug、描述 leading-relaxed），三行内容在 h-20 内不再溢出遮挡
+
+**涉及文件**：`client/src/demo/ui/StepStatusCard.tsx`
+
+**验证**：tsc -b --noEmit exit 0
+
+---
+
 ## 2026-08-06 · 当前步骤卡与播放条同处底部一行（修正对齐）
 
 **模块**：前端演示页布局

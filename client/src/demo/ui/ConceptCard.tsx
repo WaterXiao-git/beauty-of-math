@@ -12,7 +12,7 @@ interface ConceptCardProps {
 
 export default function ConceptCard({ title = '概念要点', subtitle = '严格定义', children, formula }: ConceptCardProps) {
   return (
-    <section className="relative bg-white/85 backdrop-blur-sm rounded-[22px] border border-gray-100 shadow-sm p-5 pl-6 overflow-hidden">
+    <section className="relative bg-white rounded-[22px] border border-gray-100 shadow-md p-5 pl-6 overflow-hidden">
       <span className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-purple-500 to-indigo-400" />
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-bold text-gray-800">{title}</h3>

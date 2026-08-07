@@ -14,6 +14,18 @@
 
 ---
 
+## 2026-08-06 · 概念要点卡内容不可见排查：公式改 \lt + 去 backdrop-blur
+
+**模块**：前端演示页
+
+**内容**：ε−δ 概念要点公式中的裸 < 改为 \lt（TeX 规范写法）；ConceptCard 去掉 backdrop-blur-sm（嵌套滚动容器内 backdrop-filter 偶发渲染异常），白底 + shadow-md
+
+**涉及文件**：`client/src/demo/EpsilonDeltaDemo.tsx`、`client/src/demo/ui/ConceptCard.tsx`
+
+**验证**：tsc -b --noEmit exit 0
+
+---
+
 ## 2026-08-06 · ε−δ 页概念要点卡文案与公式
 
 **模块**：前端演示页

@@ -30,23 +30,13 @@ interface AiMessage {
 
 const now = () => new Date().toTimeString().slice(0, 5)
 
-/** 示例对话（静态演示；后续可接 /api/answer 真实问答） */
-const SAMPLE_MESSAGES: AiMessage[] = [
-  {
-    role: 'user',
-    time: '10:24',
-    text: '为什么这个演示的极限是 1？',
-  },
-  {
-    role: 'ai',
-    time: '10:24',
-    blocks: [
-      { type: 'text', content: '关键在于函数值随自变量趋近而稳定地逼近目标值。看这一步：' },
-      { type: 'formula', content: '\lim_{x \to a} f(x) = L' },
-      { type: 'text', content: '当 ε 任意小，总能找到 δ 使 |x−a| < δ 时曲线落在 L±ε 带内——这就是 ε−δ 语言。试试收紧 ε 滑块观察可行 δ 变小。' },
-    ],
-  },
+/** 空状态快捷提问 */
+const SUGGESTIONS = [
+  '这个演示的核心概念是什么？',
+  '拖动点或参数时应该观察什么？',
+  '能给我一个具体的数学例子吗？',
 ]
+
 
 const ICON_COPY = (
   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -67,14 +57,14 @@ const ICON_DOWN = (
 
 export default function AiCopilot({ open, onClose, context }: AiCopilotProps & { onClose: () => void }) {
   const [contextOpen, setContextOpen] = useState(true)
-  const [messages, setMessages] = useState<AiMessage[]>(SAMPLE_MESSAGES)
+  const [messages, setMessages] = useState<AiMessage[]>([])
   const [input, setInput] = useState('')
   const [feedback, setFeedback] = useState<Record<number, 'up' | 'down' | null>>({})
   const [loading, setLoading] = useState(false)
 
   // 真实问答：/api/answer（DeepSeek 主 + Qwen 备，双模型）
-  const send = async () => {
-    const q = input.trim()
+  const send = async (text?: string) => {
+    const q = (text ?? input).trim()
     if (!q || loading) return
     setMessages((m) => [...m, { role: 'user', time: now(), text: q }])
     setInput('')
@@ -182,6 +172,30 @@ export default function AiCopilot({ open, onClose, context }: AiCopilotProps & {
 
         {/* 对话消息列表 */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.length === 0 && !loading && (
+            <div className="h-full flex flex-col items-center justify-center text-center px-4">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white text-lg mb-3 shadow-lg shadow-purple-500/30">
+                <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l1.8 5.2L19 9l-5.2 1.8L12 16l-1.8-5.2L5 9l5.2-1.8L12 2z" />
+                  <path d="M19 14l.9 2.6L22.5 17.5l-2.6.9L19 21l-.9-2.6-2.6-.9 2.6-.9L19 14z" opacity={0.7} />
+                </svg>
+              </div>
+              <p className="text-sm font-semibold text-gray-700 mb-1">我是 AI 数学助教</p>
+              <p className="text-xs text-gray-400 leading-relaxed mb-4">可以提问当前演示相关的数学概念、推导或困惑</p>
+              <div className="flex flex-col gap-2 w-full max-w-[230px]">
+                {SUGGESTIONS.map((sug) => (
+                  <button
+                    key={sug}
+                    type="button"
+                    onClick={() => send(sug)}
+                    className="px-3 py-2 rounded-full bg-gray-50 border border-gray-200 text-xs text-gray-600 hover:border-purple-300 hover:text-purple-600 transition-colors"
+                  >
+                    {sug}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
           {messages.map((m, idx) => (
             <div key={idx} className={m.role === 'user' ? 'flex flex-col items-end' : 'flex flex-col items-start'}>
               {/* 顶部信息 */}
@@ -280,7 +294,7 @@ export default function AiCopilot({ open, onClose, context }: AiCopilotProps & {
             />
             <button
               type="button"
-              onClick={send}
+              onClick={() => send()}
               className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-2 shrink-0 transition-colors disabled:opacity-50"
               aria-label="发送"
               disabled={!input.trim()}

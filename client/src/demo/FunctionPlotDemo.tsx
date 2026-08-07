@@ -153,9 +153,9 @@ export default function FunctionPlotDemo() {
               const aa = p.a ?? 1
               const h = p.h ?? 0
               const k = p.k ?? 0
-              const ratio = -k / aa
-              if (!Number.isFinite(ratio) || ratio < 0) return []
-              return [h - Math.sqrt(ratio), h + Math.sqrt(ratio)]
+              const r = -k / aa
+              if (!Number.isFinite(r) || r < 0) return []
+              return [h - r, h + r]
             })()
           : []
     const trend = shape === 'linear' ? (slope > 0 ? '单调递增' : slope < 0 ? '单调递减' : '常函数') : ''
@@ -198,6 +198,8 @@ export default function FunctionPlotDemo() {
   const grid = calcViewportGrid(transform, W, H, [xMin, xMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
   // 曲线采样（可视世界范围）
+  const visYMapMin = (H - transform.ty) / transform.scale
+  const visYMapMax = -transform.ty / transform.scale
   const visWorldXMin = xMin + ((-transform.tx / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
   const visWorldXMax = xMin + (((W - transform.tx) / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
   const curvePts: string[] = []
@@ -284,7 +286,7 @@ export default function FunctionPlotDemo() {
               <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
                 {/* 二次：对称轴虚线 */}
                 {shape === 'quadratic' && markers.axis && Number.isFinite(vertexX) && (
-                  <line x1={sx(vertexX)} y1={0} x2={sx(vertexX)} y2={H} stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="6 4" />
+                  <line x1={sx(vertexX)} y1={visYMapMin} x2={sx(vertexX)} y2={visYMapMax} stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="6 4" />
                 )}
                 {/* 线性：斜率三角形 */}
                 {shape === 'linear' && markers.slopeTriangle && showTri && step >= 3 && (

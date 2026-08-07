@@ -1,12 +1,11 @@
 ﻿// 右侧控制面板（Card Stack）：概念要点（定理条件） / 实验控制（案例 + 条件开关） / 观察提示
 import type { RolleCase } from './rolleData'
-import { CASES, THEOREM_TEXT, stepDescription } from './rolleData'
+import { CASES, THEOREM_TEXT } from './rolleData'
 import type { Conditions } from './RolleCanvas'
 import ConceptCard from './ui/ConceptCard'
 import SegmentedControl from './ui/SegmentedControl'
 import SwitchRow from './ui/SwitchRow'
 import ObserveTipCard from './ui/ObserveTipCard'
-import StepStatusCard from './ui/StepStatusCard'
 
 interface RolleControlProps {
   caseId: string
@@ -16,8 +15,6 @@ interface RolleControlProps {
   /** 教学判断是否成立 */
   judgmentOk: boolean
   judgmentText: string
-  /** 当前播放步进 1-4 */
-  step: number
 }
 
 type ConditionKey = keyof Conditions
@@ -35,13 +32,11 @@ export default function RolleControl({
   onToggleCondition,
   judgmentOk,
   judgmentText,
-  step,
 }: RolleControlProps) {
   const activeCase = CASES.find((c) => c.id === caseId)
 
   return (
-    <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-3 overflow-hidden">
-      <div className="flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto">
+    <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
       {/* 概念要点（定理条件） */}
       <ConceptCard
         title="定理条件"
@@ -96,8 +91,6 @@ export default function RolleControl({
           { icon: '🎯', text: '三条件全部满足时，曲线内部至少出现一条水平切线（ξ 自动高亮）；破坏任一条件观察定理失效。' },
         ]}
       />
-      </div>
-      <StepStatusCard stepDesc={stepDescription(step)} />
     </aside>
   )
 }

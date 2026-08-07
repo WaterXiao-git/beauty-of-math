@@ -6,6 +6,7 @@ import RolleCanvas from './RolleCanvas'
 import type { Conditions } from './RolleCanvas'
 import RolleControl from './RolleControl'
 import PlayerBar from './PlayerBar'
+import StepStatusCard from './ui/StepStatusCard'
 import { CASES, STEPS, judgmentText, stepDescription } from './rolleData'
 
 const CONDITION_LABELS: Record<keyof Conditions, string> = {
@@ -89,24 +90,27 @@ export default function RolleDemo() {
           onToggleCondition={handleToggleCondition}
           judgmentOk={judgmentOk}
           judgmentText={judgment}
-          step={step}
         />
       </div>
 
       {/* 底：播放控制栏 */}
-      <PlayerBar
-        steps={STEPS}
-        step={step}
-        playing={playing}
-        onPrev={() => setStep((s) => Math.max(1, s - 1))}
-        onNext={() => setStep((s) => Math.min(4, s + 1))}
-        onTogglePlay={() => setPlaying((p) => !p)}
-        onReset={() => {
-          setPlaying(false)
-          setStep(1)
-        }}
-        stepDesc={stepDescription(step)}
-      />
+      {/* 底部行：播放条 + 当前步骤卡（同一高度） */}
+      <div className="flex h-20 shrink-0 gap-4 px-4 md:px-5 pb-4">
+        <PlayerBar
+          steps={STEPS}
+          step={step}
+          playing={playing}
+          onPrev={() => setStep((s) => Math.max(1, s - 1))}
+          onNext={() => setStep((s) => Math.min(4, s + 1))}
+          onTogglePlay={() => setPlaying((p) => !p)}
+          onReset={() => {
+            setPlaying(false)
+            setStep(1)
+          }}
+          stepDesc={stepDescription(step)}
+        />
+        <StepStatusCard stepDesc={stepDescription(step)} />
+      </div>
     </div>
   )
 }

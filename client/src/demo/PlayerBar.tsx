@@ -20,7 +20,7 @@ interface PlayerBarProps {
 
 export default function PlayerBar({ steps, step, playing, onPrev, onNext, onTogglePlay, onReset }: PlayerBarProps) {
   return (
-    <footer className="h-20 shrink-0 bg-white border-t border-gray-100 flex items-center gap-4 md:gap-8 px-4 md:px-6">
+    <footer className="flex-1 min-w-0 h-full bg-white border-t border-gray-100 flex items-center gap-4 md:gap-8 px-4 md:px-6">
       {/* 左：播放控制组 */}
       <div className="flex items-center gap-2 shrink-0">
         <button

@@ -260,8 +260,7 @@ export default function FunctionPlotDemo() {
         </section>
 
         {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
-        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-3 overflow-hidden">
-          <div className="flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto">
+        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
           {/* 概念要点 */}
           <ConceptCard formula={"y = kx + b"}>
             {config.summary}
@@ -322,21 +321,23 @@ export default function FunctionPlotDemo() {
               { icon: '🎯', text: 'x 截距 = −b/k：拖动 x 截距点可直观验证该关系。' },
             ]}
           />
-          </div>
-          <StepStatusCard stepDesc={config.steps[Math.min(step, 4) - 1]} />
         </aside>
       </div>
 
-      <PlayerBar
-        steps={config.steps}
-        step={step}
-        playing={playing}
-        onPrev={() => setStep((s) => Math.max(1, s - 1))}
-        onNext={() => setStep((s) => Math.min(4, s + 1))}
-        onTogglePlay={() => setPlaying((p) => !p)}
-        onReset={() => { setPlaying(false); setStep(1) }}
-        stepDesc={config.steps[Math.min(step, 4) - 1]}
-      />
+      {/* 底部行：播放条 + 当前步骤卡（同一高度） */}
+      <div className="flex h-20 shrink-0 gap-4 px-4 md:px-5 pb-4">
+        <PlayerBar
+          steps={config.steps}
+          step={step}
+          playing={playing}
+          onPrev={() => setStep((s) => Math.max(1, s - 1))}
+          onNext={() => setStep((s) => Math.min(4, s + 1))}
+          onTogglePlay={() => setPlaying((p) => !p)}
+          onReset={() => { setPlaying(false); setStep(1) }}
+          stepDesc={config.steps[Math.min(step, 4) - 1]}
+        />
+        <StepStatusCard stepDesc={config.steps[Math.min(step, 4) - 1]} />
+      </div>
     </div>
   )
 }

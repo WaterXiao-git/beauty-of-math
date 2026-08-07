@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-08-06 · 当前步骤卡与播放条同处底部一行（修正对齐）
+
+**模块**：前端演示页布局
+
+**内容**：
+- 「当前步骤」卡从右侧三卡列底部移到**页面底部行**：底部行 = 左播放条（flex-1，控制+四阶段进度条）+ 右当前步骤卡（w-80 xl:w-96 与三卡同宽，h-20 与播放条同高）——两者同一水平线
+- StepStatusCard 改为 h-full + 宽度类；PlayerBar footer 改为 flex-1 min-w-0
+- 四页统一：ε−δ / 导数 / function-plot / 罗尔（RolleDemo 层接 stepDescription，RolleControl 移除 step prop）
+
+**涉及文件**：`client/src/demo/ui/StepStatusCard.tsx`、`PlayerBar.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`、`FunctionPlotDemo.tsx`、`RolleControl.tsx`、`RolleDemo.tsx`
+
+**验证**：tsc -b --noEmit exit 0；vite build 成功（59.1s）
+
+---
+
 ## 2026-08-06 · 当前步骤说明移入右侧列底部(与三卡竖直对齐、与播放条同高)
 
 **模块**：前端演示页布局

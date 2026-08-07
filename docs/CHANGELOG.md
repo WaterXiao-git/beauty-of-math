@@ -14,6 +14,20 @@
 
 ---
 
+## 2026-08-06 · 牛顿迭代法演示（shape=newton，课程 ch3-s4）
+
+**模块**：前端演示模板 / server 配置层
+
+**内容**：
+- FunctionPlotDemo 新增 shape=newton：mathjs 符号求导 + 迭代序列（xₙ₊₁=xₙ−f(xₙ)/f′(xₙ)，最多 6 步、|Δ|<1e-10 收敛停）；画布标注迭代点（x 轴琥珀点 + 曲线上玫瑰点 + 竖虚线，随播放步进逐步显示）；面板显示 x₀~x₃ 迭代值；教学判断输出收敛根
+- knowledge.ts 新增 newton-method（3 案例：x²−2 求 √2、x³−x−1、cos x − x；x₀ 滑块）；课程知识点「牛顿迭代法」挂 demoId + 注册
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`、`server/src/data/knowledge.ts`、`client/src/course/courseData.ts`、`client/src/demo/DemoPage.tsx`
+
+**验证**：双端 tsc 0；vite build 成功（1m1s）；/api/knowledge/newton-method 实测 200（3 案例 shape=newton）
+
+---
+
 ## 2026-08-06 · 滑块拖动粒度细化到 0.01
 
 **模块**：前端通用组件

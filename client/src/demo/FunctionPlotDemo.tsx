@@ -2,7 +2,7 @@
 // 支持形状：linear(y=kx+b 截距点/斜率三角形可拖) / quadratic(顶点/对称轴/根) / absolute(顶点/零点)
 // 参数滑块由 case.params 自动生成（范围来自 paramRanges）
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { compile } from 'mathjs'
+import { compile, derivative as mathDerivative } from 'mathjs'
 import DemoHeader from './DemoHeader'
 import { useNavigate, useParams } from 'react-router-dom'
 import PlayerBar from './PlayerBar'
@@ -18,7 +18,7 @@ import ObserveTipCard from './ui/ObserveTipCard'
 import GridTicks from './ui/GridTicks'
 import StepStatusCard from './ui/StepStatusCard'
 
-type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite'
+type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite' | 'newton'
 
 interface ParamRange {
   label?: string
@@ -98,6 +98,17 @@ function makeParamFn(expr: string, params: Record<string, number>) {
 }
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), hi)
+
+/** 参数化导数函数：f'(x) = d/dx expr({x, ...params}) */
+function makeDerivParamFn(expr: string, params: Record<string, number>) {
+  let dExpr: string
+  try {
+    dExpr = mathDerivative(expr, 'x').toString()
+  } catch {
+    dExpr = '0'
+  }
+  return makeParamFn(dExpr, params)
+}
 
 export default function FunctionPlotDemo() {
   const navigate = useNavigate()
@@ -182,7 +193,24 @@ export default function FunctionPlotDemo() {
           : []
     const trend = shape === 'linear' ? (slope > 0 ? '单调递增' : slope < 0 ? '单调递减' : '常函数') : ''
     const openUp = shape === 'quadratic' && a > 0
-    return { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, a, b, c }
+    // 牛顿迭代序列：xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ)
+    let newtonSeq: number[] = []
+    if (shape === 'newton') {
+      const x0 = p.x0 ?? 2
+      const fp = makeDerivParamFn(activeCase.expr, params)
+      let x = x0
+      newtonSeq = [x]
+      for (let i = 0; i < 6; i++) {
+        const fx = f(x)
+        const d = fp(x)
+        if (!Number.isFinite(d) || Math.abs(d) < 1e-12) break
+        const xn = x - fx / d
+        newtonSeq.push(xn)
+        if (Math.abs(xn - x) < 1e-10) break
+        x = xn
+      }
+    }
+    return { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, a, b, c, newtonSeq }
   }, [activeCase, params])
 
   if (loadError) {
@@ -207,7 +235,7 @@ export default function FunctionPlotDemo() {
     )
   }
 
-  const { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp } = derived
+  const { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, newtonSeq } = derived
   const markers = activeCase.markers ?? {}
   const map = buildWorldMap([xMin, xMax], [yMin, yMax], W, H, PAD_L, PAD_R, PAD_T, PAD_B)
   const sx = map.sx
@@ -351,6 +379,13 @@ export default function FunctionPlotDemo() {
       { label: '结构', value: 'y = f(g(x))' },
       { label: '求值', value: '先内层 g 后外层 f' },
     )
+  } else if (shape === 'newton') {
+    panelItems.push(
+      { label: '初始 x₀', value: (params.x0 ?? 2).toFixed(2) },
+      { label: 'x₁', value: newtonSeq[1]?.toFixed(4) ?? '—' },
+      { label: 'x₂', value: newtonSeq[2]?.toFixed(4) ?? '—' },
+      { label: 'x₃', value: newtonSeq[3]?.toFixed(4) ?? '—' },
+    )
   }
 
   // 观察提示：tips 配置优先（{参数名} 插值），否则 shape 兜底
@@ -381,7 +416,9 @@ export default function FunctionPlotDemo() {
                 ? '分段函数在各段内分别定义，需关注分段点处的取值与连续性（左右极限是否相等）。'
                 : shape === 'composite'
                   ? '复合函数 y = f(g(x))：先计算内层 g(x)，再代入外层 f(u)，注意 g(x) 需落在外层定义域内。'
-                  : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
+                  : shape === 'newton'
+                    ? `牛顿迭代收敛到根 ≈ ${newtonSeq[newtonSeq.length - 1]?.toFixed(4) ?? '—'}（误差 |xₙ₊₁−xₙ| < 1e-10）。`
+                    : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
@@ -416,6 +453,8 @@ export default function FunctionPlotDemo() {
               {shape === 'rational' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gray-400" />渐近线</span>}
               {shape === 'inverse-pair' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-400" />函数 f</span>}
               {shape === 'inverse-pair' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400" />反函数 f⁻¹</span>}
+              {shape === 'newton' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-300" />迭代点 xₙ</span>}
+              {shape === 'newton' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-400" />曲线上点</span>}
                 </>
               )}
             </div>
@@ -532,6 +571,16 @@ export default function FunctionPlotDemo() {
                   />
                 )}
 
+                {/* 牛顿迭代：x 轴上迭代点 + 曲线上对应点（显示前 step 步） */}
+                {shape === 'newton' && newtonSeq.slice(0, Math.min(step + 1, newtonSeq.length)).map((x, i) => (
+                  <g key={i}>
+                    <line x1={sx(x)} y1={sy(0)} x2={sx(x)} y2={sy(f(x))} stroke="#94a3b8" strokeWidth={1} strokeDasharray="4 3" />
+                    <circle cx={sx(x)} cy={sy(0)} r={4.5} fill="#fbbf24" stroke="#0f172a" strokeWidth={1.5} />
+                    <circle cx={sx(x)} cy={sy(f(x))} r={4.5} fill="#fb7185" stroke="#0f172a" strokeWidth={1.5} />
+                    <text x={sx(x)} y={sy(0) + 16} fontSize={10} fill="#fcd34d" textAnchor="middle">x{i}</text>
+                  </g>
+                ))}
+
                 {/* 线性：y 截距点（可拖，改 b）与 x 截距点（可拖，改斜率） */}
                 {shape === 'linear' && markers.yIntercept && step >= 2 && (
                   <GeoPoint
@@ -578,7 +627,7 @@ export default function FunctionPlotDemo() {
         {/* 右：控制面板（Card Stack） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
-          <ConceptCard formula={activeCase.formula ?? config.formula ?? (shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : shape === 'inverse-pair' ? 'y = f(x) \\iff x = f^{-1}(y)' : shape === 'composite' ? 'y = f(g(x))' : 'y = f_i(x), x \\in D_i')}>
+          <ConceptCard formula={activeCase.formula ?? config.formula ?? (shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : shape === 'inverse-pair' ? 'y = f(x) \\iff x = f^{-1}(y)' : shape === 'composite' ? 'y = f(g(x))' : shape === 'newton' ? 'x_{n+1} = x_n - \\frac{f(x_n)}{f\'(x_n)}' : 'y = f_i(x), x \\in D_i')}>
             {config.summary}
           </ConceptCard>
 
@@ -638,7 +687,7 @@ export default function FunctionPlotDemo() {
                       : judgmentText,
               },
               { icon: '🖱️', text: shape === 'linear' ? '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' : '拖动背景平移 / 滚轮缩放观察曲线；调节参数滑块看图像变化。' },
-              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : shape === 'rational' ? 'x→h 时 |y|→∞（垂直渐近线），x→∞ 时 y→k（水平渐近线）。' : shape === 'inverse-pair' ? '反函数图像关于 y=x 对称；拖背景平移观察对称性。' : shape === 'piecewise' ? '分段点 x₀ 处：左右极限与 f(x₀) 相等则连续，否则间断。' : shape === 'composite' ? '复合求值顺序：x → g(x) → f(g(x))；观察内层值域是否落入外层定义域。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
+              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : shape === 'rational' ? 'x→h 时 |y|→∞（垂直渐近线），x→∞ 时 y→k（水平渐近线）。' : shape === 'inverse-pair' ? '反函数图像关于 y=x 对称；拖背景平移观察对称性。' : shape === 'piecewise' ? '分段点 x₀ 处：左右极限与 f(x₀) 相等则连续，否则间断。' : shape === 'composite' ? '复合求值顺序：x → g(x) → f(g(x))；观察内层值域是否落入外层定义域。' : shape === 'newton' ? '几何意义：过 (xₙ, f(xₙ)) 作切线，切线与 x 轴交点即 xₙ₊₁。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
               ]
             }
           />

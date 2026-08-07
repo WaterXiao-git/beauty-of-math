@@ -474,6 +474,7 @@ export const chapters: CourseChapter[] = [
             goals: ['理解牛顿迭代的几何原理', '掌握迭代公式与收敛条件', '会估计迭代误差'],
             related: ['导数', '函数的极限'],
             experimentPath: '/newton-method',
+            demoId: 'newton-method',
           },
         ],
       },

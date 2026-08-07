@@ -37,7 +37,7 @@ export interface KnowledgeCase {
   /** 参数范围（滑块自动生成；key 对应 params） */
   paramRanges?: Record<string, { label?: string; min: number; max: number; step: number }>
   /** 画布形状（function-plot 模板：linear / quadratic / absolute / exp-log） */
-  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite'
+  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite' | 'newton'
   /** 画布标注开关（function-plot 模板） */
   markers?: {
     xIntercept?: boolean
@@ -1310,6 +1310,76 @@ export const knowledgePoints: KnowledgeConfig[] = [
       difficulty: '中等难度',
       duration: '约 25 分钟',
       templates: ['幂级数部分和逼近', '收敛半径演示'],
+    },
+    version: 1,
+  },
+  // 17. 牛顿迭代法（shape=newton：切线逼近 + 迭代序列）
+  {
+    id: 'newton-method',
+    title: '牛顿迭代法',
+    course: '高等数学（上册）',
+    chapter: '微分中值定理与导数的应用',
+    section: '牛顿迭代法',
+    template: 'function-plot',
+    summary:
+      '牛顿迭代法用切线逼近函数零点：xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ)。从初始值 x₀ 出发，反复作切线与 x 轴交点，序列快速收敛到根（二阶收敛）。',
+    formula: 'x_{n+1} = x_n - \\frac{f(x_n)}{f\'(x_n)}',
+    goals: ['理解牛顿迭代的切线逼近原理', '掌握迭代公式与收敛性', '会分析初值对收敛的影响'],
+    legend: [
+      { color: '#60a5fa', label: '曲线' },
+      { color: '#fbbf24', label: '迭代点 xₙ' },
+    ],
+    tips: [
+      { icon: '📐', text: '几何意义：过 (xₙ, f(xₙ)) 作切线，切线与 x 轴交点即 xₙ₊₁。' },
+      { icon: '⚡', text: '牛顿迭代二阶收敛：每步有效数字约翻倍。' },
+      { icon: '⚠️', text: '初值 x₀ 需接近根，否则可能发散或收敛到其他根。' },
+    ],
+    defaultCase: 'newton-sqrt2',
+    cases: [
+      {
+        id: 'newton-sqrt2',
+        name: 'x²−2（求 √2）',
+        expr: 'x^2-2',
+        domain: [-1.5, 2.5],
+        yRange: [-3, 3],
+        params: { x0: 2 },
+        paramRanges: { x0: { label: '初始值 x₀', min: -5, max: 5, step: 0.1 } },
+        shape: 'newton',
+        desc: '从 x₀=2 出发快速收敛到 √2 ≈ 1.4142',
+      },
+      {
+        id: 'newton-cubic',
+        name: 'x³−x−1',
+        expr: 'x^3-x-1',
+        domain: [-2, 2],
+        yRange: [-3, 3],
+        params: { x0: 1.5 },
+        paramRanges: { x0: { label: '初始值 x₀', min: -5, max: 5, step: 0.1 } },
+        shape: 'newton',
+        desc: '唯一实根 ≈ 1.3247',
+      },
+      {
+        id: 'newton-cosx',
+        name: 'cos x − x',
+        expr: 'cos(x)-x',
+        domain: [-0.5, 1.5],
+        yRange: [-1.5, 1.5],
+        params: { x0: 1 },
+        paramRanges: { x0: { label: '初始值 x₀', min: -5, max: 5, step: 0.1 } },
+        shape: 'newton',
+        desc: '求 cos x = x 的不动点 ≈ 0.7391',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别零点', desc: '求 f(x)=0 的根：曲线与 x 轴交点' },
+      { id: 'tangent', title: '作切线', desc: '过 (x₀, f(x₀)) 作切线，斜率 f′(x₀)' },
+      { id: 'iterate', title: '迭代', desc: '切线与 x 轴交点 x₁ = x₀ − f(x₀)/f′(x₀)，重复' },
+      { id: 'converge', title: '收敛', desc: '序列快速逼近根；播放查看迭代过程' },
+    ],
+    meta: {
+      difficulty: '中等难度',
+      duration: '约 25 分钟',
+      templates: ['牛顿迭代可视化', '切线逼近零点'],
     },
     version: 1,
   },

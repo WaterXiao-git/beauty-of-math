@@ -9,12 +9,13 @@ import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
 import GeoLine from './geoboard/GeoLine'
-import { calcViewportGrid } from './viewport'
+import { buildWorldMap, calcViewportGrid } from './viewport'
 import ConceptCard from './ui/ConceptCard'
 import SegmentedControl from './ui/SegmentedControl'
 import SliderRow from './ui/SliderRow'
 import SwitchRow from './ui/SwitchRow'
 import ObserveTipCard from './ui/ObserveTipCard'
+import GridTicks from './ui/GridTicks'
 import StepStatusCard from './ui/StepStatusCard'
 
 interface DemoCase {
@@ -156,19 +157,15 @@ export default function DerivativeDemo() {
   const { f, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff } = derived
   const [xMin, xMax] = activeCase.domain
   const [yMin, yMax] = activeCase.yRange
-  const sx = (x: number) => PAD_L + ((x - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R)
-  const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
-  const coord = {
-    sx,
-    sy,
-    fromSx: (mx: number) => xMin + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin),
-    fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
-  }
+  const map = buildWorldMap([xMin, xMax], [yMin, yMax], W, H, PAD_L, PAD_R, PAD_T, PAD_B)
+  const sx = map.sx
+  const sy = map.sy
+  const coord = { sx, sy, fromSx: map.fromSx, fromSy: map.fromSy }
   const grid = calcViewportGrid(transform, W, H, [xMin, xMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
   // 曲线采样（可视世界范围，铺满视图；首个有效点 M 起笔）
-  const visWorldXMin = xMin + ((-transform.tx / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
-  const visWorldXMax = xMin + (((W - transform.tx) / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
+  const visWorldXMin = map.fromSx(-transform.tx / transform.scale)
+  const visWorldXMax = map.fromSx((W - transform.tx) / transform.scale)
   const curvePts: string[] = []
   const N = 160
   let curveStarted = false
@@ -211,6 +208,7 @@ export default function DerivativeDemo() {
           ))}
           {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
           {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
+          <GridTicks grid={grid} />
         <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
         
     

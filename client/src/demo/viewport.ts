@@ -1,4 +1,4 @@
-// 视口计算工具：让网格/坐标轴"无限延伸"（Desmos 风格）
+﻿// 视口计算工具：正方形格子（等比例世界映射）+ 网格/坐标轴无限延伸 + 刻度标签
 // 网格线、坐标轴按当前缩放/平移在屏幕坐标绘制，始终铺满可视区域；
 // 曲线等数据内容保持在世界坐标（<g transform> 内）
 import type { PanZoom } from './usePanZoom'
@@ -14,11 +14,53 @@ export function niceStep(raw: number): number {
   return 10 * pow
 }
 
+/** 刻度标签格式：整数显示整数，否则 1 位小数 */
+function fmtTick(v: number): string {
+  return Number.isInteger(v) ? String(v) : v.toFixed(1)
+}
+
+/** 等比例世界映射：x/y 单位像素一致 → 正方形格子 */
+export interface WorldMap {
+  sx: (x: number) => number
+  sy: (y: number) => number
+  fromSx: (mx: number) => number
+  fromSy: (my: number) => number
+  /** 每单位世界坐标的像素（x/y 相同） */
+  unit: number
+}
+
+export function buildWorldMap(
+  domain: [number, number],
+  yRange: [number, number],
+  W: number,
+  H: number,
+  padL: number,
+  padR: number,
+  padT: number,
+  padB: number,
+): WorldMap {
+  const xSpan = domain[1] - domain[0]
+  const ySpan = yRange[1] - yRange[0]
+  const plotW = W - padL - padR
+  const plotH = H - padT - padB
+  const unit = Math.min(plotW / xSpan, plotH / ySpan)
+  const offX = padL + (plotW - xSpan * unit) / 2
+  const offY = padT + (plotH - ySpan * unit) / 2
+  const baseY = H - padB - offY
+  const sx = (x: number) => offX + (x - domain[0]) * unit
+  const sy = (y: number) => baseY - (y - yRange[0]) * unit
+  const fromSx = (mx: number) => domain[0] + (mx - offX) / unit
+  const fromSy = (my: number) => yRange[0] + (baseY - my) / unit
+  return { sx, sy, fromSx, fromSy, unit }
+}
+
 export interface GridLine {
   /** 屏幕坐标位置（垂直线的 x / 水平线的 y） */
   pos: number
   /** 是否主刻度（世界整数轴，加粗） */
   major: boolean
+  /** 刻度标签（如 1 / 2 / 5 / 10），轴旁显示 */
+  label?: string
 }
 
 export interface ViewportGrid {
@@ -32,13 +74,9 @@ export interface ViewportGrid {
   axisY: number | null
 }
 
-interface MapFns {
-  sx: (x: number) => number
-  sy: (y: number) => number
-}
-
 /**
  * 根据当前 pan/zoom 变换与数据映射，计算铺满屏幕的网格线与贯穿坐标轴（屏幕坐标）
+ * 内部使用等比例映射（buildWorldMap），网格为正方形格子
  * @param t 当前 transform
  * @param W H 画布尺寸
  * @param domain 数据 x 范围
@@ -58,25 +96,19 @@ export function calcViewportGrid(
   padB: number,
   majorEvery = 5,
 ): ViewportGrid {
-  const xSpan = domain[1] - domain[0]
-  const ySpan = yRange[1] - yRange[0]
-  const map: MapFns = {
-    sx: (x) => padL + ((x - domain[0]) / xSpan) * (W - padL - padR),
-    sy: (y) => H - padB - ((y - yRange[0]) / ySpan) * (H - padT - padB),
-  }
+  const map = buildWorldMap(domain, yRange, W, H, padL, padR, padT, padB)
 
-  // 屏幕坐标 → 映射坐标：screen = t.tx + mapVal * t.scale
-  // 屏幕 0..W 对应的映射坐标范围
+  // 屏幕坐标 → 映射坐标
   const xMapMin = -t.tx / t.scale
   const xMapMax = (W - t.tx) / t.scale
   const yMapMin = (H - t.ty) / t.scale // 屏幕 y=H
   const yMapMax = -t.ty / t.scale // 屏幕 y=0
 
-  // 映射坐标 → 世界坐标
-  const worldXMin = domain[0] + ((xMapMin - padL) / (W - padL - padR)) * xSpan
-  const worldXMax = domain[0] + ((xMapMax - padL) / (W - padL - padR)) * xSpan
-  const worldYMin = yRange[0] + ((H - padB - yMapMin) / (H - padT - padB)) * ySpan
-  const worldYMax = yRange[0] + ((H - padB - yMapMax) / (H - padT - padB)) * ySpan
+  // 映射坐标 → 世界坐标（等比例）
+  const worldXMin = map.fromSx(xMapMin)
+  const worldXMax = map.fromSx(xMapMax)
+  const worldYMin = map.fromSy(yMapMin)
+  const worldYMax = map.fromSy(yMapMax)
 
   const xStep = niceStep((worldXMax - worldXMin) / 14)
   const yStep = niceStep((worldYMax - worldYMin) / 14)
@@ -84,12 +116,12 @@ export function calcViewportGrid(
   const verts: GridLine[] = []
   const xStart = Math.ceil(worldXMin / xStep) * xStep
   for (let c = xStart, i = 0; c <= worldXMax + xStep / 2; c += xStep, i++) {
-    verts.push({ pos: t.tx + map.sx(c) * t.scale, major: i % majorEvery === 0 })
+    verts.push({ pos: t.tx + map.sx(c) * t.scale, major: i % majorEvery === 0, label: fmtTick(c) })
   }
   const hors: GridLine[] = []
   const yStart = Math.ceil(worldYMin / yStep) * yStep
   for (let c = yStart, i = 0; c <= worldYMax + yStep / 2; c += yStep, i++) {
-    hors.push({ pos: t.ty + map.sy(c) * t.scale, major: i % majorEvery === 0 })
+    hors.push({ pos: t.ty + map.sy(c) * t.scale, major: i % majorEvery === 0, label: fmtTick(c) })
   }
 
   // 坐标轴：世界 0 的屏幕位置，在画布内则贯穿

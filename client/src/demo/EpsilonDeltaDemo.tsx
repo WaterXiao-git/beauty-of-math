@@ -8,12 +8,13 @@ import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
-import { calcViewportGrid } from './viewport'
+import { buildWorldMap, calcViewportGrid } from './viewport'
 import ConceptCard from './ui/ConceptCard'
 import SegmentedControl from './ui/SegmentedControl'
 import SliderRow from './ui/SliderRow'
 import SwitchRow from './ui/SwitchRow'
 import ObserveTipCard from './ui/ObserveTipCard'
+import GridTicks from './ui/GridTicks'
 import StepStatusCard from './ui/StepStatusCard'
 
 interface DemoCase {
@@ -156,22 +157,18 @@ export default function EpsilonDeltaDemo() {
   const { f, a, L, delta } = derived
   const [dMin, dMax] = activeCase.domain
   const [yMin, yMax] = activeCase.yRange
-  const sx = (x: number) => PAD_L + ((x - dMin) / (dMax - dMin)) * (W - PAD_L - PAD_R)
-  const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
-  // 可视范围（曲线铺满视图 / 虚线与带贯穿全屏）
+  const map = buildWorldMap([dMin, dMax], [yMin, yMax], W, H, PAD_L, PAD_R, PAD_T, PAD_B)
+  const sx = map.sx
+  const sy = map.sy
+  // 可视范围（等比例映射）
   const visMapMin = -transform.tx / transform.scale
   const visMapMax = (W - transform.tx) / transform.scale
   const visYMapMin = (H - transform.ty) / transform.scale
   const visYMapMax = -transform.ty / transform.scale
-  const visWorldXMin = dMin + ((visMapMin - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
-  const visWorldXMax = dMin + ((visMapMax - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin)
+  const visWorldXMin = map.fromSx(visMapMin)
+  const visWorldXMax = map.fromSx(visMapMax)
   const grid = calcViewportGrid(transform, W, H, [dMin, dMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
-  const coord = {
-    sx,
-    sy,
-    fromSx: (mx: number) => dMin + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (dMax - dMin),
-    fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
-  }
+  const coord = { sx, sy, fromSx: map.fromSx, fromSy: map.fromSy }
 
   // 曲线采样
   const curvePts: string[] = []
@@ -218,6 +215,7 @@ export default function EpsilonDeltaDemo() {
           ))}
           {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
           {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
+          <GridTicks grid={grid} />
         <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
         
     

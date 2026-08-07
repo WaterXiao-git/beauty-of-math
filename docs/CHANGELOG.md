@@ -14,6 +14,23 @@
 
 ---
 
+## 2026-08-06 · 正方形格子 + 自适应刻度 + 反比例断开修复 + 反函数对称
+
+**模块**：前端演示画布（坐标系级）
+
+**内容**：
+- **正方形格子**：新增 buildWorldMap 等比例世界映射（x/y 单位像素一致，居中），四个演示页 sx/sy/coord 全部切换；calcViewportGrid 内部改用等比例映射
+- **自适应刻度**：网格线带 label（1/2/5×10ⁿ niceStep），新增 GridTicks 组件贴底边/左边渲染刻度数字（缩小显示 5/10/15、放大显示 1/2/3），各页接入
+- **反比例函数**：采样跨垂直渐近线（x=h）断开 + 超限点断开（y 限幅提高到 40×+100），修复「正负无穷点连起来」「贴近坐标轴不显示」
+- **反函数**：等比例映射下 y=x 对称轴恢复 45°；inverse x³ 案例 yRange 调 [-4,4] 适配等比
+- 案例等比适配：inverse-cube yRange [-8,8]→[-4,4]
+
+**涉及文件**：`client/src/demo/viewport.ts`、`ui/GridTicks.tsx`（新增）、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`、`RolleCanvas.tsx`、`FunctionPlotDemo.tsx`、`server/src/data/knowledge.ts`
+
+**验证**：client tsc 0；server tsc 0；vite build 成功（1m1s）
+
+---
+
 ## 2026-08-06 · 批量迁移第三批：反比例函数（渐近线）+ 反函数（y=x 对称）
 
 **模块**：前端演示模板 / server 配置层

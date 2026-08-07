@@ -9,12 +9,13 @@ import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
-import { calcViewportGrid } from './viewport'
+import { buildWorldMap, calcViewportGrid } from './viewport'
 import ConceptCard from './ui/ConceptCard'
 import SegmentedControl from './ui/SegmentedControl'
 import SliderRow from './ui/SliderRow'
 import SwitchRow from './ui/SwitchRow'
 import ObserveTipCard from './ui/ObserveTipCard'
+import GridTicks from './ui/GridTicks'
 import StepStatusCard from './ui/StepStatusCard'
 
 type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair'
@@ -190,14 +191,10 @@ export default function FunctionPlotDemo() {
 
   const { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp } = derived
   const markers = activeCase.markers ?? {}
-  const sx = (x: number) => PAD_L + ((x - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R)
-  const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
-  const coord = {
-    sx,
-    sy,
-    fromSx: (mx: number) => xMin + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin),
-    fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
-  }
+  const map = buildWorldMap([xMin, xMax], [yMin, yMax], W, H, PAD_L, PAD_R, PAD_T, PAD_B)
+  const sx = map.sx
+  const sy = map.sy
+  const coord = { sx, sy, fromSx: map.fromSx, fromSy: map.fromSy }
   const grid = calcViewportGrid(transform, W, H, [xMin, xMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
   // 曲线采样（可视世界范围）
@@ -205,16 +202,25 @@ export default function FunctionPlotDemo() {
   const visMapMax = (W - transform.tx) / transform.scale
   const visYMapMin = (H - transform.ty) / transform.scale
   const visYMapMax = -transform.ty / transform.scale
-  const visWorldXMin = xMin + ((-transform.tx / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
-  const visWorldXMax = xMin + (((W - transform.tx) / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
-  const yLimit = Math.max(Math.abs(yMin), Math.abs(yMax)) * 12 + 20
+  const visWorldXMin = map.fromSx(visMapMin)
+  const visWorldXMax = map.fromSx(visMapMax)
+  const yLimit = Math.max(Math.abs(yMin), Math.abs(yMax)) * 40 + 100
+  const rationalH = shape === 'rational' ? (params.h ?? 0) : null
   const curvePts: string[] = []
   const N = 200
   let curveStarted = false
+  let prevX: number | null = null
   for (let i = 0; i <= N; i++) {
     const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
+    if (rationalH !== null && prevX !== null && (prevX - rationalH) * (x - rationalH) < 0) {
+      curveStarted = false // 跨垂直渐近线，断开
+    }
     const y = f(x)
-    if (!Number.isFinite(y) || Math.abs(y) > yLimit) continue
+    if (!Number.isFinite(y) || Math.abs(y) > yLimit) {
+      curveStarted = false // 无定义/超限点，断开（避免正负无穷连线）
+      continue
+    }
+    prevX = x
     curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
     curveStarted = true
   }
@@ -332,6 +338,7 @@ export default function FunctionPlotDemo() {
               ))}
               {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
               {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
+              <GridTicks grid={grid} />
               <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
                 {/* 二次：对称轴虚线 */}
                 {shape === 'quadratic' && markers.axis && Number.isFinite(vertexX) && (

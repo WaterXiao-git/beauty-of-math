@@ -3,7 +3,8 @@ import { useRef } from 'react'
 import MathFormula from '../components/MathFormula/MathFormula'
 import { usePanZoom } from './usePanZoom'
 import GeoPoint from './geoboard/GeoPoint'
-import { calcViewportGrid } from './viewport'
+import GridTicks from './ui/GridTicks'
+import { buildWorldMap, calcViewportGrid } from './viewport'
 import type { RolleCase } from './rolleData'
 import { LEGEND } from './rolleData'
 
@@ -45,15 +46,11 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
   const allSatisfied = conditions.continuous && conditions.differentiable && conditions.equalEndpoints
 
   // 坐标映射（固定范围）
-  const sx = (x: number) => PAD_L + ((x - viewMin) / (viewMax - viewMin)) * (W - PAD_L - PAD_R)
-  const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
+  const map = buildWorldMap([viewMin, viewMax], [yMin, yMax], W, H, PAD_L, PAD_R, PAD_T, PAD_B)
+  const sx = map.sx
+  const sy = map.sy
   const grid = calcViewportGrid(transform, W, H, [viewMin, viewMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
-  const coord = {
-    sx,
-    sy,
-    fromSx: (mx: number) => viewMin + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (viewMax - viewMin),
-    fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
-  }
+  const coord = { sx, sy, fromSx: map.fromSx, fromSy: map.fromSy }
 
   // 曲线采样（支持连续性破坏：断口）
   const N = 120
@@ -112,6 +109,7 @@ export default function RolleCanvas({ case: c, conditions, step, xiLocked, onTog
           ))}
           {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
           {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
+          <GridTicks grid={grid} />
         <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
         
 

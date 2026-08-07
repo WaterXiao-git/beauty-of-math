@@ -698,7 +698,7 @@ export const knowledgePoints: KnowledgeConfig[] = [
         expr: 'x^3',
         expr2: 'x^(1/3)',
         domain: [-2, 2],
-        yRange: [-8, 8],
+        yRange: [-4, 4],
         shape: 'inverse-pair',
         desc: '三次函数在全实数域一一对应',
       },

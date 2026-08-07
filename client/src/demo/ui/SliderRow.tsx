@@ -63,7 +63,7 @@ export default function SliderRow({
         type="range"
         min={min}
         max={max}
-        step={step}
+        step={Math.min(step, 0.01)}
         value={value}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         className="w-full accent-purple-600"

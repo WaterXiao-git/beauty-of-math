@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-08-06 · 批量迁移第四批：分段函数 + 复合函数
+
+**模块**：前端演示模板 / server 配置层
+
+**内容**：
+- FunctionPlotDemo 新增 shape：piecewise（KnowledgeCase 扩展 pieces 字段，分段逐段采样、段间断开）、composite（单曲线复合结构，面板显示 f(g(x)) 求值顺序）
+- knowledge.ts：新增 piecewise-function（4 案例：符号函数/绝对值分段/x² 接 2x−1/阶梯）与 composite-function（4 案例：sin2x/cos(x²)/√(1−x²)/2^(x²)）
+- courseData 新增两知识点 + DemoPage 注册
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`、`DemoPage.tsx`、`server/src/data/knowledge.ts`、`client/src/course/courseData.ts`
+
+**验证**：client tsc 0；server tsc 0；vite build 成功（1m2s）；/api/knowledge/piecewise-function（4 案例 2 段）与 /composite-function（4 案例）实测 200
+
+---
+
 ## 2026-08-06 · 网格刻度改贴坐标轴显示
 
 **模块**：前端演示画布

@@ -173,6 +173,30 @@ export const chapters: CourseChapter[] = [
             related: ['函数'],
             demoId: 'inverse-function',
           },
+          {
+            id: 'piecewise-function',
+            title: '分段函数',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: '间断点可视化',
+            summary:
+              '分段函数在不同区间用不同表达式定义，需关注分段点处的取值与连续性。',
+            goals: ['理解分段定义', '会求分段点函数值', '判断连续性'],
+            related: ['函数'],
+            demoId: 'piecewise-function',
+          },
+          {
+            id: 'composite-function',
+            title: '复合函数',
+            status: 'not-started',
+            previewLevel: 'C',
+            template: '复合结构可视化',
+            summary:
+              '复合函数 y = f(g(x))：先内层 g 后外层 f，内层值域需落在外层定义域内。',
+            goals: ['理解复合结构', '掌握求值顺序', '会求定义域'],
+            related: ['函数'],
+            demoId: 'composite-function',
+          },
         ],
       },
       {

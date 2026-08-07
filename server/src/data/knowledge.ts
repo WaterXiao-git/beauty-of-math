@@ -14,6 +14,8 @@ export interface KnowledgeCase {
   expr: string
   /** 第二条曲线表达式（参数化，如对数 log(x, base)） */
   expr2?: string
+  /** 分段函数定义（shape=piecewise；每段表达式与区间，参数化） */
+  pieces?: { expr: string; from?: number | null; to?: number | null }[]
   /** 定义域 [a, b] */
   domain: [number, number]
   /** 视图 y 范围 [min, max] */
@@ -27,7 +29,7 @@ export interface KnowledgeCase {
   /** 参数范围（滑块自动生成；key 对应 params） */
   paramRanges?: Record<string, { label?: string; min: number; max: number; step: number }>
   /** 画布形状（function-plot 模板：linear / quadratic / absolute / exp-log） */
-  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair'
+  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite'
   /** 画布标注开关（function-plot 模板） */
   markers?: {
     xIntercept?: boolean
@@ -723,6 +725,144 @@ export const knowledgePoints: KnowledgeConfig[] = [
       difficulty: '入门难度',
       duration: '约 15 分钟',
       templates: ['反函数对称可视化', '复合还原演示'],
+    },
+    version: 1,
+  },
+  // 10. 分段函数（function-plot 模板：shape=piecewise）
+  {
+    id: 'piecewise-function',
+    title: '分段函数',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数',
+    template: 'function-plot',
+    summary:
+      '分段函数在不同区间上用不同表达式定义：y = fᵢ(x)（x ∈ Dᵢ）。关注分段点处的取值与连续性——左右极限相等且等于函数值则连续。',
+    goals: [
+      '理解分段函数的定义方式',
+      '会求分段点处的函数值与极限',
+      '判断分段点处的连续性',
+    ],
+    defaultCase: 'sign',
+    cases: [
+      {
+        id: 'sign',
+        name: '符号函数 sign(x)',
+        expr: '0',
+        pieces: [{ expr: '-1', to: 0 }, { expr: '1', from: 0 }],
+        domain: [-5, 5],
+        yRange: [-3, 3],
+        shape: 'piecewise',
+        desc: 'x<0 取 −1、x>0 取 1，x=0 处跳跃间断',
+      },
+      {
+        id: 'abs-pw',
+        name: '绝对值分段',
+        expr: '0',
+        pieces: [{ expr: '-x', to: 0 }, { expr: 'x', from: 0 }],
+        domain: [-5, 5],
+        yRange: [-3, 5],
+        shape: 'piecewise',
+        desc: 'x<0 为 −x、x≥0 为 x，即 y=|x|，连续',
+      },
+      {
+        id: 'pw-quad',
+        name: 'x² 接 2x−1',
+        expr: '0',
+        pieces: [{ expr: 'x^2', to: 1 }, { expr: '2*x-1', from: 1 }],
+        domain: [-3, 3],
+        yRange: [-3, 5],
+        shape: 'piecewise',
+        desc: 'x=1 处两段取值相等（1），连续衔接',
+      },
+      {
+        id: 'step',
+        name: '阶梯函数',
+        expr: '0',
+        pieces: [{ expr: '1', to: 1 }, { expr: '2', from: 1, to: 2 }, { expr: '3', from: 2 }],
+        domain: [-5, 5],
+        yRange: [-1, 5],
+        shape: 'piecewise',
+        desc: '台阶式取值，分段点处跳跃间断',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别分段', desc: '不同区间用不同表达式定义同一函数' },
+      { id: 'points', title: '分段点', desc: '分段点 x₀ 处需分别考虑左右两段' },
+      { id: 'continuous', title: '连续性', desc: '左右极限相等且等于 f(x₀) 则连续' },
+      { id: 'apply', title: '综合应用', desc: '求分段函数值：先判断 x 属于哪一段' },
+    ],
+    meta: {
+      difficulty: '入门难度',
+      duration: '约 15 分钟',
+      templates: ['分段函数可视化', '间断点演示'],
+    },
+    version: 1,
+  },
+  // 11. 复合函数（function-plot 模板：shape=composite）
+  {
+    id: 'composite-function',
+    title: '复合函数',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数',
+    template: 'function-plot',
+    summary:
+      '复合函数 y = f(g(x))：先对 x 施以内层函数 g，再将结果代入外层函数 f。内层值域需落在外层定义域内。',
+    goals: [
+      '理解复合函数的结构 f(g(x))',
+      '掌握复合函数的求值顺序',
+      '会求复合函数的定义域',
+    ],
+    defaultCase: 'compose-sin2x',
+    cases: [
+      {
+        id: 'compose-sin2x',
+        name: 'y = sin(2x)',
+        expr: 'sin(2*x)',
+        domain: [-4, 4],
+        yRange: [-1.5, 1.5],
+        shape: 'composite',
+        desc: '内层 g(x)=2x 压缩周期，外层 f(u)=sin u',
+      },
+      {
+        id: 'compose-cosx2',
+        name: 'y = cos(x²)',
+        expr: 'cos(x^2)',
+        domain: [-3, 3],
+        yRange: [-1.5, 1.5],
+        shape: 'composite',
+        desc: '内层 g(x)=x² 使振荡频率随 |x| 增大而加快',
+      },
+      {
+        id: 'compose-sqrt',
+        name: 'y = √(1−x²)',
+        expr: 'sqrt(1-x^2)',
+        domain: [-1.2, 1.2],
+        yRange: [-0.3, 1.5],
+        shape: 'composite',
+        desc: '单位圆上半部分：g(x)=1−x² 需非负',
+      },
+      {
+        id: 'compose-2x2',
+        name: 'y = 2^(x²)',
+        expr: 'pow(2, x^2)',
+        domain: [-2, 2],
+        yRange: [0.5, 8],
+        shape: 'composite',
+        desc: '内层 x² 恒非负，复合后为偶函数',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别结构', desc: 'y = f(g(x))：外层 f、内层 g' },
+      { id: 'inner', title: '内层 g', desc: '先计算 g(x)，其值域是外层的输入' },
+      { id: 'outer', title: '外层 f', desc: '再把 u = g(x) 代入 f(u)' },
+      { id: 'domain', title: '定义域', desc: 'g(x) 的值域必须落在外层定义域内' },
+    ],
+    meta: {
+      difficulty: '入门难度',
+      duration: '约 15 分钟',
+      templates: ['复合函数可视化', '内层外层演示'],
     },
     version: 1,
   },

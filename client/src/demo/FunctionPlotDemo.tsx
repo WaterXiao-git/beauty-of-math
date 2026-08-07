@@ -18,7 +18,7 @@ import ObserveTipCard from './ui/ObserveTipCard'
 import GridTicks from './ui/GridTicks'
 import StepStatusCard from './ui/StepStatusCard'
 
-type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair'
+type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair' | 'piecewise' | 'composite'
 
 interface ParamRange {
   label?: string
@@ -33,6 +33,8 @@ interface DemoCase {
   expr: string
   /** 第二条曲线表达式（参数化，如对数 log(x, base)） */
   expr2?: string
+  /** 分段函数定义（shape=piecewise；每段表达式与区间，参数化） */
+  pieces?: { expr: string; from?: number | null; to?: number | null }[]
   domain: [number, number]
   yRange: [number, number]
   params?: Record<string, number>
@@ -206,23 +208,31 @@ export default function FunctionPlotDemo() {
   const visWorldXMax = map.fromSx(visMapMax)
   const yLimit = Math.max(Math.abs(yMin), Math.abs(yMax)) * 40 + 100
   const rationalH = shape === 'rational' ? (params.h ?? 0) : null
+  // 分段函数：按 pieces 逐段采样（段间断开）；否则整体采样
+  const segments: { fn: (x: number) => number; from: number; to: number }[] = activeCase.pieces && shape === 'piecewise'
+    ? activeCase.pieces.map((p) => ({ fn: makeParamFn(p.expr, params), from: p.from ?? visWorldXMin, to: p.to ?? visWorldXMax }))
+    : [{ fn: f, from: visWorldXMin, to: visWorldXMax }]
   const curvePts: string[] = []
   const N = 200
   let curveStarted = false
   let prevX: number | null = null
-  for (let i = 0; i <= N; i++) {
-    const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
-    if (rationalH !== null && prevX !== null && (prevX - rationalH) * (x - rationalH) < 0) {
-      curveStarted = false // 跨垂直渐近线，断开
+  for (const seg of segments) {
+    curveStarted = false
+    prevX = null
+    for (let i = 0; i <= N; i++) {
+      const x = seg.from + ((seg.to - seg.from) * i) / N
+      if (rationalH !== null && prevX !== null && (prevX - rationalH) * (x - rationalH) < 0) {
+        curveStarted = false // 跨垂直渐近线，断开
+      }
+      const y = seg.fn(x)
+      if (!Number.isFinite(y) || Math.abs(y) > yLimit) {
+        curveStarted = false // 无定义/超限点，断开（避免正负无穷连线）
+        continue
+      }
+      prevX = x
+      curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+      curveStarted = true
     }
-    const y = f(x)
-    if (!Number.isFinite(y) || Math.abs(y) > yLimit) {
-      curveStarted = false // 无定义/超限点，断开（避免正负无穷连线）
-      continue
-    }
-    prevX = x
-    curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
-    curveStarted = true
   }
   const curvePts2: string[] = []
   let curve2Started = false
@@ -281,6 +291,18 @@ export default function FunctionPlotDemo() {
       { label: '关系', value: '关于 y=x 对称' },
       { label: '复合', value: 'f(f⁻¹(x)) = x' },
     )
+  } else if (shape === 'piecewise') {
+    panelItems.push(
+      { label: '分段数', value: String(activeCase.pieces?.length ?? 1) },
+      { label: '定义域', value: '[' + xMin.toFixed(1) + ', ' + xMax.toFixed(1) + ']' },
+      { label: '类型', value: '分段函数' },
+    )
+  } else if (shape === 'composite') {
+    panelItems.push(
+      { label: '表达式', value: activeCase.name },
+      { label: '结构', value: 'y = f(g(x))' },
+      { label: '求值', value: '先内层 g 后外层 f' },
+    )
   }
 
   // 教学判断文案
@@ -299,7 +321,11 @@ export default function FunctionPlotDemo() {
             ? `中心 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，渐近线 x = ${(params.h ?? 0).toFixed(2)}、y = ${(params.k ?? 0).toFixed(2)}，图像为双曲线。`
             : shape === 'inverse-pair'
               ? '函数与反函数图像关于直线 y=x 对称，且 f(f⁻¹(x)) = x。'
-              : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
+              : shape === 'piecewise'
+                ? '分段函数在各段内分别定义，需关注分段点处的取值与连续性（左右极限是否相等）。'
+                : shape === 'composite'
+                  ? '复合函数 y = f(g(x))：先计算内层 g(x)，再代入外层 f(u)，注意 g(x) 需落在外层定义域内。'
+                  : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
@@ -485,7 +511,7 @@ export default function FunctionPlotDemo() {
         {/* 右：控制面板（Card Stack） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
-          <ConceptCard formula={shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : 'y = f(x) \\iff x = f^{-1}(y)'}>
+          <ConceptCard formula={shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : shape === 'inverse-pair' ? 'y = f(x) \\iff x = f^{-1}(y)' : shape === 'composite' ? 'y = f(g(x))' : 'y = f_i(x), x \\in D_i'}>
             {config.summary}
           </ConceptCard>
 
@@ -542,7 +568,7 @@ export default function FunctionPlotDemo() {
                       : judgmentText,
               },
               { icon: '🖱️', text: shape === 'linear' ? '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' : '拖动背景平移 / 滚轮缩放观察曲线；调节参数滑块看图像变化。' },
-              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : shape === 'rational' ? 'x→h 时 |y|→∞（垂直渐近线），x→∞ 时 y→k（水平渐近线）。' : shape === 'inverse-pair' ? '反函数图像关于 y=x 对称；拖背景平移观察对称性。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
+              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : shape === 'rational' ? 'x→h 时 |y|→∞（垂直渐近线），x→∞ 时 y→k（水平渐近线）。' : shape === 'inverse-pair' ? '反函数图像关于 y=x 对称；拖背景平移观察对称性。' : shape === 'piecewise' ? '分段点 x₀ 处：左右极限与 f(x₀) 相等则连续，否则间断。' : shape === 'composite' ? '复合求值顺序：x → g(x) → f(g(x))；观察内层值域是否落入外层定义域。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
             ]}
           />
         </aside>

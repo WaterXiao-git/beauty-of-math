@@ -17,7 +17,7 @@ import SwitchRow from './ui/SwitchRow'
 import ObserveTipCard from './ui/ObserveTipCard'
 import StepStatusCard from './ui/StepStatusCard'
 
-type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log'
+type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair'
 
 interface ParamRange {
   label?: string
@@ -201,17 +201,20 @@ export default function FunctionPlotDemo() {
   const grid = calcViewportGrid(transform, W, H, [xMin, xMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
   // 曲线采样（可视世界范围）
+  const visMapMin = -transform.tx / transform.scale
+  const visMapMax = (W - transform.tx) / transform.scale
   const visYMapMin = (H - transform.ty) / transform.scale
   const visYMapMax = -transform.ty / transform.scale
   const visWorldXMin = xMin + ((-transform.tx / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
   const visWorldXMax = xMin + (((W - transform.tx) / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
+  const yLimit = Math.max(Math.abs(yMin), Math.abs(yMax)) * 12 + 20
   const curvePts: string[] = []
   const N = 200
   let curveStarted = false
   for (let i = 0; i <= N; i++) {
     const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
     const y = f(x)
-    if (!Number.isFinite(y)) continue
+    if (!Number.isFinite(y) || Math.abs(y) > yLimit) continue
     curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
     curveStarted = true
   }
@@ -220,7 +223,7 @@ export default function FunctionPlotDemo() {
   for (let i = 0; i <= N; i++) {
     const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
     const y = f2?.(x)
-    if (y == null || !Number.isFinite(y)) continue
+    if (y == null || !Number.isFinite(y) || Math.abs(y) > yLimit) continue
     curvePts2.push((curve2Started ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
     curve2Started = true
   }
@@ -258,6 +261,20 @@ export default function FunctionPlotDemo() {
       { label: '对数 logₐx', value: base > 1 ? '递增' : base < 1 ? '递减' : '—' },
       { label: '关系', value: '互为反函数' },
     )
+  } else if (shape === 'rational') {
+    panelItems.push(
+      { label: '垂直渐近线', value: `x = ${(params.h ?? 0).toFixed(2)}` },
+      { label: '水平渐近线', value: `y = ${(params.k ?? 0).toFixed(2)}` },
+      { label: '定义域', value: `x ≠ ${(params.h ?? 0).toFixed(2)}` },
+      { label: '系数 a', value: (params.a ?? 1).toFixed(2) },
+    )
+  } else if (shape === 'inverse-pair') {
+    panelItems.push(
+      { label: '函数', value: activeCase.name.split(' 与 ')[0] },
+      { label: '反函数', value: activeCase.name.split(' 与 ')[1] ?? '—' },
+      { label: '关系', value: '关于 y=x 对称' },
+      { label: '复合', value: 'f(f⁻¹(x)) = x' },
+    )
   }
 
   // 教学判断文案
@@ -272,7 +289,11 @@ export default function FunctionPlotDemo() {
           : 'a = 0 时退化为直线，请调整 a。'
         : shape === 'exp-log'
           ? `底数 a = ${(params.base ?? 2).toFixed(2)}（${(params.base ?? 2) > 1 ? 'a>1 两函数递增' : '0<a<1 两函数递减'}），指数与对数互为反函数，图像关于 y=x 对称。`
-          : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
+          : shape === 'rational'
+            ? `中心 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，渐近线 x = ${(params.h ?? 0).toFixed(2)}、y = ${(params.k ?? 0).toFixed(2)}，图像为双曲线。`
+            : shape === 'inverse-pair'
+              ? '函数与反函数图像关于直线 y=x 对称，且 f(f⁻¹(x)) = x。'
+              : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
@@ -294,6 +315,10 @@ export default function FunctionPlotDemo() {
               {shape === 'linear' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-400" />斜率三角形</span>}
               {shape === 'exp-log' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-400" />指数 aˣ</span>}
               {shape === 'exp-log' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400" />对数 logₐx</span>}
+              {shape === 'rational' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400" />曲线</span>}
+              {shape === 'rational' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-gray-400" />渐近线</span>}
+              {shape === 'inverse-pair' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-400" />函数 f</span>}
+              {shape === 'inverse-pair' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400" />反函数 f⁻¹</span>}
             </div>
           </div>
 
@@ -324,14 +349,22 @@ export default function FunctionPlotDemo() {
                   </g>
                 )}
 
-                {/* 指数对数：y=x 对称虚线 */}
-                {shape === 'exp-log' && (
+                {/* rational：垂直/水平渐近线 */}
+                {shape === 'rational' && (
+                  <>
+                    <line x1={sx(params.h ?? 0)} y1={visYMapMin} x2={sx(params.h ?? 0)} y2={visYMapMax} stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="6 4" />
+                    <line x1={visMapMin} y1={sy(params.k ?? 0)} x2={visMapMax} y2={sy(params.k ?? 0)} stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="6 4" />
+                  </>
+                )}
+
+                {/* 指数对数/反函数对：y=x 对称虚线 */}
+                {(shape === 'exp-log' || shape === 'inverse-pair') && (
                   <line x1={sx(visWorldXMin)} y1={sy(visWorldXMin)} x2={sx(visWorldXMax)} y2={sy(visWorldXMax)} stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="6 4" />
                 )}
 
-                {/* 函数曲线（exp-log 时指数靛蓝 + 对数粉） */}
-                {curvePts.length > 0 && <path d={curvePts.join(' ')} fill="none" stroke={shape === 'exp-log' ? '#6366f1' : '#60a5fa'} strokeWidth={2.6} strokeLinecap="round" />}
-                {shape === 'exp-log' && curvePts2.length > 0 && <path d={curvePts2.join(' ')} fill="none" stroke="#ec4899" strokeWidth={2.6} strokeLinecap="round" />}
+                {/* 函数曲线（exp-log/inverse-pair 双曲线：靛蓝 + 粉） */}
+                {curvePts.length > 0 && <path d={curvePts.join(' ')} fill="none" stroke={shape === 'exp-log' || shape === 'inverse-pair' ? '#6366f1' : '#60a5fa'} strokeWidth={2.6} strokeLinecap="round" />}
+                {(shape === 'exp-log' || shape === 'inverse-pair') && curvePts2.length > 0 && <path d={curvePts2.join(' ')} fill="none" stroke="#ec4899" strokeWidth={2.6} strokeLinecap="round" />}
 
                 {/* 二次：顶点（可拖，反解 b/c）+ 根 + y 截距 */}
                 {shape === 'quadratic' && markers.vertex && Number.isFinite(vertexY) && (
@@ -381,6 +414,24 @@ export default function FunctionPlotDemo() {
                   <circle key={i} cx={sx(r)} cy={sy(0)} r={5} fill="#34d399" stroke="#0f172a" strokeWidth={2} />
                 ))}
 
+                {/* rational：中心点（可拖，改 h/k） */}
+                {shape === 'rational' && (
+                  <GeoPoint
+                    label="O" x={params.h ?? 0} y={params.k ?? 0} color="#fb7185"
+                    constraint="free"
+                    onMove={(wx, wy) => {
+                      const rh = activeCase.paramRanges?.h
+                      const rk = activeCase.paramRanges?.k
+                      setParams((prev) => ({
+                        ...prev,
+                        h: rh ? clamp(wx, rh.min, rh.max) : wx,
+                        k: rk ? clamp(wy, rk.min, rk.max) : wy,
+                      }))
+                    }}
+                    coord={coord} transform={transform} svgRef={svgRef} labelDx={10} labelDy={-10}
+                  />
+                )}
+
                 {/* 线性：y 截距点（可拖，改 b）与 x 截距点（可拖，改斜率） */}
                 {shape === 'linear' && markers.yIntercept && step >= 2 && (
                   <GeoPoint
@@ -427,7 +478,7 @@ export default function FunctionPlotDemo() {
         {/* 右：控制面板（Card Stack） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
-          <ConceptCard formula={shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : 'y = a^x \\iff x = \\log_a y'}>
+          <ConceptCard formula={shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : shape === 'exp-log' ? 'y = a^x \\iff x = \\log_a y' : shape === 'rational' ? 'y = \\frac{a}{x-h} + k' : 'y = f(x) \\iff x = f^{-1}(y)'}>
             {config.summary}
           </ConceptCard>
 
@@ -484,7 +535,7 @@ export default function FunctionPlotDemo() {
                       : judgmentText,
               },
               { icon: '🖱️', text: shape === 'linear' ? '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' : '拖动背景平移 / 滚轮缩放观察曲线；调节参数滑块看图像变化。' },
-              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
+              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : shape === 'rational' ? 'x→h 时 |y|→∞（垂直渐近线），x→∞ 时 y→k（水平渐近线）。' : shape === 'inverse-pair' ? '反函数图像关于 y=x 对称；拖背景平移观察对称性。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
             ]}
           />
         </aside>

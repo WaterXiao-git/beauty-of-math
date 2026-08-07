@@ -149,6 +149,30 @@ export const chapters: CourseChapter[] = [
             related: ['函数'],
             demoId: 'exponential-log-function',
           },
+          {
+            id: 'rational-function',
+            title: '反比例函数',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: '渐近线动态演示',
+            summary:
+              'y = a/(x−h) + k 的图像是双曲线，x=h 为垂直渐近线、y=k 为水平渐近线。',
+            goals: ['理解双曲线图像', '掌握渐近线', '理解平移'],
+            related: ['函数'],
+            demoId: 'rational-function',
+          },
+          {
+            id: 'inverse-function',
+            title: '反函数',
+            status: 'not-started',
+            previewLevel: 'C',
+            template: '反函数对称可视化',
+            summary:
+              'f 与 f⁻¹ 互为反函数时，图像关于 y=x 对称，且 f(f⁻¹(x)) = x。',
+            goals: ['理解反函数概念', '认识 y=x 对称', '掌握复合还原'],
+            related: ['函数'],
+            demoId: 'inverse-function',
+          },
         ],
       },
       {

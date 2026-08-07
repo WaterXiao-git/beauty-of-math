@@ -24,6 +24,8 @@ const demoRegistry: Record<string, ComponentType> = {
   'quadratic-function': FunctionPlotDemo,
   'absolute-value-function': FunctionPlotDemo,
   'exponential-log-function': FunctionPlotDemo,
+  'rational-function': FunctionPlotDemo,
+  'inverse-function': FunctionPlotDemo,
 }
 
 /** 未实现模板的占位页（需求 2.2：说明原因 + 替代学习路径） */

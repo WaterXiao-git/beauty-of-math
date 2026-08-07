@@ -27,7 +27,7 @@ export interface KnowledgeCase {
   /** 参数范围（滑块自动生成；key 对应 params） */
   paramRanges?: Record<string, { label?: string; min: number; max: number; step: number }>
   /** 画布形状（function-plot 模板：linear / quadratic / absolute / exp-log） */
-  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log'
+  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log' | 'rational' | 'inverse-pair'
   /** 画布标注开关（function-plot 模板） */
   markers?: {
     xIntercept?: boolean
@@ -587,6 +587,142 @@ export const knowledgePoints: KnowledgeConfig[] = [
       difficulty: '入门难度',
       duration: '约 20 分钟',
       templates: ['指数对数可视化', '反函数对称演示'],
+    },
+    version: 1,
+  },
+  // 8. 反比例函数（function-plot 模板：shape=rational，渐近线）
+  {
+    id: 'rational-function',
+    title: '反比例函数',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数',
+    template: 'function-plot',
+    summary:
+      '反比例函数 y = a/(x−h) + k 的图像是双曲线：直线 x=h 为垂直渐近线（x→h 时 |y|→∞），直线 y=k 为水平渐近线（x→∞ 时 y→k），点 (h,k) 是两条渐近线的交点。',
+    goals: [
+      '理解反比例函数图像为双曲线',
+      '掌握垂直/水平渐近线的意义',
+      '理解 h/k 对图像平移的影响',
+    ],
+    defaultCase: 'recip-1',
+    cases: [
+      {
+        id: 'recip-1',
+        name: 'y = 1/x',
+        expr: 'a/(x-h)+k',
+        domain: [-5, 5],
+        yRange: [-5, 5],
+        params: { a: 1, h: 0, k: 0 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -5, max: 5, step: 0.1 }, k: { label: '平移 k', min: -5, max: 5, step: 0.1 } },
+        shape: 'rational',
+        desc: '标准反比例：渐近线为坐标轴',
+      },
+      {
+        id: 'recip-h',
+        name: 'y = 1/(x−1)',
+        expr: 'a/(x-h)+k',
+        domain: [-5, 5],
+        yRange: [-5, 5],
+        params: { a: 1, h: 1, k: 0 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -5, max: 5, step: 0.1 }, k: { label: '平移 k', min: -5, max: 5, step: 0.1 } },
+        shape: 'rational',
+        desc: '垂直渐近线右移至 x=1',
+      },
+      {
+        id: 'recip-hk',
+        name: 'y = 1/(x−1)+1',
+        expr: 'a/(x-h)+k',
+        domain: [-5, 5],
+        yRange: [-5, 5],
+        params: { a: 1, h: 1, k: 1 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -5, max: 5, step: 0.1 }, k: { label: '平移 k', min: -5, max: 5, step: 0.1 } },
+        shape: 'rational',
+        desc: '中心移至 (1,1)',
+      },
+      {
+        id: 'recip-neg',
+        name: 'y = −2/(x+1)+2',
+        expr: 'a/(x-h)+k',
+        domain: [-5, 5],
+        yRange: [-5, 5],
+        params: { a: -2, h: -1, k: 2 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -5, max: 5, step: 0.1 }, k: { label: '平移 k', min: -5, max: 5, step: 0.1 } },
+        shape: 'rational',
+        desc: 'a<0 开口方向相反，中心 (−1,2)',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别函数', desc: 'y = a/(x−h) + k 为反比例函数，图像是双曲线' },
+      { id: 'va', title: '垂直渐近线', desc: 'x→h 时 |y|→∞，直线 x=h 为垂直渐近线' },
+      { id: 'ha', title: '水平渐近线', desc: 'x→∞ 时 y→k，直线 y=k 为水平渐近线' },
+      { id: 'shift', title: '平移变换', desc: '拖动中心点 (h,k) 或调滑块，观察渐近线跟随' },
+    ],
+    meta: {
+      difficulty: '入门难度',
+      duration: '约 15 分钟',
+      templates: ['反比例函数可视化', '渐近线动态演示'],
+    },
+    version: 1,
+  },
+  // 9. 反函数（function-plot 模板：shape=inverse-pair，关于 y=x 对称）
+  {
+    id: 'inverse-function',
+    title: '反函数',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数',
+    template: 'function-plot',
+    summary:
+      '若 y=f(x) 与 y=f⁻¹(x) 互为反函数，则它们的图像关于直线 y=x 对称，且复合 f(f⁻¹(x)) = x、f⁻¹(f(x)) = x。',
+    goals: [
+      '理解反函数的概念与存在条件（一一对应）',
+      '认识反函数图像关于 y=x 对称',
+      '掌握复合还原性质 f(f⁻¹(x)) = x',
+    ],
+    defaultCase: 'inv-square',
+    cases: [
+      {
+        id: 'inv-square',
+        name: 'y = x² 与 y = √x',
+        expr: 'x^2',
+        expr2: 'sqrt(x)',
+        domain: [0, 4],
+        yRange: [0, 4],
+        shape: 'inverse-pair',
+        desc: 'x≥0 上一一对应，互为反函数',
+      },
+      {
+        id: 'inv-cube',
+        name: 'y = x³ 与 y = x^(1/3)',
+        expr: 'x^3',
+        expr2: 'x^(1/3)',
+        domain: [-2, 2],
+        yRange: [-8, 8],
+        shape: 'inverse-pair',
+        desc: '三次函数在全实数域一一对应',
+      },
+      {
+        id: 'inv-exp',
+        name: 'y = 2ˣ 与 y = log₂x',
+        expr: 'pow(2, x)',
+        expr2: 'log(x, 2)',
+        domain: [-3, 3],
+        yRange: [-3, 3],
+        shape: 'inverse-pair',
+        desc: '指数与对数互为反函数',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别反函数', desc: 'f 与 f⁻¹ 满足 f(f⁻¹(x)) = x' },
+      { id: 'mirror', title: '关于 y=x 对称', desc: '反函数图像是原函数关于 y=x 的镜像' },
+      { id: 'domain', title: '定义域与值域', desc: 'f⁻¹ 的定义域 = f 的值域，互相对换' },
+      { id: 'apply', title: '复合还原', desc: 'f(f⁻¹(x)) = x 与 f⁻¹(f(x)) = x' },
+    ],
+    meta: {
+      difficulty: '入门难度',
+      duration: '约 15 分钟',
+      templates: ['反函数对称可视化', '复合还原演示'],
     },
     version: 1,
   },

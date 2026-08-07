@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-08-06 · 批量迁移第三批：反比例函数（渐近线）+ 反函数（y=x 对称）
+
+**模块**：前端演示模板 / server 配置层
+
+**内容**：
+- FunctionPlotDemo 新增 shape：rational（反比例 y=a/(x−h)+k：垂直/水平渐近线贯穿虚线 + 中心点可拖改 h/k）、inverse-pair（复用双曲线机制：函数靛蓝 + 反函数粉 + y=x 虚线）；采样加 y 限幅（防渐近线处大值连线）
+- knowledge.ts：新增 rational-function（4 案例：1/x、1/(x−1)、1/(x−1)+1、−2/(x+1)+2）与 inverse-function（3 案例：x²↔√x、x³↔x^(1/3)、2ˣ↔log₂x）
+- courseData 新增两知识点 + DemoPage 注册
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`、`DemoPage.tsx`、`server/src/data/knowledge.ts`、`client/src/course/courseData.ts`
+
+**验证**：client tsc 0；server tsc 0；vite build 成功（1m3s）；/api/knowledge/rational-function 与 /inverse-function 实测 200
+
+---
+
 ## 2026-08-06 · 顶点可拖 + 画布点色规范 + 批量迁移第二批（指数与对数函数）
 
 **模块**：前端演示模板 / 设计文档 / server 配置层

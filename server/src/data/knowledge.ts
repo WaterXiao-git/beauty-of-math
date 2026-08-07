@@ -12,6 +12,8 @@ export interface KnowledgeCase {
   name: string
   /** 数学表达式（mathjs 可解析），如 "x^4 - x^2" */
   expr: string
+  /** 第二条曲线表达式（参数化，如对数 log(x, base)） */
+  expr2?: string
   /** 定义域 [a, b] */
   domain: [number, number]
   /** 视图 y 范围 [min, max] */
@@ -24,8 +26,8 @@ export interface KnowledgeCase {
   params?: Record<string, number>
   /** 参数范围（滑块自动生成；key 对应 params） */
   paramRanges?: Record<string, { label?: string; min: number; max: number; step: number }>
-  /** 画布形状（function-plot 模板：linear / quadratic / absolute） */
-  shape?: 'linear' | 'quadratic' | 'absolute'
+  /** 画布形状（function-plot 模板：linear / quadratic / absolute / exp-log） */
+  shape?: 'linear' | 'quadratic' | 'absolute' | 'exp-log'
   /** 画布标注开关（function-plot 模板） */
   markers?: {
     xIntercept?: boolean
@@ -506,6 +508,85 @@ export const knowledgePoints: KnowledgeConfig[] = [
       difficulty: '入门难度',
       duration: '约 15 分钟',
       templates: ['绝对值函数可视化', 'V 形折线参数联动'],
+    },
+    version: 1,
+  },
+  // 7. 指数与对数函数（function-plot 模板：shape=exp-log，双曲线互为反函数）
+  {
+    id: 'exponential-log-function',
+    title: '指数与对数函数',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数',
+    template: 'function-plot',
+    summary:
+      'y = aˣ 与 y = logₐ(x)（a>0 且 a≠1）互为反函数，图像关于直线 y=x 对称：a>1 时两函数都递增，0<a<1 时都递减。',
+    goals: [
+      '理解指数函数与对数函数互为反函数',
+      '掌握底数 a 对增减性的影响',
+      '认识两曲线关于 y=x 对称',
+    ],
+    defaultCase: 'base2',
+    cases: [
+      {
+        id: 'base2',
+        name: '底数 2',
+        expr: 'pow(base, x)',
+        expr2: 'log(x, base)',
+        domain: [-3, 3],
+        yRange: [-3, 3],
+        params: { base: 2 },
+        paramRanges: { base: { label: '底数 a', min: 0.2, max: 4, step: 0.1 } },
+        shape: 'exp-log',
+        desc: '底数 2：指数递增，对数 log₂x 定义域 x>0',
+      },
+      {
+        id: 'base-e',
+        name: '自然底数 e',
+        expr: 'pow(base, x)',
+        expr2: 'log(x, base)',
+        domain: [-3, 3],
+        yRange: [-3, 3],
+        params: { base: 2.718281828459045 },
+        paramRanges: { base: { label: '底数 a', min: 0.2, max: 4, step: 0.1 } },
+        shape: 'exp-log',
+        desc: '自然底数 e≈2.718，微积分中最常用的底',
+      },
+      {
+        id: 'base-10',
+        name: '底数 10',
+        expr: 'pow(base, x)',
+        expr2: 'log(x, base)',
+        domain: [-1.5, 1.5],
+        yRange: [-2, 2],
+        params: { base: 10 },
+        paramRanges: { base: { label: '底数 a', min: 0.2, max: 4, step: 0.1 } },
+        shape: 'exp-log',
+        desc: '常用对数 log₁₀x（lg x）；指数增长极快',
+      },
+      {
+        id: 'base-05',
+        name: '底数 0.5',
+        expr: 'pow(base, x)',
+        expr2: 'log(x, base)',
+        domain: [-3, 3],
+        yRange: [-3, 3],
+        params: { base: 0.5 },
+        paramRanges: { base: { label: '底数 a', min: 0.2, max: 4, step: 0.1 } },
+        shape: 'exp-log',
+        desc: '0<a<1：指数与对数都递减',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别反函数', desc: 'y = aˣ 与 y = logₐx 互为反函数（a>0, a≠1）' },
+      { id: 'base', title: '底数影响', desc: 'a>1 两函数递增，0<a<1 两函数递减' },
+      { id: 'mirror', title: '关于 y=x 对称', desc: '反函数图像关于直线 y=x 对称' },
+      { id: 'apply', title: '换底公式', desc: 'logₐx = ln x / ln a，任意底可化为自然对数' },
+    ],
+    meta: {
+      difficulty: '入门难度',
+      duration: '约 20 分钟',
+      templates: ['指数对数可视化', '反函数对称演示'],
     },
     version: 1,
   },

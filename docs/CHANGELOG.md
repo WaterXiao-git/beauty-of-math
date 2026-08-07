@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-08-06 · 顶点可拖 + 画布点色规范 + 批量迁移第二批（指数与对数函数）
+
+**模块**：前端演示模板 / 设计文档 / server 配置层
+
+**内容**：
+- **顶点可拖**：二次函数顶点（拖拽反解 b/c，保持 a，曲线实时跟随）；绝对值函数顶点（拖拽改 h/k）；均用 GeoPoint free 约束
+- **点色统一**：linear y 截距点 绿→紫 #c084fc、absolute 顶点→玫瑰 #fb7185、零点→绿 #34d399；规范写入 docs/UNIFIED_LAYOUT.md「五、画布点色规范」（曲线亮蓝/顶点玫瑰/零点绿/y 截距紫/x 截距琥珀/目标点蓝/P 蓝 Q 琥珀/ξ 紫/割线天蓝切线粉/辅助线灰虚线）
+- **批量迁移第二批：指数与对数函数**（/demo/exponential-log-function）：shape=exp-log 双曲线（指数靛蓝 + 对数粉 + y=x 对称虚线），KnowledgeCase 扩展 expr2；4 案例（底数 2/e/10/0.5）；courseData 新增知识点 + DemoPage 注册
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`、`DemoPage.tsx`、`server/src/data/knowledge.ts`、`client/src/course/courseData.ts`、`docs/UNIFIED_LAYOUT.md`
+
+**验证**：client tsc 0；server tsc 0；vite build 成功（58.9s）；/api/knowledge/exponential-log-function 实测 200（4 案例 shape=exp-log）
+
+---
+
 ## 2026-08-06 · 修复：二次对称轴虚线不贯穿 + 绝对值零点公式错误
 
 **模块**：前端演示模板

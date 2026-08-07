@@ -23,6 +23,7 @@ const demoRegistry: Record<string, ComponentType> = {
   'function-plot': FunctionPlotDemo,
   'quadratic-function': FunctionPlotDemo,
   'absolute-value-function': FunctionPlotDemo,
+  'exponential-log-function': FunctionPlotDemo,
 }
 
 /** 未实现模板的占位页（需求 2.2：说明原因 + 替代学习路径） */

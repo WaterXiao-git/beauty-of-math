@@ -137,6 +137,18 @@ export const chapters: CourseChapter[] = [
             related: ['函数'],
             demoId: 'absolute-value-function',
           },
+          {
+            id: 'exponential-log-function',
+            title: '指数与对数函数',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: '反函数对称可视化',
+            summary:
+              'y = aˣ 与 y = logₐ(x) 互为反函数，图像关于直线 y=x 对称；a>1 递增，0<a<1 递减。',
+            goals: ['理解互为反函数', '掌握底数与增减性', '认识 y=x 对称'],
+            related: ['函数'],
+            demoId: 'exponential-log-function',
+          },
         ],
       },
       {

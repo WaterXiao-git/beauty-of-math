@@ -17,7 +17,7 @@ import SwitchRow from './ui/SwitchRow'
 import ObserveTipCard from './ui/ObserveTipCard'
 import StepStatusCard from './ui/StepStatusCard'
 
-type Shape = 'linear' | 'quadratic' | 'absolute'
+type Shape = 'linear' | 'quadratic' | 'absolute' | 'exp-log'
 
 interface ParamRange {
   label?: string
@@ -30,6 +30,8 @@ interface DemoCase {
   id: string
   name: string
   expr: string
+  /** 第二条曲线表达式（参数化，如对数 log(x, base)） */
+  expr2?: string
   domain: [number, number]
   yRange: [number, number]
   params?: Record<string, number>
@@ -117,6 +119,7 @@ export default function FunctionPlotDemo() {
   const derived = useMemo(() => {
     if (!activeCase) return null
     const f = makeParamFn(activeCase.expr, params)
+    const f2 = activeCase.expr2 ? makeParamFn(activeCase.expr2, params) : null
     const xMin = activeCase.domain[0]
     const xMax = activeCase.domain[1]
     const yMin = activeCase.yRange[0]
@@ -160,7 +163,7 @@ export default function FunctionPlotDemo() {
           : []
     const trend = shape === 'linear' ? (slope > 0 ? '单调递增' : slope < 0 ? '单调递减' : '常函数') : ''
     const openUp = shape === 'quadratic' && a > 0
-    return { f, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, a, b, c }
+    return { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, a, b, c }
   }, [activeCase, params])
 
   if (loadError) {
@@ -185,7 +188,7 @@ export default function FunctionPlotDemo() {
     )
   }
 
-  const { f, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp } = derived
+  const { f, f2, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp } = derived
   const markers = activeCase.markers ?? {}
   const sx = (x: number) => PAD_L + ((x - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R)
   const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
@@ -211,6 +214,15 @@ export default function FunctionPlotDemo() {
     if (!Number.isFinite(y)) continue
     curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
     curveStarted = true
+  }
+  const curvePts2: string[] = []
+  let curve2Started = false
+  for (let i = 0; i <= N; i++) {
+    const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
+    const y = f2?.(x)
+    if (y == null || !Number.isFinite(y)) continue
+    curvePts2.push((curve2Started ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+    curve2Started = true
   }
 
   const setParam = (key: string, value: number) => setParams((prev) => ({ ...prev, [key]: value }))
@@ -238,6 +250,14 @@ export default function FunctionPlotDemo() {
       { label: '零点', value: roots.length > 0 ? roots.map((r) => r.toFixed(2)).join('、') : '无' },
       { label: '陡缓', value: `|a| = ${Math.abs(params.a ?? 1).toFixed(2)}` },
     )
+  } else if (shape === 'exp-log') {
+    const base = params.base ?? 2
+    panelItems.push(
+      { label: '底数 a', value: base.toFixed(2) },
+      { label: '指数 aˣ', value: base > 1 ? '递增' : base < 1 ? '递减' : '常数' },
+      { label: '对数 logₐx', value: base > 1 ? '递增' : base < 1 ? '递减' : '—' },
+      { label: '关系', value: '互为反函数' },
+    )
   }
 
   // 教学判断文案
@@ -250,7 +270,9 @@ export default function FunctionPlotDemo() {
         ? Number.isFinite(vertexY)
           ? `顶点 (${vertexX.toFixed(2)}, ${vertexY.toFixed(2)})，开口${openUp ? '向上' : '向下'}，Δ = ${delta.toFixed(2)}（${delta > 0 ? '两实根' : delta === 0 ? '重根' : '无实根'}）。`
           : 'a = 0 时退化为直线，请调整 a。'
-        : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
+        : shape === 'exp-log'
+          ? `底数 a = ${(params.base ?? 2).toFixed(2)}（${(params.base ?? 2) > 1 ? 'a>1 两函数递增' : '0<a<1 两函数递减'}），指数与对数互为反函数，图像关于 y=x 对称。`
+          : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
@@ -270,6 +292,8 @@ export default function FunctionPlotDemo() {
               {shape === 'quadratic' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400" />根</span>}
               {shape === 'absolute' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-300" />顶点/零点</span>}
               {shape === 'linear' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-400" />斜率三角形</span>}
+              {shape === 'exp-log' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-indigo-400" />指数 aˣ</span>}
+              {shape === 'exp-log' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400" />对数 logₐx</span>}
             </div>
           </div>
 
@@ -300,15 +324,34 @@ export default function FunctionPlotDemo() {
                   </g>
                 )}
 
-                {/* 函数曲线 */}
-                {curvePts.length > 0 && <path d={curvePts.join(' ')} fill="none" stroke="#60a5fa" strokeWidth={2.6} strokeLinecap="round" />}
+                {/* 指数对数：y=x 对称虚线 */}
+                {shape === 'exp-log' && (
+                  <line x1={sx(visWorldXMin)} y1={sy(visWorldXMin)} x2={sx(visWorldXMax)} y2={sy(visWorldXMax)} stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="6 4" />
+                )}
 
-                {/* 二次：顶点 + 根 + y 截距 */}
+                {/* 函数曲线（exp-log 时指数靛蓝 + 对数粉） */}
+                {curvePts.length > 0 && <path d={curvePts.join(' ')} fill="none" stroke={shape === 'exp-log' ? '#6366f1' : '#60a5fa'} strokeWidth={2.6} strokeLinecap="round" />}
+                {shape === 'exp-log' && curvePts2.length > 0 && <path d={curvePts2.join(' ')} fill="none" stroke="#ec4899" strokeWidth={2.6} strokeLinecap="round" />}
+
+                {/* 二次：顶点（可拖，反解 b/c）+ 根 + y 截距 */}
                 {shape === 'quadratic' && markers.vertex && Number.isFinite(vertexY) && (
-                  <g>
-                    <circle cx={sx(vertexX)} cy={sy(vertexY)} r={6} fill="#fb7185" stroke="#0f172a" strokeWidth={2} />
-                    <text x={sx(vertexX) + 10} y={sy(vertexY) - 10} fontSize={12} fontWeight={700} fill="#fda4af">顶点</text>
-                  </g>
+                  <GeoPoint
+                    label="V" x={vertexX} y={vertexY} color="#fb7185"
+                    constraint="free"
+                    onMove={(wx, wy) => {
+                      if (!Number.isFinite(derived.a) || derived.a === 0) return
+                      const b2 = -2 * derived.a * wx
+                      const c2 = wy - derived.a * wx * wx - b2 * wx
+                      const rb = activeCase.paramRanges?.b
+                      const rc = activeCase.paramRanges?.c
+                      setParams((prev) => ({
+                        ...prev,
+                        b: rb ? clamp(b2, rb.min, rb.max) : b2,
+                        c: rc ? clamp(c2, rc.min, rc.max) : c2,
+                      }))
+                    }}
+                    coord={coord} transform={transform} svgRef={svgRef} labelDx={10} labelDy={-10}
+                  />
                 )}
                 {shape === 'quadratic' && markers.roots && roots.map((r, i) => (
                   <circle key={i} cx={sx(r)} cy={sy(0)} r={5} fill="#34d399" stroke="#0f172a" strokeWidth={2} />
@@ -317,21 +360,31 @@ export default function FunctionPlotDemo() {
                   <circle cx={sx(0)} cy={sy(yIntercept)} r={4.5} fill="#c084fc" stroke="#0f172a" strokeWidth={1.5} />
                 )}
 
-                {/* 绝对值：顶点 + 零点 */}
+                {/* 绝对值：顶点（可拖，改 h/k）+ 零点 */}
                 {shape === 'absolute' && markers.vertex && (
-                  <g>
-                    <circle cx={sx(params.h ?? 0)} cy={sy(params.k ?? 0)} r={6} fill="#fbbf24" stroke="#0f172a" strokeWidth={2} />
-                    <text x={sx(params.h ?? 0) + 10} y={sy(params.k ?? 0) - 10} fontSize={12} fontWeight={700} fill="#fcd34d">顶点</text>
-                  </g>
+                  <GeoPoint
+                    label="V" x={params.h ?? 0} y={params.k ?? 0} color="#fb7185"
+                    constraint="free"
+                    onMove={(wx, wy) => {
+                      const rh = activeCase.paramRanges?.h
+                      const rk = activeCase.paramRanges?.k
+                      setParams((prev) => ({
+                        ...prev,
+                        h: rh ? clamp(wx, rh.min, rh.max) : wx,
+                        k: rk ? clamp(wy, rk.min, rk.max) : wy,
+                      }))
+                    }}
+                    coord={coord} transform={transform} svgRef={svgRef} labelDx={10} labelDy={-10}
+                  />
                 )}
                 {shape === 'absolute' && markers.roots && roots.map((r, i) => (
-                  <circle key={i} cx={sx(r)} cy={sy(0)} r={5} fill="#f472b6" stroke="#0f172a" strokeWidth={2} />
+                  <circle key={i} cx={sx(r)} cy={sy(0)} r={5} fill="#34d399" stroke="#0f172a" strokeWidth={2} />
                 ))}
 
                 {/* 线性：y 截距点（可拖，改 b）与 x 截距点（可拖，改斜率） */}
                 {shape === 'linear' && markers.yIntercept && step >= 2 && (
                   <GeoPoint
-                    label="B" x={0} y={yIntercept} color="#34d399"
+                    label="B" x={0} y={yIntercept} color="#c084fc"
                     constraint="yAxis"
                     onMove={(_wx, wy) => setParam('b', clamp(wy, yMin + 0.2, yMax - 0.2))}
                     coord={coord} transform={transform} svgRef={svgRef} labelDx={8} labelDy={-10}
@@ -374,7 +427,7 @@ export default function FunctionPlotDemo() {
         {/* 右：控制面板（Card Stack） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
-          <ConceptCard formula={shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : 'y = a|x-h| + k'}>
+          <ConceptCard formula={shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : shape === 'absolute' ? 'y = a|x-h| + k' : 'y = a^x \\iff x = \\log_a y'}>
             {config.summary}
           </ConceptCard>
 
@@ -431,7 +484,7 @@ export default function FunctionPlotDemo() {
                       : judgmentText,
               },
               { icon: '🖱️', text: shape === 'linear' ? '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' : '拖动背景平移 / 滚轮缩放观察曲线；调节参数滑块看图像变化。' },
-              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
+              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : shape === 'exp-log' ? '换底公式 logₐx = ln x / ln a；两曲线关于 y=x 对称，互为反函数。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
             ]}
           />
         </aside>

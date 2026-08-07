@@ -6,7 +6,7 @@ interface StepStatusCardProps {
 export default function StepStatusCard({ stepDesc }: StepStatusCardProps) {
   return (
     <div
-      className="w-80 xl:w-96 shrink-0 h-full bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 flex flex-col justify-center gap-1.5 overflow-hidden"
+      className="w-80 xl:w-96 shrink-0 h-full bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-2 flex flex-col justify-center gap-1 overflow-hidden"
       title={stepDesc.desc}
     >
       <div className="text-[10px] text-gray-400 leading-none">当前步骤</div>

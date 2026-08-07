@@ -14,6 +14,18 @@
 
 ---
 
+## 2026-08-06 · 当前步骤卡遮挡根因修复（底部行 pb-4 吃掉行高）
+
+**模块**：前端演示页布局
+
+**内容**：底部行 div 的 pb-4 使 h-20 内子元素实际仅 64px 高，步骤卡三行溢出；去掉 pb-4（行高完整 80px）并微压步骤卡内边距 py-2，三行内容完全容纳
+
+**涉及文件**：`client/src/demo/ui/StepStatusCard.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`、`FunctionPlotDemo.tsx`、`RolleDemo.tsx`
+
+**验证**：tsc -b --noEmit exit 0
+
+---
+
 ## 2026-08-06 · 当前步骤卡行距修复（三行不再遮挡）
 
 **模块**：前端演示页布局

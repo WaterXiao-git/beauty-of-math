@@ -325,7 +325,7 @@ export default function FunctionPlotDemo() {
       </div>
 
       {/* 底部行：播放条 + 当前步骤卡（同一高度） */}
-      <div className="flex h-20 shrink-0 gap-4 px-4 md:px-5 pb-4">
+      <div className="flex h-20 shrink-0 gap-4 px-4 md:px-5">
         <PlayerBar
           steps={config.steps}
           step={step}

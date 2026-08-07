@@ -14,6 +14,21 @@
 
 ---
 
+## 2026-08-06 · 当前步骤说明移入右侧列底部(与三卡竖直对齐、与播放条同高)
+
+**模块**：前端演示页布局
+
+**内容**：
+- PlayerBar 移除右侧「步骤说明」区块（播放条只保留 播放控制 + 四阶段进度条）
+- 新增 StepStatusCard（h-20 与播放条同高、白卡圆角、当前步骤标题紫色 + 描述）
+- 四个演示页右侧列改为「三卡可滚动区 + 底部固定步骤卡」结构：步骤说明与右侧三卡同列竖直对齐，与底部四阶段进度条同一水平线；RolleControl 新增 step prop（由 RolleDemo 传入）
+
+**涉及文件**：`client/src/demo/ui/StepStatusCard.tsx`（新增）、`PlayerBar.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`、`FunctionPlotDemo.tsx`、`RolleControl.tsx`、`RolleDemo.tsx`
+
+**验证**：tsc -b --noEmit exit 0；vite build 成功（58.8s）
+
+---
+
 ## 2026-08-06 · AI 助教接真实 DeepSeek + 演示页 UI 升级（Apple/Linear 风格三卡布局）
 
 **模块**：前端演示页 / AI 助教

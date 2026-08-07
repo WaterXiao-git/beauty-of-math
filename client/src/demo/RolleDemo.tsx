@@ -89,6 +89,7 @@ export default function RolleDemo() {
           onToggleCondition={handleToggleCondition}
           judgmentOk={judgmentOk}
           judgmentText={judgment}
+          step={step}
         />
       </div>
 

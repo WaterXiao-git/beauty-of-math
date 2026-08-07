@@ -18,7 +18,7 @@ interface PlayerBarProps {
   stepDesc: { title: string; desc: string }
 }
 
-export default function PlayerBar({ steps, step, playing, onPrev, onNext, onTogglePlay, onReset, stepDesc }: PlayerBarProps) {
+export default function PlayerBar({ steps, step, playing, onPrev, onNext, onTogglePlay, onReset }: PlayerBarProps) {
   return (
     <footer className="h-20 shrink-0 bg-white border-t border-gray-100 flex items-center gap-4 md:gap-8 px-4 md:px-6">
       {/* 左：播放控制组 */}
@@ -126,11 +126,6 @@ export default function PlayerBar({ steps, step, playing, onPrev, onNext, onTogg
         </div>
       </div>
 
-      {/* 右：当前步骤说明 */}
-      <div className="hidden lg:block w-52 shrink-0 border-l border-gray-100 pl-4">
-        <div className="text-xs font-bold text-indigo-600 mb-0.5">{stepDesc.title}</div>
-        <div className="text-[11px] text-gray-400 leading-snug line-clamp-2">{stepDesc.desc}</div>
-      </div>
     </footer>
   )
 }

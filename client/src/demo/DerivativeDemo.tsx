@@ -15,6 +15,7 @@ import SegmentedControl from './ui/SegmentedControl'
 import SliderRow from './ui/SliderRow'
 import SwitchRow from './ui/SwitchRow'
 import ObserveTipCard from './ui/ObserveTipCard'
+import StepStatusCard from './ui/StepStatusCard'
 
 interface DemoCase {
   id: string
@@ -278,7 +279,8 @@ export default function DerivativeDemo() {
         </section>
 
         {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
-        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
+        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-3 overflow-hidden">
+          <div className="flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto">
           {/* 概念要点 */}
           <ConceptCard formula={"f'(x_0) = \\lim_{h \\to 0} \\frac{f(x_0+h)-f(x_0)}{h}"}>
             {config.summary}
@@ -332,6 +334,8 @@ export default function DerivativeDemo() {
               { icon: '⚠️', text: 'h 越小割线越接近切线——点「播放」让 h 自动递减，观察极限过程。' },
             ]}
           />
+          </div>
+          <StepStatusCard stepDesc={config.steps[Math.min(step, 4) - 1]} />
         </aside>
       </div>
 

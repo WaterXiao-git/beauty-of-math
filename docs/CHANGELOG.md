@@ -14,6 +14,20 @@
 
 ---
 
+## 2026-08-06 · 修复：演示页「报告Bug」与步骤说明右下角冲突 + 统一排版方案文档
+
+**模块**：前端布局 / 设计文档
+
+**内容**：
+- BugReportButton（fixed bottom-4 right-4 橙色胶囊）与 PlayerBar 右侧步骤说明重叠：改为仅旧实验页显示（isLegacyExperiment），演示页/提问页不再显示，步骤说明独占右下角
+- 新增 docs/UNIFIED_LAYOUT.md：知识点/新演示/旧实验元素盘点 + 统一排版骨架 + 技术栈统一路线（全部知识点最终迁移到「SVG 画布+控制面板+播放条」统一配置渲染，淘汰 canvas2D/Plotly 双轨；外壳化仅作过渡兜底）
+
+**涉及文件**：`client/src/components/Layout/Layout.tsx`、`docs/UNIFIED_LAYOUT.md`（新增）
+
+**验证**：tsc -b --noEmit exit 0
+
+---
+
 ## 2026-08-06 · 旧实验页外壳化（300+ 页统一 DemoHeader + 抽屉触角）
 
 **模块**：前端布局

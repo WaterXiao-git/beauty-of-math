@@ -117,7 +117,7 @@ function LayoutContent() {
       {isNarrationMode && !isPresenterMode && <NarrationController />}
 
       {/* Bug 报告按钮 - 仅在实验页面显示 */}
-      {isExperimentPage && <BugReportButton experimentPath={experimentPath} />}
+      {isLegacyExperiment && <BugReportButton experimentPath={experimentPath} />}
     </div>
   )
 }

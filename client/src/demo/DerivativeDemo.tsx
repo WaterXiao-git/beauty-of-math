@@ -279,7 +279,7 @@ export default function DerivativeDemo() {
         </section>
 
         {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
-        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
+        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
           <ConceptCard formula={"f'(x_0) = \\lim_{h \\to 0} \\frac{f(x_0+h)-f(x_0)}{h}"}>
             {config.summary}

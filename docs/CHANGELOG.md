@@ -14,6 +14,20 @@
 
 ---
 
+## 2026-08-06 · 概念要点卡塌陷根因修复（flex 子项被压缩）
+
+**模块**：前端演示页布局
+
+**内容**：
+- 根因：aside 为 overflow-y-auto 的 flex 容器时，flex 子项 min-height:auto 归零，内容超高时卡片被 flex-shrink 压成一行、其余内容被裁（正文可选不可见、accent 条一行高）；四页 aside 加 [&>*]:shrink-0 修复
+- ConceptCard 重构为纯自然流：absolute 紫色条 → border-l-4、去掉 overflow-hidden、公式卡 flex → text-center（消除所有可疑裁剪 CSS）
+
+**涉及文件**：`client/src/demo/ui/ConceptCard.tsx`、`EpsilonDeltaDemo.tsx`、`DerivativeDemo.tsx`、`FunctionPlotDemo.tsx`、`RolleControl.tsx`
+
+**验证**：tsc -b --noEmit exit 0
+
+---
+
 ## 2026-08-06 · 概念要点卡内容不可见排查：公式改 \lt + 去 backdrop-blur
 
 **模块**：前端演示页

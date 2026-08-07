@@ -260,7 +260,7 @@ export default function FunctionPlotDemo() {
         </section>
 
         {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
-        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
+        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
           <ConceptCard formula={"y = kx + b"}>
             {config.summary}

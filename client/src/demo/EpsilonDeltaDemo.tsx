@@ -293,7 +293,7 @@ export default function EpsilonDeltaDemo() {
         </section>
 
         {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
-        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
+        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
           <ConceptCard formula={"0 \\lt |x-a| \\lt \\delta \\Rightarrow |f(x)-L| \\lt \\varepsilon"}>
             无论给定多小的 ε，都能找到一个 δ，使得当 x 足够接近 a 点时，f(x) 必定落入 L 附近。

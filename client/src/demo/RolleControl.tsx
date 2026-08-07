@@ -36,7 +36,7 @@ export default function RolleControl({
   const activeCase = CASES.find((c) => c.id === caseId)
 
   return (
-    <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
+    <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
       {/* 概念要点（定理条件） */}
       <ConceptCard
         title="定理条件"

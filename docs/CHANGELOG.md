@@ -14,6 +14,22 @@
 
 ---
 
+## 2026-08-06 · 批量迁移第一批：FunctionPlotDemo 泛化 + 二次函数/绝对值函数
+
+**模块**：前端演示模板 + server 配置层
+
+**内容**：
+- FunctionPlotDemo 泛化为「参数化函数画布」：参数滑块由 case.params + paramRanges 自动生成；shape 支持 linear（截距点/斜率三角形可拖）/ quadratic（顶点/对称轴/根/判别式）/ absolute（顶点/零点）；按知识点 id 加载配置（useParams）
+- knowledge.ts：KnowledgeCase 扩展 paramRanges/shape/markers；新增 quadratic-function（5 案例：x²/−x²/(x−1)²/x²−4/x²+1）与 absolute-value-function（5 案例：|x|/|x−2|/|x|+1/2|x|/−|x|+3）
+- courseData：1.1 函数小节新增「二次函数」「绝对值函数」知识点，挂 demoId
+- 效果：新增函数类演示只加配置不碰代码（迁移产能验证）
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`、`server/src/data/knowledge.ts`、`client/src/course/courseData.ts`
+
+**验证**：client tsc 0；server tsc 0；vite build 成功（59.8s）；/api/knowledge/quadratic-function 与 /absolute-value-function 实测 200（各 5 案例 + shape）
+
+---
+
 ## 2026-08-06 · AI 助教清空预设消息，改空状态引导
 
 **模块**：前端 AI 助教

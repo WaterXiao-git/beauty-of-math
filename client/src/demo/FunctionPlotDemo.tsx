@@ -1,9 +1,10 @@
-// 一次函数图像演示（function-plot 模板试点）：配置来自统一接口 /api/knowledge/function-plot
-// 参数化表达式 y = k*x + b；k/b 由滑块或拖拽截距点（y 截距点改 b / x 截距点改斜率）控制
+﻿// 参数化函数画布演示（function-plot 模板）：配置来自统一接口 /api/knowledge/:id
+// 支持形状：linear(y=kx+b 截距点/斜率三角形可拖) / quadratic(顶点/对称轴/根) / absolute(顶点/零点)
+// 参数滑块由 case.params 自动生成（范围来自 paramRanges）
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { compile } from 'mathjs'
 import DemoHeader from './DemoHeader'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
@@ -16,14 +17,32 @@ import SwitchRow from './ui/SwitchRow'
 import ObserveTipCard from './ui/ObserveTipCard'
 import StepStatusCard from './ui/StepStatusCard'
 
+type Shape = 'linear' | 'quadratic' | 'absolute'
+
+interface ParamRange {
+  label?: string
+  min: number
+  max: number
+  step: number
+}
+
 interface DemoCase {
   id: string
   name: string
   expr: string
   domain: [number, number]
   yRange: [number, number]
-  /** 参数化表达式的默认参数（k/b） */
-  params?: { k: number; b: number }
+  params?: Record<string, number>
+  paramRanges?: Record<string, ParamRange>
+  shape?: Shape
+  markers?: {
+    xIntercept?: boolean
+    yIntercept?: boolean
+    slopeTriangle?: boolean
+    vertex?: boolean
+    axis?: boolean
+    roots?: boolean
+  }
   anchor?: number | null
   desc?: string
 }
@@ -45,7 +64,6 @@ const PAD_R = 40
 const PAD_T = 44
 const PAD_B = 52
 
-/** 参数化函数求值：y = expr({ x, ...params }) */
 function makeParamFn(expr: string, params: Record<string, number>) {
   const compiled = compile(expr)
   return (x: number): number => {
@@ -62,21 +80,19 @@ const clamp = (v: number, lo: number, hi: number) => Math.min(Math.max(v, lo), h
 
 export default function FunctionPlotDemo() {
   const navigate = useNavigate()
+  const { pointId = 'function-plot' } = useParams()
   const { transform, handlers } = usePanZoom()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
   const [loadError, setLoadError] = useState('')
   const [caseId, setCaseId] = useState('')
-  const [k, setK] = useState(1)
-  const [b, setB] = useState(0)
+  const [params, setParams] = useState<Record<string, number>>({})
+  const [showTri, setShowTri] = useState(true)
   const [step, setStep] = useState(4)
   const [playing, setPlaying] = useState(false)
-  /** 显示斜率三角形（Δx=1, Δy=k） */
-  const [showTri, setShowTri] = useState(true)
 
-  // 加载统一接口配置
   useEffect(() => {
-    fetch('/api/knowledge/function-plot')
+    fetch('/api/knowledge/' + pointId)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
         return r.json()
@@ -85,13 +101,11 @@ export default function FunctionPlotDemo() {
         setConfig(cfg)
         setCaseId(cfg.defaultCase)
         const def = cfg.cases.find((c) => c.id === cfg.defaultCase) ?? cfg.cases[0]
-        setK(def?.params?.k ?? 1)
-        setB(def?.params?.b ?? 0)
+        setParams(def?.params ?? {})
       })
       .catch((e) => setLoadError(String(e)))
-  }, [])
+  }, [pointId])
 
-  // 播放：步进 1→4 循环
   useEffect(() => {
     if (!playing) return
     const timer = setInterval(() => setStep((s) => (s >= 4 ? 1 : s + 1)), 2000)
@@ -102,22 +116,57 @@ export default function FunctionPlotDemo() {
 
   const derived = useMemo(() => {
     if (!activeCase) return null
-    const params = { k, b }
     const f = makeParamFn(activeCase.expr, params)
     const xMin = activeCase.domain[0]
     const xMax = activeCase.domain[1]
     const yMin = activeCase.yRange[0]
     const yMax = activeCase.yRange[1]
-    const yIntercept = b
-    const xIntercept = k === 0 ? null : -b / k
-    const trend = k > 0 ? '单调递增' : k < 0 ? '单调递减' : '常函数'
-    return { f, xMin, xMax, yMin, yMax, yIntercept, xIntercept, trend }
-  }, [activeCase, k, b])
+    const shape = activeCase.shape ?? 'linear'
+    const p = params
+    // 线性
+    const slope = shape === 'linear' ? (p.k ?? 1) : NaN
+    const yIntercept = p.b ?? p.c ?? 0
+    const xIntercept =
+      shape === 'linear'
+        ? slope === 0
+          ? null
+          : -yIntercept / slope
+        : shape === 'quadratic'
+          ? null // 二次的根单独算
+          : null
+    // 二次
+    const a = p.a ?? NaN
+    const b = p.b ?? NaN
+    const c = p.c ?? NaN
+    const vertexX = shape === 'quadratic' && a !== 0 ? -b / (2 * a) : NaN
+    const vertexY = Number.isFinite(vertexX) ? f(vertexX) : NaN
+    const delta = shape === 'quadratic' ? b * b - 4 * a * c : NaN
+    const roots =
+      shape === 'quadratic' && Number.isFinite(delta)
+        ? delta < 0
+          ? []
+          : delta === 0
+            ? [-b / (2 * a)]
+            : [(-b - Math.sqrt(delta)) / (2 * a), (-b + Math.sqrt(delta)) / (2 * a)]
+        : shape === 'absolute'
+          ? (() => {
+              const aa = p.a ?? 1
+              const h = p.h ?? 0
+              const k = p.k ?? 0
+              const ratio = -k / aa
+              if (!Number.isFinite(ratio) || ratio < 0) return []
+              return [h - Math.sqrt(ratio), h + Math.sqrt(ratio)]
+            })()
+          : []
+    const trend = shape === 'linear' ? (slope > 0 ? '单调递增' : slope < 0 ? '单调递减' : '常函数') : ''
+    const openUp = shape === 'quadratic' && a > 0
+    return { f, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp, a, b, c }
+  }, [activeCase, params])
 
   if (loadError) {
     return (
       <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['高等数学（上册）', '函数与极限', '一次函数图像']} onBreadcrumbClick={() => navigate('/')} />
+        <DemoHeader breadcrumb={['高等数学（上册）', '函数与极限', '函数图像']} onBreadcrumbClick={() => navigate('/')} />
         <div className="flex-1 flex items-center justify-center">
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center">
             <div className="text-4xl mb-3">⚠️</div>
@@ -130,13 +179,14 @@ export default function FunctionPlotDemo() {
   if (!config || !activeCase || !derived) {
     return (
       <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['高等数学（上册）', '函数与极限', '一次函数图像']} onBreadcrumbClick={() => navigate('/')} />
+        <DemoHeader breadcrumb={['高等数学（上册）', '函数与极限', '函数图像']} onBreadcrumbClick={() => navigate('/')} />
         <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">配置加载中…</div>
       </div>
     )
   }
 
-  const { f, xMin, xMax, yMin, yMax, xIntercept, trend } = derived
+  const { f, xMin, xMax, yMin, yMax, shape, slope, yIntercept, xIntercept, vertexX, vertexY, delta, roots, trend, openUp } = derived
+  const markers = activeCase.markers ?? {}
   const sx = (x: number) => PAD_L + ((x - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R)
   const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
   const coord = {
@@ -147,11 +197,11 @@ export default function FunctionPlotDemo() {
   }
   const grid = calcViewportGrid(transform, W, H, [xMin, xMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
-  // 曲线采样（可视世界范围，铺满视图）
+  // 曲线采样（可视世界范围）
   const visWorldXMin = xMin + ((-transform.tx / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
   const visWorldXMax = xMin + (((W - transform.tx) / transform.scale - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin)
   const curvePts: string[] = []
-  const N = 160
+  const N = 200
   let curveStarted = false
   for (let i = 0; i <= N; i++) {
     const x = visWorldXMin + ((visWorldXMax - visWorldXMin) * i) / N
@@ -160,6 +210,45 @@ export default function FunctionPlotDemo() {
     curvePts.push((curveStarted ? 'L' : 'M') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
     curveStarted = true
   }
+
+  const setParam = (key: string, value: number) => setParams((prev) => ({ ...prev, [key]: value }))
+
+  // 数据面板项
+  const panelItems: { label: string; value: string }[] = []
+  if (shape === 'linear') {
+    panelItems.push(
+      { label: '斜率 k', value: slope.toFixed(2) },
+      { label: 'y 截距', value: yIntercept.toFixed(2) },
+      { label: 'x 截距', value: xIntercept !== null ? xIntercept.toFixed(2) : '不存在' },
+      { label: '单调性', value: trend },
+    )
+  } else if (shape === 'quadratic') {
+    panelItems.push(
+      { label: '开口', value: Number.isFinite(openUp) ? (openUp ? '向上' : '向下') : '—' },
+      { label: '顶点', value: Number.isFinite(vertexY) ? `(${vertexX.toFixed(2)}, ${vertexY.toFixed(2)})` : '—' },
+      { label: '判别式 Δ', value: Number.isFinite(delta) ? delta.toFixed(2) : '—' },
+      { label: '实根', value: roots.length > 0 ? roots.map((r) => r.toFixed(2)).join('、') : '无' },
+    )
+  } else if (shape === 'absolute') {
+    panelItems.push(
+      { label: '顶点', value: `(${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})` },
+      { label: '开口', value: (params.a ?? 1) > 0 ? '向上' : '向下' },
+      { label: '零点', value: roots.length > 0 ? roots.map((r) => r.toFixed(2)).join('、') : '无' },
+      { label: '陡缓', value: `|a| = ${Math.abs(params.a ?? 1).toFixed(2)}` },
+    )
+  }
+
+  // 教学判断文案
+  const judgmentText =
+    shape === 'linear'
+      ? slope === 0
+        ? `k=0：y = ${yIntercept.toFixed(1)} 为水平直线，与 x 轴无交点。`
+        : `斜率 ${slope.toFixed(2)}（${trend}），y 截距 (0, ${yIntercept.toFixed(1)})，x 截距 (${xIntercept?.toFixed(2)}, 0)。`
+      : shape === 'quadratic'
+        ? Number.isFinite(vertexY)
+          ? `顶点 (${vertexX.toFixed(2)}, ${vertexY.toFixed(2)})，开口${openUp ? '向上' : '向下'}，Δ = ${delta.toFixed(2)}（${delta > 0 ? '两实根' : delta === 0 ? '重根' : '无实根'}）。`
+          : 'a = 0 时退化为直线，请调整 a。'
+        : `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a = ${(params.a ?? 1).toFixed(2)}（${(params.a ?? 1) > 0 ? '开口向上' : '开口向下'}）。`
 
   return (
     <div className="flex flex-col h-full bg-[#f5f7fa]">
@@ -171,19 +260,19 @@ export default function FunctionPlotDemo() {
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-xl font-bold text-white">{config.title}</h2>
-              <p className="text-xs text-slate-400 mt-1">{activeCase.name} · y = {k.toFixed(2)}x {b >= 0 ? '+' : '−'} {Math.abs(b).toFixed(2)}</p>
+              <p className="text-xs text-slate-400 mt-1">{activeCase.name} · {Object.entries(params).map(([k, v]) => `${k} = ${v.toFixed(2)}`).join(' · ')}</p>
             </div>
             <div className="flex items-center gap-3 text-xs text-slate-300 shrink-0">
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400" />直线</span>
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-300" />x 截距</span>
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400" />y 截距</span>
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-400" />斜率三角形</span>
+              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400" />曲线</span>
+              {shape === 'quadratic' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-rose-400" />顶点</span>}
+              {shape === 'quadratic' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400" />根</span>}
+              {shape === 'absolute' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-300" />顶点/零点</span>}
+              {shape === 'linear' && <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-violet-400" />斜率三角形</span>}
             </div>
           </div>
 
           <div className="relative rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden flex-1 min-h-[380px]">
             <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" {...handlers}>
-              {/* 视口网格与坐标轴（无限延伸） */}
               {grid.verts.map((v, i) => (
                 <line key={"v" + i} x1={v.pos} y1={0} x2={v.pos} y2={H} stroke={v.major ? "#334155" : "#1e293b"} strokeWidth={1} />
               ))}
@@ -193,38 +282,65 @@ export default function FunctionPlotDemo() {
               {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
               {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
               <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
-                {/* 斜率三角形（Δx=1, Δy=k） */}
-                {showTri && step >= 3 && (
+                {/* 二次：对称轴虚线 */}
+                {shape === 'quadratic' && markers.axis && Number.isFinite(vertexX) && (
+                  <line x1={sx(vertexX)} y1={0} x2={sx(vertexX)} y2={H} stroke="#94a3b8" strokeWidth={1.2} strokeDasharray="6 4" />
+                )}
+                {/* 线性：斜率三角形 */}
+                {shape === 'linear' && markers.slopeTriangle && showTri && step >= 3 && (
                   <g>
                     <polygon
-                      points={`${sx(0)},${sy(b)} ${sx(1)},${sy(b)} ${sx(1)},${sy(b + k)}`}
+                      points={`${sx(0)},${sy(yIntercept)} ${sx(1)},${sy(yIntercept)} ${sx(1)},${sy(yIntercept + slope)}`}
                       fill="#a78bfa" opacity={0.15} stroke="#a78bfa" strokeWidth={1}
                     />
-                    <text x={(sx(0) + sx(1)) / 2} y={sy(b) + 16} fontSize={10} fill="#c4b5fd" textAnchor="middle">Δx=1</text>
-                    <text x={sx(1) + 6} y={(sy(b) + sy(b + k)) / 2} fontSize={10} fill="#c4b5fd">Δy=k</text>
+                    <text x={(sx(0) + sx(1)) / 2} y={sy(yIntercept) + 16} fontSize={10} fill="#c4b5fd" textAnchor="middle">Δx=1</text>
+                    <text x={sx(1) + 6} y={(sy(yIntercept) + sy(yIntercept + slope)) / 2} fontSize={10} fill="#c4b5fd">Δy=k</text>
                   </g>
                 )}
 
-                {/* 函数直线 */}
+                {/* 函数曲线 */}
                 {curvePts.length > 0 && <path d={curvePts.join(' ')} fill="none" stroke="#60a5fa" strokeWidth={2.6} strokeLinecap="round" />}
 
-                {/* y 截距点 (0, b)：沿 y 轴拖动改 b */}
-                {step >= 2 && (
+                {/* 二次：顶点 + 根 + y 截距 */}
+                {shape === 'quadratic' && markers.vertex && Number.isFinite(vertexY) && (
+                  <g>
+                    <circle cx={sx(vertexX)} cy={sy(vertexY)} r={6} fill="#fb7185" stroke="#0f172a" strokeWidth={2} />
+                    <text x={sx(vertexX) + 10} y={sy(vertexY) - 10} fontSize={12} fontWeight={700} fill="#fda4af">顶点</text>
+                  </g>
+                )}
+                {shape === 'quadratic' && markers.roots && roots.map((r, i) => (
+                  <circle key={i} cx={sx(r)} cy={sy(0)} r={5} fill="#34d399" stroke="#0f172a" strokeWidth={2} />
+                ))}
+                {shape === 'quadratic' && markers.yIntercept && (
+                  <circle cx={sx(0)} cy={sy(yIntercept)} r={4.5} fill="#c084fc" stroke="#0f172a" strokeWidth={1.5} />
+                )}
+
+                {/* 绝对值：顶点 + 零点 */}
+                {shape === 'absolute' && markers.vertex && (
+                  <g>
+                    <circle cx={sx(params.h ?? 0)} cy={sy(params.k ?? 0)} r={6} fill="#fbbf24" stroke="#0f172a" strokeWidth={2} />
+                    <text x={sx(params.h ?? 0) + 10} y={sy(params.k ?? 0) - 10} fontSize={12} fontWeight={700} fill="#fcd34d">顶点</text>
+                  </g>
+                )}
+                {shape === 'absolute' && markers.roots && roots.map((r, i) => (
+                  <circle key={i} cx={sx(r)} cy={sy(0)} r={5} fill="#f472b6" stroke="#0f172a" strokeWidth={2} />
+                ))}
+
+                {/* 线性：y 截距点（可拖，改 b）与 x 截距点（可拖，改斜率） */}
+                {shape === 'linear' && markers.yIntercept && step >= 2 && (
                   <GeoPoint
-                    label="B" x={0} y={b} color="#34d399"
+                    label="B" x={0} y={yIntercept} color="#34d399"
                     constraint="yAxis"
-                    onMove={(_wx, wy) => setB(clamp(wy, yMin + 0.2, yMax - 0.2))}
+                    onMove={(_wx, wy) => setParam('b', clamp(wy, yMin + 0.2, yMax - 0.2))}
                     coord={coord} transform={transform} svgRef={svgRef} labelDx={8} labelDy={-10}
                   />
                 )}
-
-                {/* x 截距点 (−b/k, 0)：沿 x 轴拖动改斜率 k（b≠0 且 k≠0 时） */}
-                {step >= 2 && xIntercept !== null && Math.abs(b) > 0.05 && (
+                {shape === 'linear' && markers.xIntercept && xIntercept !== null && Math.abs(yIntercept) > 0.05 && step >= 2 && (
                   <GeoPoint
                     label="X" x={xIntercept} y={0} color="#fbbf24"
                     constraint="xAxis"
                     onMove={(wx) => {
-                      if (Math.abs(wx) > 0.05) setK(clamp(-b / wx, -5, 5))
+                      if (Math.abs(wx) > 0.05) setParam('k', clamp(-yIntercept / wx, -5, 5))
                     }}
                     coord={coord} transform={transform} svgRef={svgRef} labelDx={-14} labelDy={14}
                   />
@@ -233,23 +349,17 @@ export default function FunctionPlotDemo() {
                 {/* 坐标刻度标签 */}
                 <g fontSize={11} fill="#64748b">
                   <text x={sx(0) - 8} y={sy(0) - 8} textAnchor="middle">0</text>
-                  <text x={sx(1) + 4} y={sy(0) - 8} textAnchor="middle">1</text>
-                  {xIntercept !== null && Math.abs(b) > 0.05 && (
-                    <text x={sx(xIntercept)} y={sy(0) + 18} textAnchor="middle">x₀</text>
+                  {shape === 'quadratic' && Number.isFinite(vertexX) && (
+                    <text x={sx(vertexX)} y={sy(0) + 18} textAnchor="middle">x₀</text>
                   )}
-                  <text x={sx(0) - 26} y={sy(b) + 4} textAnchor="middle">b</text>
+                  {shape === 'linear' && <text x={sx(0) - 26} y={sy(yIntercept) + 4} textAnchor="middle">b</text>}
                 </g>
               </g>
             </svg>
 
             {/* 动态数据面板 */}
             <div className="absolute bottom-3 left-3 flex items-center gap-2 flex-wrap">
-              {[
-                { label: '斜率 k', value: k.toFixed(2) },
-                { label: 'y 截距 b', value: b.toFixed(2) },
-                { label: 'x 截距', value: xIntercept !== null ? xIntercept.toFixed(2) : '不存在' },
-                { label: '单调性', value: trend },
-              ].map((item) => (
+              {panelItems.map((item) => (
                 <div key={item.label} className="px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700/50 backdrop-blur-sm">
                   <div className="text-[10px] text-slate-400">{item.label}</div>
                   <div className="text-xs font-semibold text-slate-100 font-mono">{item.value}</div>
@@ -259,10 +369,10 @@ export default function FunctionPlotDemo() {
           </div>
         </section>
 
-        {/* 右：控制面板（Card Stack：概念要点 / 实验控制 / 观察提示） */}
+        {/* 右：控制面板（Card Stack） */}
         <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto [&>*]:shrink-0">
           {/* 概念要点 */}
-          <ConceptCard formula={"y = kx + b"}>
+          <ConceptCard formula={shape === 'linear' ? 'y = kx + b' : shape === 'quadratic' ? 'y = ax^2 + bx + c' : 'y = a|x-h| + k'}>
             {config.summary}
           </ConceptCard>
 
@@ -276,34 +386,33 @@ export default function FunctionPlotDemo() {
                 onChange={(id) => {
                   const next = config.cases.find((c) => c.id === id)
                   setCaseId(id)
-                  setK(next?.params?.k ?? 1)
-                  setB(next?.params?.b ?? 0)
+                  setParams(next?.params ?? {})
                   setStep(4)
                 }}
               />
             </div>
-
-            <SliderRow
-              label="斜率 k"
-              value={k}
-              min={-4}
-              max={4}
-              step={0.1}
-              onChange={setK}
-              hint="k 为正上升 · k 为负下降 · |k| 越大越陡"
-            />
-
-            <SliderRow
-              label="截距 b"
-              value={b}
-              min={-4}
-              max={4}
-              step={0.1}
-              onChange={setB}
-              hint="直线与 y 轴交点 (0, b)"
-            />
-            <div className="border-t border-gray-100 pt-1 mt-1">
-              <SwitchRow label="显示斜率三角形" desc="Δx=1, Δy=k 的直角三角形" checked={showTri} onChange={setShowTri} />
+            {Object.entries(params).map(([key, value]) => {
+              const range = activeCase.paramRanges?.[key]
+              if (!range) return null
+              return (
+                <SliderRow
+                  key={key}
+                  label={range.label ?? key}
+                  value={value}
+                  min={range.min}
+                  max={range.max}
+                  step={range.step}
+                  onChange={(v) => setParam(key, v)}
+                />
+              )
+            })}
+            {shape === 'linear' && (
+              <div className="border-t border-gray-100 pt-1 mt-1">
+                <SwitchRow label="显示斜率三角形" desc="Δx=1, Δy=k 的直角三角形" checked={showTri} onChange={setShowTri} />
+              </div>
+            )}
+            <div className="px-3.5 py-2.5 rounded-xl bg-purple-50/70 border border-purple-100 text-center mt-3">
+              <span className="text-sm font-semibold text-purple-700">{judgmentText}</span>
             </div>
           </section>
 
@@ -313,12 +422,14 @@ export default function FunctionPlotDemo() {
               {
                 icon: '📈',
                 text:
-                  k === 0
-                    ? `k=0：y = ${b.toFixed(1)} 为水平直线，与 x 轴无交点。`
-                    : `斜率 ${k.toFixed(2)}（${trend}），y 截距 (0, ${b.toFixed(1)})，x 截距 (${xIntercept?.toFixed(2)}, 0)。`,
+                  shape === 'quadratic'
+                    ? `顶点 (${Number.isFinite(vertexY) ? vertexX.toFixed(2) + ', ' + vertexY.toFixed(2) : '—'})，Δ = ${Number.isFinite(delta) ? delta.toFixed(2) : '—'}。`
+                    : shape === 'absolute'
+                      ? `顶点 (${(params.h ?? 0).toFixed(2)}, ${(params.k ?? 0).toFixed(2)})，a 决定开口与陡缓。`
+                      : judgmentText,
               },
-              { icon: '🖱️', text: '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' },
-              { icon: '🎯', text: 'x 截距 = −b/k：拖动 x 截距点可直观验证该关系。' },
+              { icon: '🖱️', text: shape === 'linear' ? '拖 y 截距点改 b，拖 x 截距点改斜率；或拖动背景平移 / 滚轮缩放。' : '拖动背景平移 / 滚轮缩放观察曲线；调节参数滑块看图像变化。' },
+              { icon: '🎯', text: shape === 'quadratic' ? 'Δ 决定与 x 轴交点：Δ>0 两实根、Δ=0 重根、Δ<0 无实根。' : shape === 'absolute' ? '零点 = 使 a|x−h|+k=0 的 x，即 x = h ± √(−k/a)（a≠0 且 −k/a≥0）。' : 'x 截距 = −b/k：拖 x 截距点可直观验证该关系。' },
             ]}
           />
         </aside>

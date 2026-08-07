@@ -113,6 +113,30 @@ export const chapters: CourseChapter[] = [
             experimentPath: '/linear-function',
             demoId: 'function-plot',
           },
+          {
+            id: 'quadratic-function',
+            title: '二次函数',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: '抛物线参数联动',
+            summary:
+              '二次函数 y = ax² + bx + c（a≠0）的图像是抛物线：a 决定开口方向与陡缓，顶点与对称轴由 x = −b/2a 确定，判别式 Δ 决定实根个数。',
+            goals: ['理解抛物线开口与 a 的关系', '会求顶点与对称轴', '用判别式判断实根'],
+            related: ['函数'],
+            demoId: 'quadratic-function',
+          },
+          {
+            id: 'absolute-value-function',
+            title: '绝对值函数',
+            status: 'not-started',
+            previewLevel: 'B',
+            template: 'V 形折线可视化',
+            summary:
+              '绝对值函数 y = a|x−h| + k 的图像是 V 形折线：顶点 (h,k)，a 决定开口与陡缓，零点为 a|x−h|+k=0 的解。',
+            goals: ['理解 V 形图像与顶点', '掌握 a/h/k 对图像的影响', '会求零点'],
+            related: ['函数'],
+            demoId: 'absolute-value-function',
+          },
         ],
       },
       {

@@ -22,6 +22,19 @@ export interface KnowledgeCase {
   anchor?: number | null
   /** 参数化表达式的默认参数（如 { k: 1, b: 0 } 用于 y = k*x + b） */
   params?: Record<string, number>
+  /** 参数范围（滑块自动生成；key 对应 params） */
+  paramRanges?: Record<string, { label?: string; min: number; max: number; step: number }>
+  /** 画布形状（function-plot 模板：linear / quadratic / absolute） */
+  shape?: 'linear' | 'quadratic' | 'absolute'
+  /** 画布标注开关（function-plot 模板） */
+  markers?: {
+    xIntercept?: boolean
+    yIntercept?: boolean
+    slopeTriangle?: boolean
+    vertex?: boolean
+    axis?: boolean
+    roots?: boolean
+  }
   /** 案例说明 */
   desc: string
 }
@@ -311,6 +324,188 @@ export const knowledgePoints: KnowledgeConfig[] = [
       difficulty: '入门难度',
       duration: '约 15 分钟',
       templates: ['函数图像可视化', '斜率与截距动态演示'],
+    },
+    version: 1,
+  },
+  // 5. 二次函数图像（function-plot 模板：shape=quadratic）
+  {
+    id: 'quadratic-function',
+    title: '二次函数图像',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数',
+    template: 'function-plot',
+    summary:
+      '二次函数 y = ax² + bx + c（a≠0）的图像是一条抛物线：a 决定开口方向与陡缓，顶点 (-b/2a, f(-b/2a)) 是极值点，判别式 Δ=b²-4ac 决定与 x 轴的交点个数。',
+    goals: [
+      '理解二次函数图像为抛物线，掌握开口方向与 a 的关系',
+      '会求顶点坐标与对称轴',
+      '会用判别式 Δ 判断实根个数',
+    ],
+    defaultCase: 'y-x2',
+    cases: [
+      {
+        id: 'y-x2',
+        name: 'y = x²',
+        expr: 'a*x^2 + b*x + c',
+        domain: [-5, 5],
+        yRange: [-6, 6],
+        params: { a: 1, b: 0, c: 0 },
+        paramRanges: { a: { label: '开口 a', min: -3, max: 3, step: 0.1 }, b: { label: '一次项 b', min: -5, max: 5, step: 0.5 }, c: { label: '常数 c', min: -5, max: 5, step: 0.5 } },
+        shape: 'quadratic',
+        markers: { vertex: true, axis: true, roots: true, yIntercept: true },
+        desc: '默认案例：过原点的标准抛物线',
+      },
+      {
+        id: 'y-neg-x2',
+        name: 'y = −x²',
+        expr: 'a*x^2 + b*x + c',
+        domain: [-5, 5],
+        yRange: [-6, 6],
+        params: { a: -1, b: 0, c: 0 },
+        paramRanges: { a: { label: '开口 a', min: -3, max: 3, step: 0.1 }, b: { label: '一次项 b', min: -5, max: 5, step: 0.5 }, c: { label: '常数 c', min: -5, max: 5, step: 0.5 } },
+        shape: 'quadratic',
+        markers: { vertex: true, axis: true, roots: true, yIntercept: true },
+        desc: 'a<0 开口向下',
+      },
+      {
+        id: 'y-vertex',
+        name: 'y = (x−1)²',
+        expr: 'a*x^2 + b*x + c',
+        domain: [-5, 5],
+        yRange: [-6, 6],
+        params: { a: 1, b: -2, c: 1 },
+        paramRanges: { a: { label: '开口 a', min: -3, max: 3, step: 0.1 }, b: { label: '一次项 b', min: -5, max: 5, step: 0.5 }, c: { label: '常数 c', min: -5, max: 5, step: 0.5 } },
+        shape: 'quadratic',
+        markers: { vertex: true, axis: true, roots: true, yIntercept: true },
+        desc: '顶点式 (x−1)²：顶点 (1,0)，重根',
+      },
+      {
+        id: 'y-two-roots',
+        name: 'y = x²−4',
+        expr: 'a*x^2 + b*x + c',
+        domain: [-5, 5],
+        yRange: [-6, 6],
+        params: { a: 1, b: 0, c: -4 },
+        paramRanges: { a: { label: '开口 a', min: -3, max: 3, step: 0.1 }, b: { label: '一次项 b', min: -5, max: 5, step: 0.5 }, c: { label: '常数 c', min: -5, max: 5, step: 0.5 } },
+        shape: 'quadratic',
+        markers: { vertex: true, axis: true, roots: true, yIntercept: true },
+        desc: 'Δ>0：与 x 轴交于 ±2',
+      },
+      {
+        id: 'y-no-roots',
+        name: 'y = x²+1',
+        expr: 'a*x^2 + b*x + c',
+        domain: [-5, 5],
+        yRange: [-6, 6],
+        params: { a: 1, b: 0, c: 1 },
+        paramRanges: { a: { label: '开口 a', min: -3, max: 3, step: 0.1 }, b: { label: '一次项 b', min: -5, max: 5, step: 0.5 }, c: { label: '常数 c', min: -5, max: 5, step: 0.5 } },
+        shape: 'quadratic',
+        markers: { vertex: true, axis: true, roots: true, yIntercept: true },
+        desc: 'Δ<0：与 x 轴无交点',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别函数', desc: 'y = ax² + bx + c 是二次函数，图像为抛物线' },
+      { id: 'open', title: '观察开口', desc: 'a>0 开口向上，a<0 开口向下，|a| 越大越陡' },
+      { id: 'vertex', title: '顶点与对称轴', desc: '顶点 x = −b/2a，对称轴为竖直线 x = −b/2a' },
+      { id: 'roots', title: '根与判别式', desc: 'Δ = b²−4ac：大于 0 两实根、等于 0 重根、小于 0 无实根' },
+    ],
+    meta: {
+      difficulty: '入门难度',
+      duration: '约 20 分钟',
+      templates: ['二次函数图像可视化', '抛物线参数联动'],
+    },
+    version: 1,
+  },
+  // 6. 绝对值函数图像（function-plot 模板：shape=absolute）
+  {
+    id: 'absolute-value-function',
+    title: '绝对值函数图像',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数',
+    template: 'function-plot',
+    summary:
+      '绝对值函数 y = a|x−h| + k 的图像是 V 形折线：顶点 (h, k)，a 决定开口方向与陡缓，h/k 控制左右与上下平移，零点为 a|x−h|+k=0 的解。',
+    goals: [
+      '理解绝对值函数的 V 形图像与顶点',
+      '掌握 a、h、k 对图像的影响',
+      '会求绝对值函数的零点',
+    ],
+    defaultCase: 'abs-x',
+    cases: [
+      {
+        id: 'abs-x',
+        name: 'y = |x|',
+        expr: 'a*abs(x-h)+k',
+        domain: [-6, 6],
+        yRange: [-6, 6],
+        params: { a: 1, h: 0, k: 0 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -6, max: 6, step: 0.1 }, k: { label: '平移 k', min: -6, max: 6, step: 0.1 } },
+        shape: 'absolute',
+        markers: { vertex: true, roots: true },
+        desc: '标准 V 形，顶点在原点',
+      },
+      {
+        id: 'abs-h',
+        name: 'y = |x−2|',
+        expr: 'a*abs(x-h)+k',
+        domain: [-6, 6],
+        yRange: [-6, 6],
+        params: { a: 1, h: 2, k: 0 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -6, max: 6, step: 0.1 }, k: { label: '平移 k', min: -6, max: 6, step: 0.1 } },
+        shape: 'absolute',
+        markers: { vertex: true, roots: true },
+        desc: '向右平移 2：顶点 (2,0)',
+      },
+      {
+        id: 'abs-k',
+        name: 'y = |x|+1',
+        expr: 'a*abs(x-h)+k',
+        domain: [-6, 6],
+        yRange: [-6, 6],
+        params: { a: 1, h: 0, k: 1 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -6, max: 6, step: 0.1 }, k: { label: '平移 k', min: -6, max: 6, step: 0.1 } },
+        shape: 'absolute',
+        markers: { vertex: true, roots: true },
+        desc: '向上平移 1：无零点',
+      },
+      {
+        id: 'abs-2',
+        name: 'y = 2|x|',
+        expr: 'a*abs(x-h)+k',
+        domain: [-6, 6],
+        yRange: [-6, 6],
+        params: { a: 2, h: 0, k: 0 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -6, max: 6, step: 0.1 }, k: { label: '平移 k', min: -6, max: 6, step: 0.1 } },
+        shape: 'absolute',
+        markers: { vertex: true, roots: true },
+        desc: '|a|>1 更陡',
+      },
+      {
+        id: 'abs-down',
+        name: 'y = −|x|+3',
+        expr: 'a*abs(x-h)+k',
+        domain: [-6, 6],
+        yRange: [-6, 6],
+        params: { a: -1, h: 0, k: 3 },
+        paramRanges: { a: { label: '系数 a', min: -3, max: 3, step: 0.1 }, h: { label: '平移 h', min: -6, max: 6, step: 0.1 }, k: { label: '平移 k', min: -6, max: 6, step: 0.1 } },
+        shape: 'absolute',
+        markers: { vertex: true, roots: true },
+        desc: '开口向下，零点 ±3',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别函数', desc: 'y = a|x−h| + k 是绝对值函数，图像为 V 形折线' },
+      { id: 'vertex', title: '顶点 (h, k)', desc: 'V 形最低（或最高）点即顶点，由 h/k 决定位置' },
+      { id: 'open', title: '开口与陡缓', desc: 'a>0 开口向上、a<0 开口向下，|a| 越大越陡' },
+      { id: 'roots', title: '零点', desc: '解 a|x−h|+k=0：x = h ± √(−k/a)（存在时）' },
+    ],
+    meta: {
+      difficulty: '入门难度',
+      duration: '约 15 分钟',
+      templates: ['绝对值函数可视化', 'V 形折线参数联动'],
     },
     version: 1,
   },

@@ -111,6 +111,7 @@ export const chapters: CourseChapter[] = [
             goals: ['理解函数的概念与三要素（定义域、值域、对应法则）', '掌握基本初等函数的图像与性质', '会求复合函数与反函数'],
             related: ['函数的极限', '数列的极限', '连续函数'],
             experimentPath: '/linear-function',
+            demoId: 'function-plot',
           },
         ],
       },

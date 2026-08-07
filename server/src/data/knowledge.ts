@@ -20,6 +20,8 @@ export interface KnowledgeCase {
   naturallyEqual?: boolean
   /** 预设中值点/目标点（条件满足时） */
   anchor?: number | null
+  /** 参数化表达式的默认参数（如 { k: 1, b: 0 } 用于 y = k*x + b） */
+  params?: Record<string, number>
   /** 案例说明 */
   desc: string
 }
@@ -47,7 +49,7 @@ export interface KnowledgeConfig {
   chapter: string
   section?: string
   /** 渲染模板绑定：决定前端用哪个统一容器渲染 */
-  template: 'epsilon-delta' | 'derivative' | 'theorem-demo'
+  template: 'epsilon-delta' | 'derivative' | 'theorem-demo' | 'function-plot'
   /** 知识点简介 */
   summary: string
   /** 学习目标 */
@@ -242,6 +244,73 @@ export const knowledgePoints: KnowledgeConfig[] = [
       difficulty: '中等难度',
       duration: '约 35 分钟',
       templates: ['极限定义动态演示', 'ε−δ 可视化', '函数逼近动画'],
+    },
+    version: 1,
+  },
+  // 4. 一次函数图像（function-plot 模板试点：参数化表达式 k*x+b）
+  {
+    id: 'function-plot',
+    title: '一次函数图像',
+    course: '高等数学（上册）',
+    chapter: '函数与极限',
+    section: '函数',
+    template: 'function-plot',
+    summary:
+      '一次函数 y = kx + b 的图像是一条直线：k 决定斜率（k>0 上升、k<0 下降、|k| 越大越陡），b 决定与 y 轴的交点 (0, b)。',
+    goals: [
+      '理解一次函数 y = kx + b 的图像是直线',
+      '掌握斜率 k 与截距 b 的几何意义',
+      '会由 k、b 判断单调性并求出与坐标轴的交点',
+    ],
+    defaultCase: 'k1b0',
+    cases: [
+      {
+        id: 'k1b0',
+        name: 'y = x',
+        expr: 'k*x + b',
+        domain: [-5, 5],
+        yRange: [-5, 5],
+        params: { k: 1, b: 0 },
+        desc: '默认案例：过原点的平分线 y = x',
+      },
+      {
+        id: 'k2b1',
+        name: 'y = 2x + 1',
+        expr: 'k*x + b',
+        domain: [-5, 5],
+        yRange: [-5, 5],
+        params: { k: 2, b: 1 },
+        desc: 'k>0 上升，b=1 与 y 轴交于 (0,1)',
+      },
+      {
+        id: 'kneg',
+        name: 'y = −x + 3',
+        expr: 'k*x + b',
+        domain: [-5, 5],
+        yRange: [-5, 5],
+        params: { k: -1, b: 3 },
+        desc: 'k<0 下降，x 截距 = 3',
+      },
+      {
+        id: 'k0',
+        name: 'y = 2（常函数）',
+        expr: 'k*x + b',
+        domain: [-5, 5],
+        yRange: [-5, 5],
+        params: { k: 0, b: 2 },
+        desc: 'k=0 时为水平直线，无 x 截距',
+      },
+    ],
+    steps: [
+      { id: 'identify', title: '识别函数', desc: 'y = kx + b 是一次函数，图像为一条直线' },
+      { id: 'slope', title: '观察斜率 k', desc: 'k>0 上升、k<0 下降，|k| 越大越陡；斜率三角形 Δy/Δx = k' },
+      { id: 'intercept', title: '观察截距 b', desc: '直线与 y 轴交于 (0, b)；与 x 轴交于 (−b/k, 0)（k≠0）' },
+      { id: 'apply', title: '综合应用', desc: '拖动 y 截距点改 b，拖动 x 截距点改斜率，观察直线变化' },
+    ],
+    meta: {
+      difficulty: '入门难度',
+      duration: '约 15 分钟',
+      templates: ['函数图像可视化', '斜率与截距动态演示'],
     },
     version: 1,
   },

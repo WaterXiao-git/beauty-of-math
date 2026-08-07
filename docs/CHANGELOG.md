@@ -14,6 +14,22 @@
 
 ---
 
+## 2026-08-06 · 阶段2试点：一次函数图像（function-plot 模板，配置驱动 + 统一排版）
+
+**模块**：前端演示模板 + server 配置层
+
+**内容**：
+- 新增 FunctionPlotDemo 模板（第 4 个统一演示）：参数化表达式 y = k*x + b（mathjs 多变量求值），深色画布（无限网格/曲线/斜率三角形）+ 可拖拽截距点（y 截距点沿 y 轴改 b、x 截距点沿 x 轴改斜率）+ 数据面板（斜率/截距/单调性）+ 控制面板（案例 Tab/k、b 滑块/教学判断）+ 播放条
+- knowledge.ts：KnowledgeCase 增加 params 字段（参数化表达式默认值），template 枚举增加 'function-plot'，新增 linear-function 配置（4 案例：y=x / y=2x+1 / y=−x+3 / 常函数）
+- courseData：知识点「函数」挂 demoId: 'function-plot'（/demo/function 进入统一演示）；DemoPage 注册模板
+- 验证「配置驱动 + 统一排版」链路：新增知识点只改数据不碰代码
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`（新增）、`DemoPage.tsx`、`client/src/course/courseData.ts`、`server/src/data/knowledge.ts`
+
+**验证**：client tsc exit 0；server tsc exit 0；vite build 成功（1m15s）；/api/knowledge/function-plot 实测 200 返回 4 案例 + params
+
+---
+
 ## 2026-08-06 · 修复：演示页「报告Bug」与步骤说明右下角冲突 + 统一排版方案文档
 
 **模块**：前端布局 / 设计文档

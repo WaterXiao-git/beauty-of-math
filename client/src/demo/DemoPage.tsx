@@ -11,12 +11,14 @@ import RolleDemo from './RolleDemo'
 import DrawerTab from './DrawerTab'
 import EpsilonDeltaDemo from './EpsilonDeltaDemo'
 import DerivativeDemo from './DerivativeDemo'
+import FunctionPlotDemo from './FunctionPlotDemo'
 
 /** 已实现的演示模板注册表：demoId -> 演示页组件 */
 const demoRegistry: Record<string, ComponentType> = {
   rolle: RolleDemo,
   'epsilon-delta': EpsilonDeltaDemo,
   derivative: DerivativeDemo,
+  'function-plot': FunctionPlotDemo,
 }
 
 /** 未实现模板的占位页（需求 2.2：说明原因 + 替代学习路径） */

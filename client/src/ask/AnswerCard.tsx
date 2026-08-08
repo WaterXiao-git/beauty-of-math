@@ -8,6 +8,15 @@ interface Explanation {
   summary: string
   keyPoints: string[]
   example: string
+  source?: 'deepseek' | 'qwen' | 'local'
+  model?: string
+}
+
+function explanationSourceLabel(content: Explanation | null): string {
+  if (content?.source === 'deepseek') return 'DeepSeek 解释'
+  if (content?.source === 'qwen') return '千问解释'
+  if (content?.source === 'local') return '本地兜底'
+  return 'AI 解释'
 }
 
 interface AnswerCardProps {
@@ -54,7 +63,7 @@ export default function AnswerCard({ question, onRefine }: AnswerCardProps) {
           {state === 'ok' && content ? `概念解释：${content.title}` : '概念解释'}
         </h4>
         <span className="shrink-0 px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-semibold">
-          AI 解释
+          {explanationSourceLabel(content)}
         </span>
       </div>
 
@@ -119,7 +128,7 @@ export default function AnswerCard({ question, onRefine }: AnswerCardProps) {
       {/* 操作 */}
       <div className="flex items-center gap-3">
         <Link
-          to="/"
+          to="/experiments"
           className="inline-flex items-center justify-center px-4 h-10 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors shadow-md shadow-blue-500/20"
         >
           浏览全部实验

@@ -30,7 +30,7 @@ export function drawMatrixTransform(
   const unit = Math.min(W, H) / 10 // 每个单位格的像素
 
   ctx.clearRect(0, 0, W, H)
-  ctx.fillStyle = '#0f172a'
+  ctx.fillStyle = '#ffffff'
   ctx.fillRect(0, 0, W, H)
 
   const m = lerpMatrix(IDENTITY, data.matrix, progress)

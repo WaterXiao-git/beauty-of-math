@@ -5,9 +5,14 @@ import { catenaryNarration } from '../../narrations/scripts/catenary'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
 import { A_VALUES, arcLength, sag } from './catenary'
 import { drawCatenary } from './draw'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
 
 const W = 600
 const H = 480
+
+export const experimentV2 = true
 
 export default function CatenaryExperiment() {
   const [a, setA] = useState(70)
@@ -35,26 +40,25 @@ export default function CatenaryExperiment() {
   return (
     <>
       {showPresenter && <NarrationPresenter onExit={handleExit} />}
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">悬链线</h1>
-            <p className="text-gray-600">双曲余弦的曲线</p>
-          </div>
-          <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "悬链线",
+        ]}
+        title="悬链线"
+        subtitle="双曲余弦的曲线"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full p-3 text-slate-800 md:p-4">
             <h3 className="text-lg font-semibold mb-2">a = {a} · 弧长 ≈ {len} · 下垂 ≈ {dip}</h3>
-            <canvas ref={canvasRef} width={W} height={H} className="w-full rounded-lg bg-slate-50" />
+<canvas ref={canvasRef} width={W} height={H} className="w-full rounded-lg bg-slate-50" />
           </div>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">参数 a（曲率）</h3>
-              <div className="space-y-2">
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="参数 a（曲率）">
+<div className="space-y-2">
                 {A_VALUES.map((v) => (
                   <button
                     key={v}
@@ -65,25 +69,34 @@ export default function CatenaryExperiment() {
                   </button>
                 ))}
               </div>
-              <button onClick={() => setShowParabola((s) => !s)} className="w-full mt-3 px-3 py-2 rounded-lg text-sm font-medium bg-orange-100 text-orange-700 hover:bg-orange-200">
+<button onClick={() => setShowParabola((s) => !s)} className="w-full mt-3 px-3 py-2 rounded-lg text-sm font-medium bg-orange-100 text-orange-700 hover:bg-orange-200">
                 {showParabola ? '隐藏' : '显示'}对比抛物线
               </button>
-              <button onClick={() => setInvert((s) => !s)} className="w-full mt-2 px-3 py-2 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200">
+<button onClick={() => setInvert((s) => !s)} className="w-full mt-2 px-3 py-2 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200">
                 {invert ? '恢复下垂链条' : '倒置成最优拱'}
               </button>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">要点与趣闻</h3>
-              <ul className="text-sm text-gray-600 space-y-1.5">
+</ExperimentCard>
+<ExperimentCard title="要点与趣闻">
+<ul className="text-sm text-gray-600 space-y-1.5">
                 <li>• 方程 <b>y = a·cosh(x/a)</b>，a 越小曲线越深。</li>
                 <li>• 看着像<b>抛物线</b>，但两端上升更快，本质不同。</li>
                 <li>• 弧长有闭式 <b>2a·sinh(x₀/a)</b>。</li>
                 <li>• 倒置后成为<b>纯受压</b>的最优拱，高迪的圣家堂据此设计。</li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+</ExperimentCard>
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

@@ -6,8 +6,13 @@ import { NarrationPresenter } from '../../components/NarrationPresenter'
 import { useNarrationOptional } from '../../contexts/NarrationContext'
 import { cltNarration } from '../../narrations/scripts/clt'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
 
 type ExperimentType = 'coin' | 'dice' | 'uniform'
+
+export const experimentV2 = true
 
 export default function CLTExperiment() {
   const [params, setParams] = useState({
@@ -141,31 +146,21 @@ export default function CLTExperiment() {
 
   return (
     <>
-      {/* 全屏 PPT 讲解模式 */}
       {showPresenter && (
         <NarrationPresenter onExit={handleExitPresenter} />
       )}
 
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">中心极限定理</h1>
-            <p className="text-gray-600">观察样本均值如何趋向正态分布</p>
-          </div>
-          <button
-            onClick={openPresenter}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-            </svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "中心极限定理",
+        ]}
+        title="中心极限定理"
+        subtitle="观察样本均值如何趋向正态分布"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full space-y-4 p-2 md:p-3 [&_.js-plotly-plot]:w-full">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-semibold">样本均值分布 (n={params.numSamples}次实验)</h3>
               <button
@@ -209,19 +204,18 @@ export default function CLTExperiment() {
                   yaxis: { title: { text: '概率密度' } },
                   legend: { orientation: 'h', y: -0.15 },
                   bargap: 0.05,
-                }}
+                 paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
                 config={{ responsive: true, displaylogo: false }}
                 className="w-full"
               />
             ) : (
-              <div className="h-[350px] flex items-center justify-center text-gray-400">
+              <div className="h-[350px] flex items-center justify-center text-slate-500">
                 点击"运行实验"开始
               </div>
             )}
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
               <h3 className="text-lg font-semibold mb-3">实验统计</h3>
               {samples.length > 0 ? (
                 <div className="space-y-2">
@@ -243,30 +237,30 @@ export default function CLTExperiment() {
                   </div>
                 </div>
               ) : (
-                <p className="text-gray-400 text-center py-4">等待实验数据</p>
+                <p className="text-slate-500 text-center py-4">等待实验数据</p>
               )}
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
               <h3 className="text-lg font-semibold mb-3">中心极限定理</h3>
               <div className="space-y-2">
                 <MathFormula formula="\bar{X}_n \xrightarrow{d} N(\mu, \frac{\sigma^2}{n})" />
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-slate-600 mt-2">
                   无论原始分布是什么，当样本量n足够大时，样本均值的分布趋近于正态分布。
                 </p>
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">选择实验</h3>
-            <div className="grid grid-cols-1 gap-2">
+          </div>
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="选择实验">
+<div className="grid grid-cols-1 gap-2">
               <button
                 onClick={() => setExpType('coin')}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${
-                  expType === 'coin' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  expType === 'coin' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-slate-700 hover:bg-gray-200'
                 }`}
               >
                 抛硬币 (0或1)
@@ -274,7 +268,7 @@ export default function CLTExperiment() {
               <button
                 onClick={() => setExpType('dice')}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${
-                  expType === 'dice' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  expType === 'dice' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-slate-700 hover:bg-gray-200'
                 }`}
               >
                 掷骰子 (1-6)
@@ -282,15 +276,14 @@ export default function CLTExperiment() {
               <button
                 onClick={() => setExpType('uniform')}
                 className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${
-                  expType === 'uniform' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  expType === 'uniform' ? 'bg-purple-600 text-white' : 'bg-gray-100 text-slate-700 hover:bg-gray-200'
                 }`}
               >
                 均匀分布 [0,1]
               </button>
             </div>
-          </div>
-
-          <ParameterPanel
+</ExperimentCard>
+<ParameterPanel
             title="实验参数"
             params={[
               { key: 'sampleSize', label: '每次样本量', value: params.sampleSize, min: 5, max: 100, step: 5 },
@@ -298,8 +291,7 @@ export default function CLTExperiment() {
             ]}
             onChange={handleParamChange}
           />
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+<div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
             <button
               onClick={runExperiment}
               className="w-full py-3 px-4 rounded-lg font-medium bg-purple-600 text-white hover:bg-purple-700 transition-colors"
@@ -307,17 +299,31 @@ export default function CLTExperiment() {
               运行实验
             </button>
           </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">标准误差公式</h3>
-            <MathFormula formula="SE = \frac{\sigma}{\sqrt{n}}" />
-            <p className="text-sm text-gray-600 mt-2">
+<ExperimentCard title="标准误差公式">
+<MathFormula formula="SE = \frac{\sigma}{\sqrt{n}}" />
+<p className="text-sm text-slate-600 mt-2">
               样本量越大，样本均值的标准差越小，分布越集中。
             </p>
-          </div>
-        </div>
-      </div>
-    </div>
+</ExperimentCard>
+
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button
+            onClick={openPresenter}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+            </svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

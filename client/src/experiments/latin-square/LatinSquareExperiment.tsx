@@ -5,9 +5,14 @@ import { latinSquareNarration } from '../../narrations/scripts/latin-square'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
 import { generateLatinSquare, isValidLatinSquare, ORDERS } from './latinSquare'
 import { drawLatinSquare } from './draw'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
 
 const W = 600
 const H = 480
+
+export const experimentV2 = true
 
 export default function LatinSquareExperiment() {
   const [n, setN] = useState(5)
@@ -33,26 +38,25 @@ export default function LatinSquareExperiment() {
   return (
     <>
       {showPresenter && <NarrationPresenter onExit={handleExit} />}
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">拉丁方</h1>
-            <p className="text-gray-600">每行每列各符号一次</p>
-          </div>
-          <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "拉丁方",
+        ]}
+        title="拉丁方"
+        subtitle="每行每列各符号一次"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full p-3 text-slate-800 md:p-4">
             <h3 className="text-lg font-semibold mb-2">{n} 阶拉丁方 · {valid ? '校验通过' : '非拉丁方'}</h3>
-            <canvas ref={canvasRef} width={W} height={H} className="w-full rounded-lg bg-slate-50" />
+<canvas ref={canvasRef} width={W} height={H} className="w-full rounded-lg bg-slate-50" />
           </div>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">选择阶数 n</h3>
-              <div className="space-y-2">
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="选择阶数 n">
+<div className="space-y-2">
                 {ORDERS.map((k) => (
                   <button
                     key={k}
@@ -63,22 +67,31 @@ export default function LatinSquareExperiment() {
                   </button>
                 ))}
               </div>
-              <button onClick={() => setShift((s) => (s % (n - 1)) + 1)} className="w-full mt-3 px-3 py-2 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200">
+<button onClick={() => setShift((s) => (s % (n - 1)) + 1)} className="w-full mt-3 px-3 py-2 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200">
                 🔁 换一种循环移位
               </button>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">应用与趣闻</h3>
-              <ul className="text-sm text-gray-600 space-y-1.5">
+</ExperimentCard>
+<ExperimentCard title="应用与趣闻">
+<ul className="text-sm text-gray-600 space-y-1.5">
                 <li>• 数独就是带宫格约束的 <b>9 阶拉丁方</b>。</li>
                 <li>• 循环移位法：格 (i,j) 填 <b>(i·s+j) mod n</b>。</li>
                 <li>• 两个方叠加后 n² 对全不同，即 <b>正交拉丁方</b>。</li>
                 <li>• 农业<b>实验设计</b>用它均衡消除行列干扰。</li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+</ExperimentCard>
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

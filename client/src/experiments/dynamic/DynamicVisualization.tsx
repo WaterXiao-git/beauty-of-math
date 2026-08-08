@@ -373,7 +373,7 @@ function ArithmeticVisualization({
           count={renderer.left}
           colorClassName="bg-blue-500"
         />
-        <span className="text-3xl font-bold text-slate-400">
+        <span className="text-3xl font-bold text-slate-500">
           {OPERATION_SYMBOL[renderer.operation]}
         </span>
         <BlockGroup

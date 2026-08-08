@@ -41,7 +41,7 @@ export default function GameOfLifeExperiment() {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     if (!ctx) return
-    ctx.fillStyle = '#0f172a'
+    ctx.fillStyle = '#ffffff'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     for (let r = 0; r < ROWS; r++) {
       for (let c = 0; c < COLS; c++) {
@@ -98,7 +98,7 @@ export default function GameOfLifeExperiment() {
               width={COLS * CELL}
               height={ROWS * CELL}
               onClick={handleCanvasClick}
-              className="w-full rounded border border-gray-300 cursor-pointer bg-slate-900"
+              className="w-full rounded border border-gray-300 cursor-pointer bg-white"
               style={{ imageRendering: 'pixelated' }}
             />
             <p className="text-xs text-gray-500 mt-2">点击格子可手动切换细胞生死</p>

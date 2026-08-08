@@ -1,4 +1,4 @@
-import 'dotenv/config'
+import './config/environment.js'
 
 import express from 'express'
 import cors from 'cors'
@@ -6,9 +6,7 @@ import experimentsRouter from './routes/experiments.js'
 import bugsRouter from './routes/bugs.js'
 import agentRouter from './routes/agent.js'
 import knowledgeRouter from './routes/knowledge.js'
-import routeRouter from './routes/route.js'
 import answerRouter from './routes/answer.js'
-import generateRouter from './routes/generate.js'
 import contentRouter from './routes/content.js'
 
 const app = express()
@@ -24,9 +22,7 @@ app.use('/api/experiments', experimentsRouter)
 app.use('/api/bugs', bugsRouter)
 app.use('/api/agent', agentRouter)
 app.use('/api/knowledge', knowledgeRouter)
-app.use('/api/route', routeRouter)
 app.use('/api/answer', answerRouter)
-app.use('/api/generate', generateRouter)
 app.use('/api/content', contentRouter)
 
 // 管理员认证接口

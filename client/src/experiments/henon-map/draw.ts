@@ -19,7 +19,7 @@ export function drawHenonMap(
   if (!ctx) return
   const W = canvas.width
   const H = canvas.height
-  ctx.fillStyle = '#0f172a'
+  ctx.fillStyle = '#ffffff'
   ctx.fillRect(0, 0, W, H)
 
   const pts = iterate(a, b, n)

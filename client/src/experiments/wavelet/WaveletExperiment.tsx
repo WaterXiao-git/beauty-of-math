@@ -11,9 +11,14 @@ import {
   WAVELET_OPTIONS,
 } from './wavelet'
 import { drawWavelet } from './draw'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
 
 const N = 256
 const SCALE_COUNT = 48
+
+export const experimentV2 = true
 
 export default function WaveletExperiment() {
   const [signal, setSignal] = useState('chirp')
@@ -51,26 +56,25 @@ export default function WaveletExperiment() {
   return (
     <>
       {showPresenter && <NarrationPresenter onExit={handleExit} />}
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">小波变换</h1>
-            <p className="text-gray-600">用平移与伸缩，同时看见时间与频率</p>
-          </div>
-          <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "小波变换",
+        ]}
+        title="小波变换"
+        subtitle="用平移与伸缩，同时看见时间与频率"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full p-3 text-slate-800 md:p-4">
             <h3 className="text-lg font-semibold mb-2">{sigInfo.label} · {wavInfo.label} 尺度图</h3>
-            <canvas ref={canvasRef} width={640} height={560} className="w-full rounded-lg" />
+<canvas ref={canvasRef} width={640} height={560} className="w-full rounded-lg" />
           </div>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">选择信号</h3>
-              <div className="space-y-2">
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="选择信号">
+<div className="space-y-2">
                 {SIGNAL_OPTIONS.map((o) => (
                   <button
                     key={o.id}
@@ -82,10 +86,9 @@ export default function WaveletExperiment() {
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">母小波</h3>
-              <div className="space-y-2">
+</ExperimentCard>
+<ExperimentCard title="母小波">
+<div className="space-y-2">
                 {WAVELET_OPTIONS.map((o) => (
                   <button
                     key={o.id}
@@ -97,19 +100,28 @@ export default function WaveletExperiment() {
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">要点</h3>
-              <ul className="text-sm text-gray-600 space-y-1.5">
+</ExperimentCard>
+<ExperimentCard title="要点">
+<ul className="text-sm text-gray-600 space-y-1.5">
                 <li>• 傅里叶只见<b>频率</b>不见<b>时间</b>，小波两者兼得。</li>
                 <li>• <b>平移</b>母小波定位时间，<b>伸缩</b>母小波选择频率。</li>
                 <li>• 尺度图颜色越亮，该时刻该尺度的<b>能量</b>越强。</li>
                 <li>• Haar 小波正交，可<b>完美重构</b>并<b>能量守恒</b>。</li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+</ExperimentCard>
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

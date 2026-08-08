@@ -1,0 +1,6470 @@
+{
+  "generatedAt": "2026-08-08T16:21:32.501Z",
+  "shellHasDefaultPlayer": false,
+  "summary": {
+    "totalExperiments": 300,
+    "nativeV2Count": 257,
+    "compatibilityCount": 43,
+    "fullyCleanCount": 257,
+    "structurallyCleanCount": 257,
+    "highRiskCount": 0,
+    "mediumRiskCount": 43,
+    "lowRiskCount": 0,
+    "structuralIssueTotal": 88,
+    "issueTotal": 88,
+    "player": {
+      "explicit": 0,
+      "shellDefault": 0,
+      "disabled": 0,
+      "missing": 257
+    }
+  },
+  "categories": [
+    {
+      "type": "dark-experiment-surface",
+      "count": 0
+    },
+    {
+      "type": "legacy-three-column-grid",
+      "count": 41
+    },
+    {
+      "type": "missing-playerbar",
+      "count": 0
+    },
+    {
+      "type": "fixed-dimensions",
+      "count": 0
+    },
+    {
+      "type": "canvas-overflow-risk",
+      "count": 0
+    },
+    {
+      "type": "plotly-theme-mismatch",
+      "count": 0
+    },
+    {
+      "type": "legacy-blue-button",
+      "count": 4
+    },
+    {
+      "type": "missing-responsive-layout",
+      "count": 0
+    },
+    {
+      "type": "compatibility-runtime",
+      "count": 43
+    },
+    {
+      "type": "native-v2-without-shell",
+      "count": 0
+    },
+    {
+      "type": "shell-without-v2-flag",
+      "count": 0
+    }
+  ],
+  "renderers": [
+    {
+      "renderer": "canvas",
+      "count": 261,
+      "withIssues": 15
+    },
+    {
+      "renderer": "plotly",
+      "count": 33,
+      "withIssues": 22
+    },
+    {
+      "renderer": "svg",
+      "count": 0,
+      "withIssues": 0
+    },
+    {
+      "renderer": "webgl",
+      "count": 0,
+      "withIssues": 0
+    },
+    {
+      "renderer": "hybrid",
+      "count": 6,
+      "withIssues": 6
+    },
+    {
+      "renderer": "dom",
+      "count": 0,
+      "withIssues": 0
+    },
+    {
+      "renderer": "unknown",
+      "count": 0,
+      "withIssues": 0
+    }
+  ],
+  "experiments": [
+    {
+      "id": "a-star",
+      "relativeFile": "src/experiments/a-star/AStarExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "absolute-value",
+      "relativeFile": "src/experiments/absolute-value/AbsoluteValueExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "aliasing",
+      "relativeFile": "src/experiments/aliasing/AliasingExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "apollonian-gasket",
+      "relativeFile": "src/experiments/apollonian-gasket/ApollonianGasketExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "arc-length-curvature",
+      "relativeFile": "src/experiments/arc-length-curvature/ArcLengthCurvatureExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "autocorrelation",
+      "relativeFile": "src/experiments/autocorrelation/AutocorrelationExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "b-spline",
+      "relativeFile": "src/experiments/b-spline/BSplineExperiment.tsx",
+      "lineCount": 108,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "backpropagation",
+      "relativeFile": "src/experiments/backpropagation/BackpropagationExperiment.tsx",
+      "lineCount": 113,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "barnsley-fern",
+      "relativeFile": "src/experiments/barnsley-fern/BarnsleyFernExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "basic-arithmetic",
+      "relativeFile": "src/experiments/basic-arithmetic/BasicArithmeticExperiment.tsx",
+      "lineCount": 703,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 22,
+              "snippet": "export default function BasicArithmeticExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 463,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 464,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "bayes",
+      "relativeFile": "src/experiments/bayes/BayesExperiment.tsx",
+      "lineCount": 427,
+      "renderer": "hybrid",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 48,
+              "snippet": "export default function BayesExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 174,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 175,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "bell-numbers",
+      "relativeFile": "src/experiments/bell-numbers/BellNumbersExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "benfords-law",
+      "relativeFile": "src/experiments/benfords-law/BenfordsLawExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "bessel-functions",
+      "relativeFile": "src/experiments/bessel-functions/BesselFunctionsExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "bezier",
+      "relativeFile": "src/experiments/bezier/BezierExperiment.tsx",
+      "lineCount": 503,
+      "renderer": "hybrid",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 28,
+              "snippet": "export default function BezierExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 313,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 314,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        },
+        {
+          "type": "legacy-blue-button",
+          "severity": "low",
+          "title": "旧蓝色按钮",
+          "description": "button 仍使用旧版 bg-blue-500 / 600 / 700。",
+          "evidence": [
+            {
+              "line": 337,
+              "snippet": "<button"
+            }
+          ]
+        }
+      ],
+      "issueCount": 3,
+      "structuralIssueCount": 3,
+      "score": 10,
+      "risk": "medium"
+    },
+    {
+      "id": "bfs-dfs",
+      "relativeFile": "src/experiments/bfs-dfs/BfsDfsExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "binomial-theorem",
+      "relativeFile": "src/experiments/binomial-theorem/BinomialTheoremExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "birthday-paradox",
+      "relativeFile": "src/experiments/birthday-paradox/BirthdayParadoxExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "bisection-method",
+      "relativeFile": "src/experiments/bisection-method/BisectionMethodExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "box-counting-dimension",
+      "relativeFile": "src/experiments/box-counting-dimension/BoxCountingDimensionExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "brachistochrone",
+      "relativeFile": "src/experiments/brachistochrone/BrachistochroneExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "brownian-motion",
+      "relativeFile": "src/experiments/brownian-motion/BrownianMotionExperiment.tsx",
+      "lineCount": 108,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "buffon-needle",
+      "relativeFile": "src/experiments/buffon-needle/BuffonNeedleExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "burning-ship",
+      "relativeFile": "src/experiments/burning-ship/BurningShipExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "caesar-cipher",
+      "relativeFile": "src/experiments/caesar-cipher/CaesarCipherExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "calculus",
+      "relativeFile": "src/experiments/calculus/CalculusExperiment.tsx",
+      "lineCount": 353,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 21,
+              "snippet": "export default function CalculusExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 162,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6\">"
+            },
+            {
+              "line": 163,
+              "snippet": "<div className=\"lg:col-span-2 space-y-4 md:space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "cantor-set",
+      "relativeFile": "src/experiments/cantor-set/CantorSetExperiment.tsx",
+      "lineCount": 98,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "catalan-numbers",
+      "relativeFile": "src/experiments/catalan-numbers/CatalanNumbersExperiment.tsx",
+      "lineCount": 110,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "catenary",
+      "relativeFile": "src/experiments/catenary/CatenaryExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "catmull-rom",
+      "relativeFile": "src/experiments/catmull-rom/CatmullRomExperiment.tsx",
+      "lineCount": 113,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "cellular-automata",
+      "relativeFile": "src/experiments/cellular-automata/CellularAutomataExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "chaos",
+      "relativeFile": "src/experiments/chaos/ChaosExperiment.tsx",
+      "lineCount": 510,
+      "renderer": "hybrid",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function ChaosExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 225,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 226,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "chebyshev-polynomials",
+      "relativeFile": "src/experiments/chebyshev-polynomials/ChebyshevPolynomialsExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "chinese-remainder",
+      "relativeFile": "src/experiments/chinese-remainder/ChineseRemainderExperiment.tsx",
+      "lineCount": 113,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "cholesky",
+      "relativeFile": "src/experiments/cholesky/CholeskyExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "circle-geometry",
+      "relativeFile": "src/experiments/circle-geometry/CircleGeometryExperiment.tsx",
+      "lineCount": 123,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "circle-packing",
+      "relativeFile": "src/experiments/circle-packing/CirclePackingExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "clock-angles",
+      "relativeFile": "src/experiments/clock-angles/ClockAnglesExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "clt",
+      "relativeFile": "src/experiments/clt/CLTExperiment.tsx",
+      "lineCount": 330,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "collatz",
+      "relativeFile": "src/experiments/collatz/CollatzExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "combinatorial-proof",
+      "relativeFile": "src/experiments/combinatorial-proof/CombinatorialProofExperiment.tsx",
+      "lineCount": 125,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "complex",
+      "relativeFile": "src/experiments/complex/ComplexExperiment.tsx",
+      "lineCount": 262,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "composite-function",
+      "relativeFile": "src/experiments/composite-function/CompositeFunctionExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "confidence-interval",
+      "relativeFile": "src/experiments/confidence-interval/ConfidenceIntervalExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "conic-sections",
+      "relativeFile": "src/experiments/conic-sections/ConicSectionsExperiment.tsx",
+      "lineCount": 751,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 48,
+              "snippet": "export default function ConicSectionsExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 469,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 470,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "continued-fraction",
+      "relativeFile": "src/experiments/continued-fraction/ContinuedFractionExperiment.tsx",
+      "lineCount": 111,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "convex-hull",
+      "relativeFile": "src/experiments/convex-hull/ConvexHullExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "convolution",
+      "relativeFile": "src/experiments/convolution/ConvolutionExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "coupon-collector",
+      "relativeFile": "src/experiments/coupon-collector/CouponCollectorExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "cramers-rule",
+      "relativeFile": "src/experiments/cramers-rule/CramersRuleExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "cryptography",
+      "relativeFile": "src/experiments/cryptography/CryptographyExperiment.tsx",
+      "lineCount": 666,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function CryptographyExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 266,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 267,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "cycloid",
+      "relativeFile": "src/experiments/cycloid/CycloidExperiment.tsx",
+      "lineCount": 113,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "damped-oscillation",
+      "relativeFile": "src/experiments/damped-oscillation/DampedOscillationExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "decision-tree",
+      "relativeFile": "src/experiments/decision-tree/DecisionTreeExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "delaunay-triangulation",
+      "relativeFile": "src/experiments/delaunay-triangulation/DelaunayTriangulationExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "derangements",
+      "relativeFile": "src/experiments/derangements/DerangementsExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "determinant-geometry",
+      "relativeFile": "src/experiments/determinant-geometry/DeterminantGeometryExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "dice-probability",
+      "relativeFile": "src/experiments/dice-probability/DiceProbabilityExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "differential-geometry",
+      "relativeFile": "src/experiments/differential-geometry/DifferentialGeometryExperiment.tsx",
+      "lineCount": 466,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 12,
+              "snippet": "export default function DifferentialGeometryExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 259,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 260,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "diffie-hellman",
+      "relativeFile": "src/experiments/diffie-hellman/DiffieHellmanExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "digital-root",
+      "relativeFile": "src/experiments/digital-root/DigitalRootExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "dijkstra",
+      "relativeFile": "src/experiments/dijkstra/DijkstraExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "directional-derivative",
+      "relativeFile": "src/experiments/directional-derivative/DirectionalDerivativeExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "discrete-cosine-transform",
+      "relativeFile": "src/experiments/discrete-cosine-transform/DiscreteCosineTransformExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "divergence-curl",
+      "relativeFile": "src/experiments/divergence-curl/DivergenceCurlExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "divide-conquer",
+      "relativeFile": "src/experiments/divide-conquer/DivideConquerExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "dot-cross-product",
+      "relativeFile": "src/experiments/dot-cross-product/DotCrossProductExperiment.tsx",
+      "lineCount": 131,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "double-pendulum",
+      "relativeFile": "src/experiments/double-pendulum/DoublePendulumExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "dragon-curve",
+      "relativeFile": "src/experiments/dragon-curve/DragonCurveExperiment.tsx",
+      "lineCount": 91,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "dynamic-programming",
+      "relativeFile": "src/experiments/dynamic-programming/DynamicProgrammingExperiment.tsx",
+      "lineCount": 111,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "ear-clipping",
+      "relativeFile": "src/experiments/ear-clipping/EarClippingExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "eigen-visualization",
+      "relativeFile": "src/experiments/eigen-visualization/EigenVisualizationExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "elliptic-curve",
+      "relativeFile": "src/experiments/elliptic-curve/EllipticCurveExperiment.tsx",
+      "lineCount": 113,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "epidemic-sir",
+      "relativeFile": "src/experiments/epidemic-sir/EpidemicSirExperiment.tsx",
+      "lineCount": 134,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "epsilon-delta",
+      "relativeFile": "src/experiments/epsilon-delta/EpsilonDeltaExperiment.tsx",
+      "lineCount": 107,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "euclidean-algorithm",
+      "relativeFile": "src/experiments/euclidean-algorithm/EuclideanAlgorithmExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "euler-characteristic",
+      "relativeFile": "src/experiments/euler-characteristic/EulerCharacteristicExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "euler-hamilton-path",
+      "relativeFile": "src/experiments/euler-hamilton-path/EulerHamiltonPathExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "euler-identity",
+      "relativeFile": "src/experiments/euler-identity/EulerIdentityExperiment.tsx",
+      "lineCount": 1248,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "euler-line",
+      "relativeFile": "src/experiments/euler-line/EulerLineExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "euler-totient",
+      "relativeFile": "src/experiments/euler-totient/EulerTotientExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "even-odd",
+      "relativeFile": "src/experiments/even-odd/EvenOddExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "exponential-log",
+      "relativeFile": "src/experiments/exponential-log/ExponentialLogExperiment.tsx",
+      "lineCount": 119,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "farey-sequence",
+      "relativeFile": "src/experiments/farey-sequence/FareySequenceExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "fast-exponentiation",
+      "relativeFile": "src/experiments/fast-exponentiation/FastExponentiationExperiment.tsx",
+      "lineCount": 99,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "fermat-little",
+      "relativeFile": "src/experiments/fermat-little/FermatLittleExperiment.tsx",
+      "lineCount": 98,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "fft",
+      "relativeFile": "src/experiments/fft/FftExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "fibonacci-nature",
+      "relativeFile": "src/experiments/fibonacci-nature/FibonacciNatureExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "fixed-point-iteration",
+      "relativeFile": "src/experiments/fixed-point-iteration/FixedPointIterationExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "fourier-drawing",
+      "relativeFile": "src/experiments/fourier-drawing/FourierDrawingExperiment.tsx",
+      "lineCount": 411,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 79,
+              "snippet": "export default function FourierDrawingExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 257,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 258,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "fourier-series",
+      "relativeFile": "src/experiments/fourier-series/FourierSeriesExperiment.tsx",
+      "lineCount": 502,
+      "renderer": "hybrid",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function FourierSeriesExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 288,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 289,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "fourier",
+      "relativeFile": "src/experiments/fourier/FourierExperiment.tsx",
+      "lineCount": 336,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "fractal",
+      "relativeFile": "src/experiments/fractal/FractalExperiment.tsx",
+      "lineCount": 389,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 10,
+              "snippet": "export default function FractalExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 201,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 202,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "fractions",
+      "relativeFile": "src/experiments/fractions/FractionsExperiment.tsx",
+      "lineCount": 639,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 30,
+              "snippet": "export default function FractionsExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 386,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 387,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "frobenius-coin",
+      "relativeFile": "src/experiments/frobenius-coin/FrobeniusCoinExperiment.tsx",
+      "lineCount": 98,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "function-transform",
+      "relativeFile": "src/experiments/function-transform/FunctionTransformExperiment.tsx",
+      "lineCount": 107,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "galton-board",
+      "relativeFile": "src/experiments/galton-board/GaltonBoardExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "gamblers-ruin",
+      "relativeFile": "src/experiments/gamblers-ruin/GamblersRuinExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "game-of-life",
+      "relativeFile": "src/experiments/game-of-life/GameOfLifeExperiment.tsx",
+      "lineCount": 165,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 14,
+              "snippet": "export default function GameOfLifeExperiment() {"
+            }
+          ]
+        }
+      ],
+      "issueCount": 1,
+      "structuralIssueCount": 1,
+      "score": 5,
+      "risk": "medium"
+    },
+    {
+      "id": "game-theory",
+      "relativeFile": "src/experiments/game-theory/GameTheoryExperiment.tsx",
+      "lineCount": 583,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 51,
+              "snippet": "export default function GameTheoryExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 270,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 271,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "gamma-function",
+      "relativeFile": "src/experiments/gamma-function/GammaFunctionExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "gaussian-integers",
+      "relativeFile": "src/experiments/gaussian-integers/GaussianIntegersExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "gaussian-mixture",
+      "relativeFile": "src/experiments/gaussian-mixture/GaussianMixtureExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "gaussian-process",
+      "relativeFile": "src/experiments/gaussian-process/GaussianProcessExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "generating-functions",
+      "relativeFile": "src/experiments/generating-functions/GeneratingFunctionsExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "genetic-algorithm",
+      "relativeFile": "src/experiments/genetic-algorithm/GeneticAlgorithmExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "geometry-shapes",
+      "relativeFile": "src/experiments/geometry-shapes/GeometryShapesExperiment.tsx",
+      "lineCount": 749,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 83,
+              "snippet": "export default function GeometryShapesExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 505,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 506,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "gibbs-phenomenon",
+      "relativeFile": "src/experiments/gibbs-phenomenon/GibbsPhenomenonExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "golden-ratio",
+      "relativeFile": "src/experiments/golden-ratio/GoldenRatioExperiment.tsx",
+      "lineCount": 325,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "gosper-curve",
+      "relativeFile": "src/experiments/gosper-curve/GosperCurveExperiment.tsx",
+      "lineCount": 91,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "gradient-descent",
+      "relativeFile": "src/experiments/gradient-descent/GradientDescentExperiment.tsx",
+      "lineCount": 452,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 77,
+              "snippet": "export default function GradientDescentExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 203,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 204,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "gram-schmidt",
+      "relativeFile": "src/experiments/gram-schmidt/GramSchmidtExperiment.tsx",
+      "lineCount": 111,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "graph-coloring",
+      "relativeFile": "src/experiments/graph-coloring/GraphColoringExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "graph-theory",
+      "relativeFile": "src/experiments/graph-theory/GraphTheoryExperiment.tsx",
+      "lineCount": 553,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 82,
+              "snippet": "export default function GraphTheoryExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 370,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 371,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "gray-code",
+      "relativeFile": "src/experiments/gray-code/GrayCodeExperiment.tsx",
+      "lineCount": 98,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "green-theorem",
+      "relativeFile": "src/experiments/green-theorem/GreenTheoremExperiment.tsx",
+      "lineCount": 123,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "happy-numbers",
+      "relativeFile": "src/experiments/happy-numbers/HappyNumbersExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "heat-equation",
+      "relativeFile": "src/experiments/heat-equation/HeatEquationExperiment.tsx",
+      "lineCount": 458,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 12,
+              "snippet": "export default function HeatEquationExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 229,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 230,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "henon-map",
+      "relativeFile": "src/experiments/henon-map/HenonMapExperiment.tsx",
+      "lineCount": 88,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "hidden-markov",
+      "relativeFile": "src/experiments/hidden-markov/HiddenMarkovExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "hilbert-curve",
+      "relativeFile": "src/experiments/hilbert-curve/HilbertCurveExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "hill-cipher",
+      "relativeFile": "src/experiments/hill-cipher/HillCipherExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "hopf-fibration",
+      "relativeFile": "src/experiments/hopf-fibration/HopfFibrationExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "huffman-coding",
+      "relativeFile": "src/experiments/huffman-coding/HuffmanCodingExperiment.tsx",
+      "lineCount": 108,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "hyperbolic-tiling",
+      "relativeFile": "src/experiments/hyperbolic-tiling/HyperbolicTilingExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "hypothesis-testing",
+      "relativeFile": "src/experiments/hypothesis-testing/HypothesisTestingExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "improper-integral",
+      "relativeFile": "src/experiments/improper-integral/ImproperIntegralExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "inclusion-exclusion",
+      "relativeFile": "src/experiments/inclusion-exclusion/InclusionExclusionExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "inequalities",
+      "relativeFile": "src/experiments/inequalities/InequalitiesExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "integer-partition",
+      "relativeFile": "src/experiments/integer-partition/IntegerPartitionExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "interpolation",
+      "relativeFile": "src/experiments/interpolation/InterpolationExperiment.tsx",
+      "lineCount": 580,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function InterpolationExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 346,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 347,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        },
+        {
+          "type": "legacy-blue-button",
+          "severity": "low",
+          "title": "旧蓝色按钮",
+          "description": "button 仍使用旧版 bg-blue-500 / 600 / 700。",
+          "evidence": [
+            {
+              "line": 535,
+              "snippet": "<button"
+            }
+          ]
+        }
+      ],
+      "issueCount": 3,
+      "structuralIssueCount": 3,
+      "score": 10,
+      "risk": "medium"
+    },
+    {
+      "id": "inverse-function",
+      "relativeFile": "src/experiments/inverse-function/InverseFunctionExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "inversive-geometry",
+      "relativeFile": "src/experiments/inversive-geometry/InversiveGeometryExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "jacobian",
+      "relativeFile": "src/experiments/jacobian/JacobianExperiment.tsx",
+      "lineCount": 108,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "josephus-problem",
+      "relativeFile": "src/experiments/josephus-problem/JosephusProblemExperiment.tsx",
+      "lineCount": 116,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "kalman-filter",
+      "relativeFile": "src/experiments/kalman-filter/KalmanFilterExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "kaprekar",
+      "relativeFile": "src/experiments/kaprekar/KaprekarExperiment.tsx",
+      "lineCount": 115,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "kd-tree",
+      "relativeFile": "src/experiments/kd-tree/KdTreeExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "kepler-orbit",
+      "relativeFile": "src/experiments/kepler-orbit/KeplerOrbitExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "kernel-image",
+      "relativeFile": "src/experiments/kernel-image/KernelImageExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "kmeans",
+      "relativeFile": "src/experiments/kmeans/KmeansExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "knn",
+      "relativeFile": "src/experiments/knn/KnnExperiment.tsx",
+      "lineCount": 114,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "knot-theory",
+      "relativeFile": "src/experiments/knot-theory/KnotTheoryExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "koch-snowflake",
+      "relativeFile": "src/experiments/koch-snowflake/KochSnowflakeExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "l-system",
+      "relativeFile": "src/experiments/l-system/LSystemExperiment.tsx",
+      "lineCount": 112,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "lagrange-multiplier",
+      "relativeFile": "src/experiments/lagrange-multiplier/LagrangeMultiplierExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "laplace",
+      "relativeFile": "src/experiments/laplace/LaplaceExperiment.tsx",
+      "lineCount": 585,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 70,
+              "snippet": "export default function LaplaceExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 204,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 205,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "laplacian",
+      "relativeFile": "src/experiments/laplacian/LaplacianExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "latin-square",
+      "relativeFile": "src/experiments/latin-square/LatinSquareExperiment.tsx",
+      "lineCount": 98,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "law-large-numbers",
+      "relativeFile": "src/experiments/law-large-numbers/LawLargeNumbersExperiment.tsx",
+      "lineCount": 108,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "least-squares",
+      "relativeFile": "src/experiments/least-squares/LeastSquaresExperiment.tsx",
+      "lineCount": 108,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "legendre-polynomials",
+      "relativeFile": "src/experiments/legendre-polynomials/LegendrePolynomialsExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "levy-c-curve",
+      "relativeFile": "src/experiments/levy-c-curve/LevyCCurveExperiment.tsx",
+      "lineCount": 91,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "limit-cycle",
+      "relativeFile": "src/experiments/limit-cycle/LimitCycleExperiment.tsx",
+      "lineCount": 110,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "line-clipping",
+      "relativeFile": "src/experiments/line-clipping/LineClippingExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "line-integral",
+      "relativeFile": "src/experiments/line-integral/LineIntegralExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "linear-algebra",
+      "relativeFile": "src/experiments/linear-algebra/LinearAlgebraExperiment.tsx",
+      "lineCount": 354,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "linear-function",
+      "relativeFile": "src/experiments/linear-function/LinearFunctionExperiment.tsx",
+      "lineCount": 574,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 14,
+              "snippet": "export default function LinearFunctionExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 303,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 304,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "linear-system",
+      "relativeFile": "src/experiments/linear-system/LinearSystemExperiment.tsx",
+      "lineCount": 115,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "lissajous",
+      "relativeFile": "src/experiments/lissajous/LissajousExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "logarithm-spiral",
+      "relativeFile": "src/experiments/logarithm-spiral/LogarithmSpiralExperiment.tsx",
+      "lineCount": 99,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "logistic-bifurcation",
+      "relativeFile": "src/experiments/logistic-bifurcation/LogisticBifurcationExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "logistic-regression",
+      "relativeFile": "src/experiments/logistic-regression/LogisticRegressionExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "look-and-say",
+      "relativeFile": "src/experiments/look-and-say/LookAndSayExperiment.tsx",
+      "lineCount": 93,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "lorenz-attractor",
+      "relativeFile": "src/experiments/lorenz-attractor/LorenzAttractorExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "lotka-volterra",
+      "relativeFile": "src/experiments/lotka-volterra/LotkaVolterraExperiment.tsx",
+      "lineCount": 98,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "lu-decomposition",
+      "relativeFile": "src/experiments/lu-decomposition/LuDecompositionExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "lucas-numbers",
+      "relativeFile": "src/experiments/lucas-numbers/LucasNumbersExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "magic-square",
+      "relativeFile": "src/experiments/magic-square/MagicSquareExperiment.tsx",
+      "lineCount": 112,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "mandelbrot-julia",
+      "relativeFile": "src/experiments/mandelbrot-julia/MandelbrotJuliaExperiment.tsx",
+      "lineCount": 119,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "marching-squares",
+      "relativeFile": "src/experiments/marching-squares/MarchingSquaresExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "markov-chain",
+      "relativeFile": "src/experiments/markov-chain/MarkovChainExperiment.tsx",
+      "lineCount": 554,
+      "renderer": "hybrid",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 56,
+              "snippet": "export default function MarkovChainExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 351,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 352,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "markov-stationary",
+      "relativeFile": "src/experiments/markov-stationary/MarkovStationaryExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "matrix-decomposition",
+      "relativeFile": "src/experiments/matrix-decomposition/MatrixDecompositionExperiment.tsx",
+      "lineCount": 491,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function MatrixDecompositionExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 218,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 219,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "matrix-transform",
+      "relativeFile": "src/experiments/matrix-transform/MatrixTransformExperiment.tsx",
+      "lineCount": 110,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "max-likelihood",
+      "relativeFile": "src/experiments/max-likelihood/MaxLikelihoodExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "mean-value-theorem",
+      "relativeFile": "src/experiments/mean-value-theorem/MeanValueTheoremExperiment.tsx",
+      "lineCount": 114,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "minimum-spanning-tree",
+      "relativeFile": "src/experiments/minimum-spanning-tree/MinimumSpanningTreeExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "mobius-function",
+      "relativeFile": "src/experiments/mobius-function/MobiusFunctionExperiment.tsx",
+      "lineCount": 93,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "mobius",
+      "relativeFile": "src/experiments/mobius/MobiusExperiment.tsx",
+      "lineCount": 133,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "modular-arithmetic",
+      "relativeFile": "src/experiments/modular-arithmetic/ModularArithmeticExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "monte-carlo",
+      "relativeFile": "src/experiments/monte-carlo/MonteCarloExperiment.tsx",
+      "lineCount": 267,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "monty-hall",
+      "relativeFile": "src/experiments/monty-hall/MontyHallExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "multiple-integral",
+      "relativeFile": "src/experiments/multiple-integral/MultipleIntegralExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "naive-bayes",
+      "relativeFile": "src/experiments/naive-bayes/NaiveBayesExperiment.tsx",
+      "lineCount": 114,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "nbody-simulation",
+      "relativeFile": "src/experiments/nbody-simulation/NbodySimulationExperiment.tsx",
+      "lineCount": 124,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "network-flow",
+      "relativeFile": "src/experiments/network-flow/NetworkFlowExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "neural-network-forward",
+      "relativeFile": "src/experiments/neural-network-forward/NeuralNetworkForwardExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "newton-fractal",
+      "relativeFile": "src/experiments/newton-fractal/NewtonFractalExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "newton-method",
+      "relativeFile": "src/experiments/newton-method/NewtonMethodExperiment.tsx",
+      "lineCount": 438,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 25,
+              "snippet": "export default function NewtonMethodExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 193,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 194,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "nine-point-circle",
+      "relativeFile": "src/experiments/nine-point-circle/NinePointCircleExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "number-bases",
+      "relativeFile": "src/experiments/number-bases/NumberBasesExperiment.tsx",
+      "lineCount": 107,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "number-theory",
+      "relativeFile": "src/experiments/number-theory/NumberTheoryExperiment.tsx",
+      "lineCount": 526,
+      "renderer": "hybrid",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function NumberTheoryExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 209,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 210,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "numerical-analysis",
+      "relativeFile": "src/experiments/numerical-analysis/NumericalAnalysisExperiment.tsx",
+      "lineCount": 531,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function NumericalAnalysisExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 241,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 242,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "numerical-integration",
+      "relativeFile": "src/experiments/numerical-integration/NumericalIntegrationExperiment.tsx",
+      "lineCount": 541,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 54,
+              "snippet": "export default function NumericalIntegrationExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 324,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 325,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "nyquist-sampling",
+      "relativeFile": "src/experiments/nyquist-sampling/NyquistSamplingExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "ode",
+      "relativeFile": "src/experiments/ode/ODEExperiment.tsx",
+      "lineCount": 356,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 49,
+              "snippet": "export default function ODEExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 178,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 179,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "one-time-pad",
+      "relativeFile": "src/experiments/one-time-pad/OneTimePadExperiment.tsx",
+      "lineCount": 99,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "optimization",
+      "relativeFile": "src/experiments/optimization/OptimizationExperiment.tsx",
+      "lineCount": 515,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 63,
+              "snippet": "export default function OptimizationExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 245,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 246,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "orthogonal-projection",
+      "relativeFile": "src/experiments/orthogonal-projection/OrthogonalProjectionExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pagerank",
+      "relativeFile": "src/experiments/pagerank/PagerankExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "parabola-optics",
+      "relativeFile": "src/experiments/parabola-optics/ParabolaOpticsExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "parametric",
+      "relativeFile": "src/experiments/parametric/ParametricExperiment.tsx",
+      "lineCount": 345,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "partial-derivative",
+      "relativeFile": "src/experiments/partial-derivative/PartialDerivativeExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "partial-fractions",
+      "relativeFile": "src/experiments/partial-fractions/PartialFractionsExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "particle-swarm",
+      "relativeFile": "src/experiments/particle-swarm/ParticleSwarmExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pascal-triangle",
+      "relativeFile": "src/experiments/pascal-triangle/PascalTriangleExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pca",
+      "relativeFile": "src/experiments/pca/PCAExperiment.tsx",
+      "lineCount": 530,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function PCAExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 254,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 255,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "pde",
+      "relativeFile": "src/experiments/pde/PDEExperiment.tsx",
+      "lineCount": 512,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 12,
+              "snippet": "export default function PDEExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 312,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 313,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "peano-curve",
+      "relativeFile": "src/experiments/peano-curve/PeanoCurveExperiment.tsx",
+      "lineCount": 92,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pell-equation",
+      "relativeFile": "src/experiments/pell-equation/PellEquationExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pendulum-phase",
+      "relativeFile": "src/experiments/pendulum-phase/PendulumPhaseExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "perceptron",
+      "relativeFile": "src/experiments/perceptron/PerceptronExperiment.tsx",
+      "lineCount": 107,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "percolation",
+      "relativeFile": "src/experiments/percolation/PercolationExperiment.tsx",
+      "lineCount": 120,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "perfect-numbers",
+      "relativeFile": "src/experiments/perfect-numbers/PerfectNumbersExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "permutation-combination",
+      "relativeFile": "src/experiments/permutation-combination/PermutationCombinationExperiment.tsx",
+      "lineCount": 564,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 48,
+              "snippet": "export default function PermutationCombinationExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 217,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 218,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "phase-portrait",
+      "relativeFile": "src/experiments/phase-portrait/PhasePortraitExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pick-theorem",
+      "relativeFile": "src/experiments/pick-theorem/PickTheoremExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "piecewise-function",
+      "relativeFile": "src/experiments/piecewise-function/PiecewiseFunctionExperiment.tsx",
+      "lineCount": 98,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pigeonhole",
+      "relativeFile": "src/experiments/pigeonhole/PigeonholeExperiment.tsx",
+      "lineCount": 107,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "poincare-disk",
+      "relativeFile": "src/experiments/poincare-disk/PoincareDiskExperiment.tsx",
+      "lineCount": 113,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "poincare-section",
+      "relativeFile": "src/experiments/poincare-section/PoincareSectionExperiment.tsx",
+      "lineCount": 112,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "point-in-polygon",
+      "relativeFile": "src/experiments/point-in-polygon/PointInPolygonExperiment.tsx",
+      "lineCount": 113,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "poisson-process",
+      "relativeFile": "src/experiments/poisson-process/PoissonProcessExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "polar",
+      "relativeFile": "src/experiments/polar/PolarExperiment.tsx",
+      "lineCount": 307,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "polynomial-roots",
+      "relativeFile": "src/experiments/polynomial-roots/PolynomialRootsExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "power-iteration",
+      "relativeFile": "src/experiments/power-iteration/PowerIterationExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "power-series",
+      "relativeFile": "src/experiments/power-series/PowerSeriesExperiment.tsx",
+      "lineCount": 125,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "prime-counting",
+      "relativeFile": "src/experiments/prime-counting/PrimeCountingExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "prime-factorization",
+      "relativeFile": "src/experiments/prime-factorization/PrimeFactorizationExperiment.tsx",
+      "lineCount": 111,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "primitive-root",
+      "relativeFile": "src/experiments/primitive-root/PrimitiveRootExperiment.tsx",
+      "lineCount": 110,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "probability",
+      "relativeFile": "src/experiments/probability/ProbabilityExperiment.tsx",
+      "lineCount": 374,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 54,
+              "snippet": "export default function ProbabilityExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 213,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 214,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "projectile-motion",
+      "relativeFile": "src/experiments/projectile-motion/ProjectileMotionExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pythagoras-tree",
+      "relativeFile": "src/experiments/pythagoras-tree/PythagorasTreeExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pythagorean-triples",
+      "relativeFile": "src/experiments/pythagorean-triples/PythagoreanTriplesExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "pythagorean",
+      "relativeFile": "src/experiments/pythagorean/PythagoreanExperiment.tsx",
+      "lineCount": 578,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 16,
+              "snippet": "export default function PythagoreanExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 313,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 314,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "qr-decomposition",
+      "relativeFile": "src/experiments/qr-decomposition/QrDecompositionExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "quadratic-form",
+      "relativeFile": "src/experiments/quadratic-form/QuadraticFormExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "quadratic-function",
+      "relativeFile": "src/experiments/quadratic-function/QuadraticFunctionExperiment.tsx",
+      "lineCount": 586,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 14,
+              "snippet": "export default function QuadraticFunctionExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 335,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 336,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "quadratic-residue",
+      "relativeFile": "src/experiments/quadratic-residue/QuadraticResidueExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "quadtree",
+      "relativeFile": "src/experiments/quadtree/QuadtreeExperiment.tsx",
+      "lineCount": 110,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "random-walk",
+      "relativeFile": "src/experiments/random-walk/RandomWalkExperiment.tsx",
+      "lineCount": 441,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function RandomWalkExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 179,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 180,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "rational-asymptotes",
+      "relativeFile": "src/experiments/rational-asymptotes/RationalAsymptotesExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "reaction-diffusion",
+      "relativeFile": "src/experiments/reaction-diffusion/ReactionDiffusionExperiment.tsx",
+      "lineCount": 1039,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "regression",
+      "relativeFile": "src/experiments/regression/RegressionExperiment.tsx",
+      "lineCount": 655,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 11,
+              "snippet": "export default function RegressionExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 342,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 343,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        },
+        {
+          "type": "legacy-blue-button",
+          "severity": "low",
+          "title": "旧蓝色按钮",
+          "description": "button 仍使用旧版 bg-blue-500 / 600 / 700。",
+          "evidence": [
+            {
+              "line": 464,
+              "snippet": "<button"
+            }
+          ]
+        }
+      ],
+      "issueCount": 3,
+      "structuralIssueCount": 3,
+      "score": 10,
+      "risk": "medium"
+    },
+    {
+      "id": "residue-theorem",
+      "relativeFile": "src/experiments/residue-theorem/ResidueTheoremExperiment.tsx",
+      "lineCount": 119,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "reuleaux",
+      "relativeFile": "src/experiments/reuleaux/ReuleauxExperiment.tsx",
+      "lineCount": 111,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "riemann-sum",
+      "relativeFile": "src/experiments/riemann-sum/RiemannSumExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "roman-numerals",
+      "relativeFile": "src/experiments/roman-numerals/RomanNumeralsExperiment.tsx",
+      "lineCount": 124,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "rossler-attractor",
+      "relativeFile": "src/experiments/rossler-attractor/RosslerAttractorExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "rotating-calipers",
+      "relativeFile": "src/experiments/rotating-calipers/RotatingCalipersExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "rotation3d",
+      "relativeFile": "src/experiments/rotation3d/Rotation3dExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "rsa-cipher",
+      "relativeFile": "src/experiments/rsa-cipher/RsaCipherExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "secant-method",
+      "relativeFile": "src/experiments/secant-method/SecantMethodExperiment.tsx",
+      "lineCount": 108,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "sequences",
+      "relativeFile": "src/experiments/sequences/SequencesExperiment.tsx",
+      "lineCount": 122,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "series-convergence",
+      "relativeFile": "src/experiments/series-convergence/SeriesConvergenceExperiment.tsx",
+      "lineCount": 112,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "set-theory",
+      "relativeFile": "src/experiments/set-theory/SetTheoryExperiment.tsx",
+      "lineCount": 458,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 10,
+              "snippet": "export default function SetTheoryExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 265,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 266,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        },
+        {
+          "type": "legacy-blue-button",
+          "severity": "low",
+          "title": "旧蓝色按钮",
+          "description": "button 仍使用旧版 bg-blue-500 / 600 / 700。",
+          "evidence": [
+            {
+              "line": 363,
+              "snippet": "<button"
+            }
+          ]
+        }
+      ],
+      "issueCount": 3,
+      "structuralIssueCount": 3,
+      "score": 10,
+      "risk": "medium"
+    },
+    {
+      "id": "sierpinski-carpet",
+      "relativeFile": "src/experiments/sierpinski-carpet/SierpinskiCarpetExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "sierpinski-triangle",
+      "relativeFile": "src/experiments/sierpinski-triangle/SierpinskiTriangleExperiment.tsx",
+      "lineCount": 112,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "sieve-eratosthenes",
+      "relativeFile": "src/experiments/sieve-eratosthenes/SieveEratosthenesExperiment.tsx",
+      "lineCount": 98,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "signal-processing",
+      "relativeFile": "src/experiments/signal-processing/SignalProcessingExperiment.tsx",
+      "lineCount": 563,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 12,
+              "snippet": "export default function SignalProcessingExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 264,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 265,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "similar-triangles",
+      "relativeFile": "src/experiments/similar-triangles/SimilarTrianglesExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "simulated-annealing",
+      "relativeFile": "src/experiments/simulated-annealing/SimulatedAnnealingExperiment.tsx",
+      "lineCount": 146,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "sine-superposition",
+      "relativeFile": "src/experiments/sine-superposition/SineSuperpositionExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "softmax",
+      "relativeFile": "src/experiments/softmax/SoftmaxExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "solid-of-revolution",
+      "relativeFile": "src/experiments/solid-of-revolution/SolidOfRevolutionExperiment.tsx",
+      "lineCount": 110,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "sorting-algorithms",
+      "relativeFile": "src/experiments/sorting-algorithms/SortingAlgorithmsExperiment.tsx",
+      "lineCount": 114,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "spectral-theorem",
+      "relativeFile": "src/experiments/spectral-theorem/SpectralTheoremExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "spherical-geometry",
+      "relativeFile": "src/experiments/spherical-geometry/SphericalGeometryExperiment.tsx",
+      "lineCount": 99,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "spirograph",
+      "relativeFile": "src/experiments/spirograph/SpirographExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "stats-basics",
+      "relativeFile": "src/experiments/stats-basics/StatsBasicsExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "steiner-chain",
+      "relativeFile": "src/experiments/steiner-chain/SteinerChainExperiment.tsx",
+      "lineCount": 108,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "stereographic-projection",
+      "relativeFile": "src/experiments/stereographic-projection/StereographicProjectionExperiment.tsx",
+      "lineCount": 94,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "stern-brocot",
+      "relativeFile": "src/experiments/stern-brocot/SternBrocotExperiment.tsx",
+      "lineCount": 91,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "stirling-numbers",
+      "relativeFile": "src/experiments/stirling-numbers/StirlingNumbersExperiment.tsx",
+      "lineCount": 102,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "stokes-theorem",
+      "relativeFile": "src/experiments/stokes-theorem/StokesTheoremExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "sum-of-squares",
+      "relativeFile": "src/experiments/sum-of-squares/SumOfSquaresExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "svd",
+      "relativeFile": "src/experiments/svd/SvdExperiment.tsx",
+      "lineCount": 104,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "symmetry",
+      "relativeFile": "src/experiments/symmetry/SymmetryExperiment.tsx",
+      "lineCount": 101,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "tangram",
+      "relativeFile": "src/experiments/tangram/TangramExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "taylor",
+      "relativeFile": "src/experiments/taylor/TaylorExperiment.tsx",
+      "lineCount": 395,
+      "renderer": "plotly",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 92,
+              "snippet": "export default function TaylorExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 208,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 209,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "tent-map",
+      "relativeFile": "src/experiments/tent-map/TentMapExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "tessellation",
+      "relativeFile": "src/experiments/tessellation/TessellationExperiment.tsx",
+      "lineCount": 100,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "three-body",
+      "relativeFile": "src/experiments/three-body/ThreeBodyExperiment.tsx",
+      "lineCount": 169,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 14,
+              "snippet": "export default function ThreeBodyExperiment() {"
+            }
+          ]
+        }
+      ],
+      "issueCount": 1,
+      "structuralIssueCount": 1,
+      "score": 5,
+      "risk": "medium"
+    },
+    {
+      "id": "torus-klein",
+      "relativeFile": "src/experiments/torus-klein/TorusKleinExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "tower-of-hanoi",
+      "relativeFile": "src/experiments/tower-of-hanoi/TowerOfHanoiExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "triangle-centers",
+      "relativeFile": "src/experiments/triangle-centers/TriangleCentersExperiment.tsx",
+      "lineCount": 106,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "triangular-numbers",
+      "relativeFile": "src/experiments/triangular-numbers/TriangularNumbersExperiment.tsx",
+      "lineCount": 103,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "trigonometry",
+      "relativeFile": "src/experiments/trigonometry/TrigExperiment.tsx",
+      "lineCount": 213,
+      "renderer": "plotly",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "ulam-spiral",
+      "relativeFile": "src/experiments/ulam-spiral/UlamSpiralExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "vector-calculus-field",
+      "relativeFile": "src/experiments/vector-calculus-field/VectorCalculusFieldExperiment.tsx",
+      "lineCount": 97,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "vector-field",
+      "relativeFile": "src/experiments/vector-field/VectorFieldExperiment.tsx",
+      "lineCount": 467,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 60,
+              "snippet": "export default function VectorFieldExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 323,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 324,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "vibrating-string",
+      "relativeFile": "src/experiments/vibrating-string/VibratingStringExperiment.tsx",
+      "lineCount": 109,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "vieta-formulas",
+      "relativeFile": "src/experiments/vieta-formulas/VietaFormulasExperiment.tsx",
+      "lineCount": 95,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "vigenere-cipher",
+      "relativeFile": "src/experiments/vigenere-cipher/VigenereCipherExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "voronoi",
+      "relativeFile": "src/experiments/voronoi/VoronoiExperiment.tsx",
+      "lineCount": 96,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "wave-equation",
+      "relativeFile": "src/experiments/wave-equation/WaveEquationExperiment.tsx",
+      "lineCount": 395,
+      "renderer": "canvas",
+      "nativeV2": false,
+      "usesExperimentShell": false,
+      "compatibilityRuntime": true,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [
+        {
+          "type": "compatibility-runtime",
+          "severity": "medium",
+          "title": "Compatibility Runtime",
+          "description": "实验没有声明 experimentV2 = true。",
+          "evidence": [
+            {
+              "line": 10,
+              "snippet": "export default function WaveEquationExperiment() {"
+            }
+          ]
+        },
+        {
+          "type": "legacy-three-column-grid",
+          "severity": "medium",
+          "title": "旧版页面三栏",
+          "description": "检测到旧页面 grid-cols-1 + lg:grid-cols-3 + lg:col-span-2 页面结构。",
+          "evidence": [
+            {
+              "line": 219,
+              "snippet": "<div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">"
+            },
+            {
+              "line": 220,
+              "snippet": "<div className=\"lg:col-span-2 space-y-6\">"
+            }
+          ]
+        }
+      ],
+      "issueCount": 2,
+      "structuralIssueCount": 2,
+      "score": 9,
+      "risk": "medium"
+    },
+    {
+      "id": "wavelet",
+      "relativeFile": "src/experiments/wavelet/WaveletExperiment.tsx",
+      "lineCount": 128,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "wilson-theorem",
+      "relativeFile": "src/experiments/wilson-theorem/WilsonTheoremExperiment.tsx",
+      "lineCount": 105,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    },
+    {
+      "id": "windowing",
+      "relativeFile": "src/experiments/windowing/WindowingExperiment.tsx",
+      "lineCount": 91,
+      "renderer": "canvas",
+      "nativeV2": true,
+      "usesExperimentShell": true,
+      "compatibilityRuntime": false,
+      "playerMode": "none",
+      "hasEffectivePlayerBar": false,
+      "hasResponsiveHint": true,
+      "issues": [],
+      "issueCount": 0,
+      "structuralIssueCount": 0,
+      "score": 0,
+      "risk": "clean"
+    }
+  ]
+}

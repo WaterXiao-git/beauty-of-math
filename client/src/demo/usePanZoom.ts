@@ -67,5 +67,11 @@ export function usePanZoom(minScale = 0.5, maxScale = 12) {
     return moved
   }
 
-  return { transform, handlers, consumeDrag }
+  const reset = () => {
+    dragRef.current = null
+    movedRef.current = false
+    setTransform({ scale: 1, tx: 0, ty: 0 })
+  }
+
+  return { transform, handlers, consumeDrag, reset }
 }

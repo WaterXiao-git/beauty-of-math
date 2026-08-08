@@ -28,7 +28,7 @@ export default function CourseHeader({
             type="button"
             onClick={onOpenNavigation}
             className="inline-flex h-9 items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 text-sm font-semibold text-gray-700 shadow-sm transition hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
-            aria-label="打开章节与知识点"
+            aria-label="打开全部课程目录"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round">
               <path d="M4 6h16M4 12h16M4 18h16" />
@@ -68,6 +68,17 @@ export default function CourseHeader({
               ) : i === 0 && i < last ? (
                 <Link
                   to="/"
+                  className="truncate text-gray-500 transition-colors hover:text-blue-600 hover:underline"
+                >
+                  {item}
+                </Link>
+              ) : i < last ? (
+                <Link
+                  to={
+                    item === '全部可视化实验' || item === '实验库'
+                      ? '/experiments'
+                      : `/experiments?q=${encodeURIComponent(item)}`
+                  }
                   className="truncate text-gray-500 transition-colors hover:text-blue-600 hover:underline"
                 >
                   {item}

@@ -1,12 +1,18 @@
-import { EXPERIMENT_MANIFEST } from '../data/experimentManifest.js'
+import {
+  EXPERIMENT_TAXONOMY,
+  getExperimentTaxonomyFacets,
+} from '../content/experimentTaxonomy.js'
 
 const DEFAULT_LIMIT = 24
-const MAX_LIMIT = 60
+const MAX_LIMIT = 300
 
 export interface ExperimentCatalogQuery {
   q?: string
   difficulty?: string
   topic?: string
+  courseId?: string
+  chapterId?: string
+  knowledgePointId?: string
   offset?: number
   limit?: number
 }
@@ -28,10 +34,13 @@ export function listPublishedExperiments(query: ExperimentCatalogQuery = {}) {
   const keyword = normalize(query.q ?? '')
   const difficulty = normalize(query.difficulty ?? '')
   const topic = normalize(query.topic ?? '')
+  const courseId = normalize(query.courseId ?? '')
+  const chapterId = normalize(query.chapterId ?? '')
+  const knowledgePointId = normalize(query.knowledgePointId ?? '')
   const offset = toSafeInteger(query.offset, 0)
   const limit = toSafeInteger(query.limit, DEFAULT_LIMIT, MAX_LIMIT) || DEFAULT_LIMIT
 
-  const filtered = EXPERIMENT_MANIFEST.filter((experiment) => {
+  const filtered = EXPERIMENT_TAXONOMY.filter((experiment) => {
     if (difficulty && normalize(experiment.difficulty) !== difficulty) {
       return false
     }
@@ -39,6 +48,13 @@ export function listPublishedExperiments(query: ExperimentCatalogQuery = {}) {
     if (topic && !experiment.topics.some((item) => normalize(item) === topic)) {
       return false
     }
+
+    if (courseId && normalize(experiment.courseId) !== courseId) return false
+    if (chapterId && normalize(experiment.chapterId) !== chapterId) return false
+    if (
+      knowledgePointId &&
+      !experiment.knowledgePointIds.some((item) => normalize(item) === knowledgePointId)
+    ) return false
 
     if (!keyword) return true
 
@@ -48,6 +64,11 @@ export function listPublishedExperiments(query: ExperimentCatalogQuery = {}) {
         experiment.description,
         experiment.path,
         ...experiment.topics,
+        ...experiment.tags,
+        ...experiment.keywords,
+        ...experiment.knowledgePointNames,
+        experiment.courseName,
+        experiment.chapterName,
       ].join(' '),
     )
 
@@ -55,20 +76,20 @@ export function listPublishedExperiments(query: ExperimentCatalogQuery = {}) {
   })
 
   const difficultyCounts = Object.fromEntries(
-    [...new Set(EXPERIMENT_MANIFEST.map((item) => item.difficulty))]
+    [...new Set(EXPERIMENT_TAXONOMY.map((item) => item.difficulty))]
       .sort()
       .map((item) => [
         item,
-        EXPERIMENT_MANIFEST.filter((experiment) => experiment.difficulty === item).length,
+        EXPERIMENT_TAXONOMY.filter((experiment) => experiment.difficulty === item).length,
       ]),
   )
 
   const topicCounts = Object.fromEntries(
-    [...new Set(EXPERIMENT_MANIFEST.flatMap((item) => item.topics))]
+    [...new Set(EXPERIMENT_TAXONOMY.flatMap((item) => item.topics))]
       .sort()
       .map((item) => [
         item,
-        EXPERIMENT_MANIFEST.filter((experiment) => experiment.topics.includes(item)).length,
+        EXPERIMENT_TAXONOMY.filter((experiment) => experiment.topics.includes(item)).length,
       ]),
   )
 
@@ -81,6 +102,7 @@ export function listPublishedExperiments(query: ExperimentCatalogQuery = {}) {
     facets: {
       difficulties: difficultyCounts,
       topics: topicCounts,
+      taxonomy: getExperimentTaxonomyFacets(),
     },
   }
 }

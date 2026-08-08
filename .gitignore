@@ -36,6 +36,9 @@ coverage/
 .cache/
 .eslintcache
 
+# Experiment V2 migration backups are local and reproducible
+client/.migration/backups/
+
 # 报价单含手机号/底价等商业敏感信息, 不提交到公开仓库
 数学之美_软件授权报价单.docx
 ~$*.docx

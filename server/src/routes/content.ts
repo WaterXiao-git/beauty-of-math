@@ -28,6 +28,12 @@ router.get('/experiments', (req, res) => {
       difficulty:
         typeof req.query.difficulty === 'string' ? req.query.difficulty : undefined,
       topic: typeof req.query.topic === 'string' ? req.query.topic : undefined,
+      courseId: typeof req.query.courseId === 'string' ? req.query.courseId : undefined,
+      chapterId: typeof req.query.chapterId === 'string' ? req.query.chapterId : undefined,
+      knowledgePointId:
+        typeof req.query.knowledgePointId === 'string'
+          ? req.query.knowledgePointId
+          : undefined,
       offset: parseNumber(req.query.offset),
       limit: parseNumber(req.query.limit),
     }),

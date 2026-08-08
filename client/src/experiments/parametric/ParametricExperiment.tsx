@@ -6,6 +6,9 @@ import { NarrationPresenter } from '../../components/NarrationPresenter'
 import { useNarrationOptional } from '../../contexts/NarrationContext'
 import { parametricNarration } from '../../narrations/scripts/parametric'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
 
 type CurveType = 'lissajous' | 'cycloid' | 'epicycloid' | 'bezier' | 'hypotrochoid'
 
@@ -41,6 +44,8 @@ const curveInfo: Record<CurveType, { name: string; formulaX: string; formulaY: s
     description: '万花尺原理，小圆在大圆内部滚动',
   },
 }
+
+export const experimentV2 = true
 
 export default function ParametricExperiment() {
   const [params, setParams] = useState({
@@ -178,31 +183,21 @@ export default function ParametricExperiment() {
 
   return (
     <>
-      {/* 全屏 PPT 讲解模式 */}
       {showPresenter && (
         <NarrationPresenter onExit={handleExitPresenter} />
       )}
 
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">参数方程</h1>
-            <p className="text-gray-600">探索参数曲线的美妙世界</p>
-          </div>
-          <button
-            onClick={openPresenter}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-            </svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "参数方程",
+        ]}
+        title="参数方程"
+        subtitle="探索参数曲线的美妙世界"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full space-y-4 p-2 md:p-3 [&_.js-plotly-plot]:w-full">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
             <h3 className="text-lg font-semibold mb-2">{curveInfo[curveType].name}</h3>
             <Plot
               data={[
@@ -241,13 +236,12 @@ export default function ParametricExperiment() {
                 xaxis: { range, scaleanchor: 'y', scaleratio: 1, showgrid: true, gridcolor: '#f1f5f9' },
                 yaxis: { range, showgrid: true, gridcolor: '#f1f5f9' },
                 showlegend: false,
-              }}
+               paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
               config={{ responsive: true, displaylogo: false }}
               className="w-full"
             />
           </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+<div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
             <h3 className="text-lg font-semibold mb-2">参数方程</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-3 bg-blue-50 rounded-lg">
@@ -257,31 +251,29 @@ export default function ParametricExperiment() {
                 <MathFormula formula={curveInfo[curveType].formulaY} />
               </div>
             </div>
-            <p className="text-gray-600 text-sm mt-3">{curveInfo[curveType].description}</p>
+            <p className="text-slate-600 text-sm mt-3">{curveInfo[curveType].description}</p>
           </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">选择曲线</h3>
-            <div className="grid grid-cols-1 gap-2">
+          </div>
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="选择曲线">
+<div className="grid grid-cols-1 gap-2">
               {(Object.keys(curveInfo) as CurveType[]).map((type) => (
                 <button
                   key={type}
                   onClick={() => setCurveType(type)}
                   className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors text-left ${
-                    curveType === type ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    curveType === type ? 'bg-blue-600 text-white' : 'bg-gray-100 text-slate-700 hover:bg-gray-200'
                   }`}
                 >
                   {curveInfo[type].name}
                 </button>
               ))}
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">动画控制</h3>
-            <button
+</ExperimentCard>
+<ExperimentCard title="动画控制">
+<button
               onClick={() => setIsAnimating(!isAnimating)}
               className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
                 isAnimating ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-blue-500 text-white hover:bg-blue-600'
@@ -289,9 +281,8 @@ export default function ParametricExperiment() {
             >
               {isAnimating ? '停止动画' : '开始动画'}
             </button>
-          </div>
-
-          {curveType === 'lissajous' && (
+</ExperimentCard>
+{curveType === 'lissajous' && (
             <ParameterPanel
               title="利萨如参数"
               params={[
@@ -302,8 +293,7 @@ export default function ParametricExperiment() {
               onChange={handleParamChange}
             />
           )}
-
-          {(curveType === 'cycloid') && (
+{(curveType === 'cycloid') && (
             <ParameterPanel
               title="摆线参数"
               params={[
@@ -312,8 +302,7 @@ export default function ParametricExperiment() {
               onChange={handleParamChange}
             />
           )}
-
-          {(curveType === 'epicycloid' || curveType === 'hypotrochoid') && (
+{(curveType === 'epicycloid' || curveType === 'hypotrochoid') && (
             <ParameterPanel
               title="轮线参数"
               params={[
@@ -324,18 +313,32 @@ export default function ParametricExperiment() {
               onChange={handleParamChange}
             />
           )}
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">参数方程通用形式</h3>
-            <div className="space-y-2">
+<ExperimentCard title="参数方程通用形式">
+<div className="space-y-2">
               <MathFormula formula="x = f(t)" />
               <MathFormula formula="y = g(t)" />
               <MathFormula formula="t \in [t_0, t_1]" />
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+</ExperimentCard>
+
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button
+            onClick={openPresenter}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+            </svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

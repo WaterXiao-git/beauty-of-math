@@ -1,357 +1,2352 @@
-// 导数的几何意义演示（需求 4.2）：配置来自统一接口 /api/knowledge/derivative
-// 固定点 P + 移动点 Q，观察 h→0 时割线斜率趋近切线斜率（差商极限）
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { compile, derivative as mathDerivative } from 'mathjs'
-import DemoHeader from './DemoHeader'
-import PlayerBar from './PlayerBar'
-import type { StepItem } from './PlayerBar'
-import { usePanZoom } from './usePanZoom'
+// ============================================================================
+// 导数的几何意义 Demo V2
+//
+// 核心思想：
+//
+// 固定点 P = (x₀, f(x₀))
+// 移动点 Q = (x₀ + h, f(x₀ + h))
+//
+// 当：
+//
+// h → 0
+//
+// Q 沿函数曲线趋近 P，
+// 割线 PQ 的斜率逐渐趋近 P 点切线斜率：
+//
+//            f(x₀+h) - f(x₀)
+// f'(x₀) = lim -----------------
+//          h→0        h
+//
+// 页面结构统一使用：
+//
+// ExperimentShell
+// ├── DemoHeader
+// ├── Title / Legend
+// ├── 数学 Renderer
+// ├── ExperimentCard Sidebar
+// └── PlayerBar
+// ============================================================================
+
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+
+import {
+  useNavigate,
+} from 'react-router-dom'
+
+import {
+  compile,
+  derivative as mathDerivative,
+} from 'mathjs'
+
+import ExperimentCard from '../experiment-v2/ExperimentCard'
+import ExperimentShell from '../experiment-v2/ExperimentShell'
+
+import type {
+  StepItem,
+} from './PlayerBar'
+
+import {
+  usePanZoom,
+} from './usePanZoom'
+
 import GeoPoint from './geoboard/GeoPoint'
 import GeoLine from './geoboard/GeoLine'
-import { calcViewportGrid } from './viewport'
+
+import {
+  calcViewportGrid,
+} from './viewport'
+
+// ============================================================================
+// 后端配置类型
+// ============================================================================
 
 interface DemoCase {
   id: string
+
   name: string
+
+  /**
+   * MathJS 函数表达式。
+   *
+   * 示例：
+   *
+   * x^2
+   * sin(x)
+   */
   expr: string
-  domain: [number, number]
-  yRange: [number, number]
-  anchor?: number | null
+
+  domain: [
+    number,
+    number,
+  ]
+
+  yRange: [
+    number,
+    number,
+  ]
+
+  /**
+   * 推荐初始观察点。
+   */
+  anchor?:
+    | number
+    | null
+
   desc?: string
 }
+
 interface KnowledgeConfig {
   id: string
+
   title: string
+
   summary: string
+
   goals: string[]
+
   defaultCase: string
+
   cases: DemoCase[]
+
   steps: StepItem[]
-  meta?: { difficulty: string; duration: string }
+
+  meta?: {
+    difficulty: string
+
+    duration: string
+  }
 }
+
+// ============================================================================
+// SVG
+// ============================================================================
 
 const W = 720
 const H = 400
+
 const PAD_L = 62
 const PAD_R = 40
 const PAD_T = 44
 const PAD_B = 52
 
-function makeFn(expr: string) {
-  const compiled = compile(expr)
-  return (x: number): number => {
+const MIN_H_ABS = 0.05
+const MAX_H_ABS = 2
+
+function normalizeH(
+  value: number,
+  previous = 1,
+): number {
+  const clamped =
+    Math.min(
+      MAX_H_ABS,
+      Math.max(
+        -MAX_H_ABS,
+        value,
+      ),
+    )
+
+  if (
+    Math.abs(
+      clamped,
+    ) >=
+    MIN_H_ABS
+  ) {
+    return clamped
+  }
+
+  return previous < 0
+    ? -MIN_H_ABS
+    : MIN_H_ABS
+}
+
+// ============================================================================
+// 将 MathJS 表达式编译成函数
+// ============================================================================
+
+function makeFn(
+  expr: string,
+) {
+  const compiled =
+    compile(expr)
+
+  return (
+    x: number,
+  ): number => {
     try {
-      const v = compiled.evaluate({ x })
-      return Number.isFinite(v) ? v : NaN
+      const value =
+        compiled.evaluate({
+          x,
+        })
+
+      return Number.isFinite(
+        value,
+      )
+        ? value
+        : Number.NaN
     } catch {
-      return NaN
+      return Number.NaN
     }
   }
 }
 
-function makeDerivFn(expr: string) {
-  let derivExpr: string
+// ============================================================================
+// 创建导函数
+// ============================================================================
+
+function makeDerivFn(
+  expr: string,
+) {
+  let derivativeExpression:
+    string
+
   try {
-    derivExpr = mathDerivative(expr, 'x').toString()
+    derivativeExpression =
+      mathDerivative(
+        expr,
+        'x',
+      ).toString()
   } catch {
-    derivExpr = '0'
+    derivativeExpression =
+      '0'
   }
-  const compiled = compile(derivExpr)
-  return (x: number): number => {
+
+  const compiled =
+    compile(
+      derivativeExpression,
+    )
+
+  return (
+    x: number,
+  ): number => {
     try {
-      const v = compiled.evaluate({ x })
-      return Number.isFinite(v) ? v : NaN
+      const value =
+        compiled.evaluate({
+          x,
+        })
+
+      return Number.isFinite(
+        value,
+      )
+        ? value
+        : Number.NaN
     } catch {
-      return NaN
+      return Number.NaN
     }
   }
 }
+
+// ============================================================================
+// Demo
+// ============================================================================
 
 export default function DerivativeDemo() {
-  const navigate = useNavigate()
-  const { transform, handlers } = usePanZoom()
-  const svgRef = useRef<SVGSVGElement | null>(null)
-  const [config, setConfig] = useState<KnowledgeConfig | null>(null)
-  const [loadError, setLoadError] = useState('')
-  const [caseId, setCaseId] = useState('')
-  const [x0, setX0] = useState(0)
-  const [h, setH] = useState(0.8)
-  const [step, setStep] = useState(4)
-  const [playing, setPlaying] = useState(false)
+  const navigate =
+    useNavigate()
+
+  // ==========================================================================
+  // SVG 平移缩放
+  // ==========================================================================
+
+  const {
+    transform,
+    handlers,
+    reset:
+      resetView,
+  } = usePanZoom()
+
+  const svgRef =
+    useRef<SVGSVGElement | null>(
+      null,
+    )
+
+  // ==========================================================================
+  // 后端配置
+  // ==========================================================================
+
+  const [
+    config,
+    setConfig,
+  ] =
+    useState<KnowledgeConfig | null>(
+      null,
+    )
+
+  const [
+    loadError,
+    setLoadError,
+  ] = useState('')
+
+  // ==========================================================================
+  // 实验状态
+  // ==========================================================================
+
+  const [
+    caseId,
+    setCaseId,
+  ] = useState('')
+
+  /**
+   * 固定点 P 的横坐标。
+   */
+  const [
+    x0,
+    setX0,
+  ] = useState(0)
+
+  /**
+   * Q 与 P 横坐标差：
+   *
+   * Δx = h
+   */
+  const [
+    h,
+    setH,
+  ] = useState(
+    0.8,
+  )
+
+  /**
+   * 教学步骤。
+   */
+  const [
+    step,
+    setStep,
+  ] = useState(1)
+
+  const [
+    playing,
+    setPlaying,
+  ] = useState(false)
+
+  // ==========================================================================
+  // 加载知识点配置
+  // ==========================================================================
 
   useEffect(() => {
-    fetch('/api/knowledge/derivative')
-      .then((r) => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`)
-        return r.json()
-      })
-      .then((cfg: KnowledgeConfig) => {
-        setConfig(cfg)
-        setCaseId(cfg.defaultCase)
-      })
-      .catch((e) => setLoadError(String(e)))
+    const controller =
+      new AbortController()
+
+    fetch(
+      '/api/knowledge/derivative',
+      {
+        signal:
+          controller.signal,
+      },
+    )
+      .then(
+        (
+          response,
+        ) => {
+          if (
+            !response.ok
+          ) {
+            throw new Error(
+              `HTTP ${response.status}`,
+            )
+          }
+
+          return response.json()
+        },
+      )
+      .then(
+        (
+          nextConfig:
+            KnowledgeConfig,
+        ) => {
+          setConfig(
+            nextConfig,
+          )
+
+          setCaseId(
+            nextConfig.defaultCase,
+          )
+
+          /**
+           * 默认直接展示完整实验。
+           */
+          setStep(
+            Math.max(
+              1,
+              nextConfig.steps.length,
+            ),
+          )
+
+          const defaultCase =
+            nextConfig.cases.find(
+              (
+                item,
+              ) =>
+                item.id ===
+                nextConfig.defaultCase,
+            ) ??
+            nextConfig.cases[0]
+
+          setX0(
+            defaultCase?.anchor ??
+              0,
+          )
+        },
+      )
+      .catch(
+        (
+          error:
+            unknown,
+        ) => {
+          if (
+            error instanceof
+              DOMException &&
+            error.name ===
+              'AbortError'
+          ) {
+            return
+          }
+
+          setLoadError(
+            String(error),
+          )
+        },
+      )
+
+    return () => {
+      controller.abort()
+    }
   }, [])
 
-  // 播放：步进循环 + 第 3 步自动减小 h（逼近）
+  // ==========================================================================
+  // 当前案例
+  // ==========================================================================
+
+  const activeCase =
+    useMemo(
+      () =>
+        config?.cases.find(
+          (
+            item,
+          ) =>
+            item.id ===
+            caseId,
+        ) ??
+        config?.cases[0],
+
+      [
+        config,
+        caseId,
+      ],
+    )
+
+  // ==========================================================================
+  // 总步骤数量
+  // ==========================================================================
+
+  const totalSteps =
+    Math.max(
+      1,
+      config?.steps.length ??
+        1,
+    )
+
+  // ==========================================================================
+  // 自动播放
+  //
+  // 不再固定：
+  //
+  // 1 → 4
+  //
+  // 而是：
+  //
+  // 1 → config.steps.length
+  // ==========================================================================
+
   useEffect(() => {
-    if (!playing) return
-    const timer = setInterval(() => {
-      setStep((s) => (s >= 4 ? 1 : s + 1))
-      setH((prev) => (step === 3 ? Math.max(0.05, prev * 0.7) : prev))
-    }, 1800)
-    return () => clearInterval(timer)
-  }, [playing, step])
+    if (
+      !playing ||
+      !config
+    ) {
+      return
+    }
 
-  const activeCase = useMemo(() => config?.cases.find((c) => c.id === caseId) ?? config?.cases[0], [config, caseId])
+    const timer =
+      window.setInterval(
+        () => {
+          setStep(
+            (
+              currentStep,
+            ) => {
+              /**
+               * 第三阶段：
+               *
+               * 自动缩小 h，
+               * 让 Q 逐渐向 P 靠近。
+               */
+              if (
+                currentStep ===
+                3
+              ) {
+                setH(
+                  (
+                    previous,
+                  ) =>
+                    normalizeH(
+                      previous *
+                        0.7,
+                      previous,
+                    ),
+                )
+              }
 
-  const derived = useMemo(() => {
-    if (!activeCase) return null
-    const f = makeFn(activeCase.expr)
-    const fp = makeDerivFn(activeCase.expr)
-    const xMin = activeCase.domain[0]
-    const xMax = activeCase.domain[1]
-    const x0v = Math.min(Math.max(x0, xMin + 0.3), xMax - 0.3)
-    const hh = Math.max(0.05, h)
-    const yP = f(x0v)
-    const yQ = f(x0v + hh)
-    const secantSlope = (yQ - yP) / hh
-    const tangentSlope = fp(x0v)
-    return { f, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff: Math.abs(secantSlope - tangentSlope) }
-  }, [activeCase, x0, h])
+              if (
+                currentStep >=
+                Math.max(
+                  1,
+                  config.steps.length,
+                )
+              ) {
+                return 1
+              }
+
+              return (
+                currentStep +
+                1
+              )
+            },
+          )
+        },
+        1800,
+      )
+
+    return () => {
+      window.clearInterval(
+        timer,
+      )
+    }
+  }, [
+    playing,
+    config,
+  ])
+
+  // ==========================================================================
+  // 数学计算
+  // ==========================================================================
+
+  const derived =
+    useMemo(() => {
+      if (!activeCase) {
+        return null
+      }
+
+      const f =
+        makeFn(
+          activeCase.expr,
+        )
+
+      const fp =
+        makeDerivFn(
+          activeCase.expr,
+        )
+
+      const xMin =
+        activeCase.domain[0]
+
+      const xMax =
+        activeCase.domain[1]
+
+      /**
+       * P 点不能太靠近边界，
+       * 给 Q 留出观察空间。
+       */
+      const x0Value =
+        Math.min(
+          Math.max(
+            x0,
+            xMin + 0.3,
+          ),
+          xMax - 0.3,
+        )
+
+      /**
+       * h 不能为 0。
+       */
+      const hValue =
+        normalizeH(
+          h,
+          h,
+        )
+
+      const yP =
+        f(x0Value)
+
+      const yQ =
+        f(
+          x0Value +
+            hValue,
+        )
+
+      /**
+       * 割线斜率：
+       *
+       * Δy / Δx
+       */
+      const secantSlope =
+        (yQ - yP) /
+        hValue
+
+      /**
+       * 真正的导数：
+       *
+       * f'(x₀)
+       */
+      const tangentSlope =
+        fp(x0Value)
+
+      /**
+       * 割线斜率与切线斜率误差。
+       */
+      const diff =
+        Math.abs(
+          secantSlope -
+            tangentSlope,
+        )
+
+      return {
+        f,
+
+        x0:
+          x0Value,
+
+        h:
+          hValue,
+
+        yP,
+
+        yQ,
+
+        secantSlope,
+
+        tangentSlope,
+
+        diff,
+      }
+    }, [
+      activeCase,
+      x0,
+      h,
+    ])
+
+  // ==========================================================================
+  // 加载失败
+  //
+  // 即使失败也继续使用统一 ExperimentShell。
+  // ==========================================================================
 
   if (loadError) {
     return (
-      <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', '导数的几何意义']} onBreadcrumbClick={() => navigate('/')} />
-        <div className="flex-1 flex items-center justify-center">
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center">
-            <div className="text-4xl mb-3">⚠️</div>
-            <p className="text-gray-600 text-sm">演示配置加载失败（{loadError}），请确认后端服务已启动。</p>
+      <ExperimentShell
+        breadcrumb={[
+          '高等数学（上册）',
+          '导数与微分',
+          '导数的几何意义',
+        ]}
+        onBreadcrumbClick={() =>
+          navigate('/')
+        }
+        title="导数的几何意义"
+        subtitle="配置加载失败"
+        canvas={
+          <div
+            className="
+              flex
+              h-full
+              min-h-[420px]
+              items-center
+              justify-center
+              p-8
+            "
+          >
+            <div
+              className="
+                max-w-md
+                text-center
+              "
+            >
+              <div
+                className="
+                  text-5xl
+                "
+              >
+                ⚠️
+              </div>
+
+              <h2
+                className="
+                  mt-4
+                  text-lg
+                  font-bold
+                  text-slate-900
+                "
+              >
+                演示配置加载失败
+              </h2>
+
+              <p
+                className="
+                  mt-2
+                  text-sm
+                  leading-6
+                  text-slate-400
+                "
+              >
+                {loadError}
+              </p>
+
+              <p
+                className="
+                  mt-1
+                  text-xs
+                  text-slate-500
+                "
+              >
+                请确认后端服务已经启动。
+              </p>
+            </div>
           </div>
-        </div>
-      </div>
-    )
-  }
-  if (!config || !activeCase || !derived) {
-    return (
-      <div className="flex flex-col h-full bg-[#f5f7fa]">
-        <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', '导数的几何意义']} onBreadcrumbClick={() => navigate('/')} />
-        <div className="flex-1 flex items-center justify-center text-gray-400 text-sm">配置加载中…</div>
-      </div>
+        }
+      />
     )
   }
 
-  const { f, x0: x0v, h: hh, yP, yQ, secantSlope, tangentSlope, diff } = derived
-  const [xMin, xMax] = activeCase.domain
-  const [yMin, yMax] = activeCase.yRange
-  const sx = (x: number) => PAD_L + ((x - xMin) / (xMax - xMin)) * (W - PAD_L - PAD_R)
-  const sy = (y: number) => H - PAD_B - ((y - yMin) / (yMax - yMin)) * (H - PAD_T - PAD_B)
+  // ==========================================================================
+  // Loading
+  // ==========================================================================
+
+  if (
+    !config ||
+    !activeCase ||
+    !derived
+  ) {
+    return (
+      <ExperimentShell
+        breadcrumb={[
+          '高等数学（上册）',
+          '导数与微分',
+          '导数的几何意义',
+        ]}
+        onBreadcrumbClick={() =>
+          navigate('/')
+        }
+        title="导数的几何意义"
+        subtitle="正在加载实验配置"
+        canvas={
+          <div
+            className="
+              flex
+              h-full
+              min-h-[420px]
+              items-center
+              justify-center
+            "
+          >
+            <div
+              className="
+                text-center
+              "
+            >
+              <div
+                className="
+                  mx-auto
+                  h-9
+                  w-9
+                  animate-spin
+                  rounded-full
+                  border-2
+                  border-slate-700
+                  border-t-indigo-400
+                "
+              />
+
+              <p
+                className="
+                  mt-3
+                  text-sm
+                  text-slate-400
+                "
+              >
+                配置加载中…
+              </p>
+            </div>
+          </div>
+        }
+      />
+    )
+  }
+
+  // ==========================================================================
+  // 展开数学状态
+  // ==========================================================================
+
+  const {
+    f,
+
+    x0:
+      x0Value,
+
+    h:
+      hValue,
+
+    yP,
+
+    yQ,
+
+    secantSlope,
+
+    tangentSlope,
+
+    diff,
+  } = derived
+
+  const [
+    xMin,
+    xMax,
+  ] =
+    activeCase.domain
+
+  const [
+    yMin,
+    yMax,
+  ] =
+    activeCase.yRange
+
+  // ==========================================================================
+  // 世界坐标 -> SVG
+  // ==========================================================================
+
+  const sx = (
+    x: number,
+  ) =>
+    PAD_L +
+    ((x - xMin) /
+      (xMax - xMin)) *
+      (
+        W -
+        PAD_L -
+        PAD_R
+      )
+
+  const sy = (
+    y: number,
+  ) =>
+    H -
+    PAD_B -
+    ((y - yMin) /
+      (yMax - yMin)) *
+      (
+        H -
+        PAD_T -
+        PAD_B
+      )
+
+  /**
+   * GeoPoint / GeoLine
+   * 使用的统一坐标转换。
+   */
   const coord = {
     sx,
+
     sy,
-    fromSx: (mx: number) => xMin + ((mx - PAD_L) / (W - PAD_L - PAD_R)) * (xMax - xMin),
-    fromSy: (my: number) => yMin + ((H - PAD_B - my) / (H - PAD_T - PAD_B)) * (yMax - yMin),
+
+    fromSx:
+      (
+        mouseX:
+          number,
+      ) =>
+        xMin +
+        ((mouseX -
+          PAD_L) /
+          (
+            W -
+            PAD_L -
+            PAD_R
+          )) *
+          (
+            xMax -
+            xMin
+          ),
+
+    fromSy:
+      (
+        mouseY:
+          number,
+      ) =>
+        yMin +
+        ((H -
+          PAD_B -
+          mouseY) /
+          (
+            H -
+            PAD_T -
+            PAD_B
+          )) *
+          (
+            yMax -
+            yMin
+          ),
   }
-  const grid = calcViewportGrid(transform, W, H, [xMin, xMax], [yMin, yMax], PAD_L, PAD_R, PAD_T, PAD_B)
 
-  // 曲线采样
-  const curvePts: string[] = []
-  const N = 160
-  for (let i = 0; i <= N; i++) {
-    const x = xMin + ((xMax - xMin) * i) / N
-    const y = f(x)
-    if (!Number.isFinite(y)) continue
-    curvePts.push((i === 0 ? 'M' : 'L') + sx(x).toFixed(1) + ' ' + sy(y).toFixed(1))
+  // ==========================================================================
+  // 网格
+  // ==========================================================================
+
+  const grid =
+    calcViewportGrid(
+      transform,
+      W,
+      H,
+
+      [
+        xMin,
+        xMax,
+      ],
+
+      [
+        yMin,
+        yMax,
+      ],
+
+      PAD_L,
+      PAD_R,
+      PAD_T,
+      PAD_B,
+    )
+
+  // ==========================================================================
+  // 函数曲线采样
+  // ==========================================================================
+
+  const curvePoints:
+    string[] = []
+
+  const SAMPLE_COUNT =
+    160
+
+  for (
+    let index = 0;
+    index <=
+    SAMPLE_COUNT;
+    index += 1
+  ) {
+    const x =
+      xMin +
+      ((xMax -
+        xMin) *
+        index) /
+        SAMPLE_COUNT
+
+    const y =
+      f(x)
+
+    if (
+      !Number.isFinite(
+        y,
+      )
+    ) {
+      continue
+    }
+
+    curvePoints.push(
+      `${
+        curvePoints.length ===
+        0
+          ? 'M'
+          : 'L'
+      }${sx(x).toFixed(
+        1,
+      )} ${sy(y).toFixed(
+        1,
+      )}`,
+    )
   }
 
-    return (
-    <div className="flex flex-col h-full bg-[#f5f7fa]">
-      <DemoHeader breadcrumb={['高等数学（上册）', '导数与微分', config.title]} onBreadcrumbClick={() => navigate('/')} />
+  // ==========================================================================
+  // 切换案例
+  // ==========================================================================
 
-      <div className="flex-1 min-h-0 flex gap-4 p-4 md:p-5">
-        {/* 左：深色画板 */}
-        <section className="flex-1 min-w-0 bg-slate-900 rounded-2xl p-4 md:p-6 flex flex-col gap-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-xl font-bold text-white">{config.title}</h2>
-              <p className="text-xs text-slate-400 mt-1">{activeCase.name} · x₀ = {x0v.toFixed(2)} · h = {hh.toFixed(2)}</p>
-            </div>
-            <div className="flex items-center gap-3 text-xs text-slate-300 shrink-0">
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400" />P 点</span>
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-300" />Q 点</span>
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-sky-400" />割线</span>
-              <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-pink-400" />切线</span>
-            </div>
-          </div>
+  const handleSelectCase = (
+    nextCase:
+      DemoCase,
+  ) => {
+    setCaseId(
+      nextCase.id,
+    )
 
-          <div className="relative rounded-xl bg-slate-950/60 border border-slate-800 overflow-hidden flex-1 min-h-[380px]">
-            <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full cursor-grab active:cursor-grabbing" preserveAspectRatio="xMidYMid meet" ref={svgRef} {...handlers}>
-          {/* 视口网格与坐标轴（无限延伸） */}
-          {grid.verts.map((v, i) => (
-            <line key={"v" + i} x1={v.pos} y1={0} x2={v.pos} y2={H} stroke={v.major ? "#334155" : "#1e293b"} strokeWidth={1} />
-          ))}
-          {grid.hors.map((h, i) => (
-            <line key={"h" + i} x1={0} y1={h.pos} x2={W} y2={h.pos} stroke={h.major ? "#334155" : "#1e293b"} strokeWidth={1} />
-          ))}
-          {grid.axisX !== null ? <line x1={grid.axisX} y1={0} x2={grid.axisX} y2={H} stroke="#64748b" strokeWidth={1.5} /> : null}
-          {grid.axisY !== null ? <line x1={0} y1={grid.axisY} x2={W} y2={grid.axisY} stroke="#64748b" strokeWidth={1.5} /> : null}
-        <g transform={`translate(${transform.tx} ${transform.ty}) scale(${transform.scale})`}>
-        
-    
-              {/* Δx / Δy 标注（虚线三角形） */}
-              {step >= 2 && (
-                <g stroke="#94a3b8" strokeWidth={1.1} strokeDasharray="5 4">
-                  <line x1={sx(x0v + hh)} y1={sy(yP)} x2={sx(x0v)} y2={sy(yP)} />
-                  <line x1={sx(x0v + hh)} y1={sy(yP)} x2={sx(x0v + hh)} y2={sy(yQ)} />
+    setH(0.8)
+
+    setX0(
+      nextCase.anchor ??
+        0,
+    )
+
+    setStep(
+      totalSteps,
+    )
+
+    setPlaying(false)
+
+    resetView()
+  }
+
+  // ==========================================================================
+  // Player
+  // ==========================================================================
+
+  const handlePrev = () => {
+    setPlaying(false)
+
+    setStep(
+      (
+        current,
+      ) =>
+        Math.max(
+          1,
+          current - 1,
+        ),
+    )
+  }
+
+  const handleNext = () => {
+    setPlaying(false)
+
+    setStep(
+      (
+        current,
+      ) =>
+        Math.min(
+          totalSteps,
+          current + 1,
+        ),
+    )
+  }
+
+  const handleTogglePlay =
+    () => {
+      /**
+       * 如果已经处于最后一步，
+       * 从第一步重新播放。
+       */
+      if (
+        !playing &&
+        step >=
+          totalSteps
+      ) {
+        setStep(1)
+      }
+
+      setPlaying(
+        (
+          current,
+        ) =>
+          !current,
+      )
+    }
+
+  const handleReset = () => {
+    setPlaying(false)
+
+    setStep(1)
+
+    setCaseId(
+      config.defaultCase,
+    )
+
+    const defaultCase =
+      config.cases.find(
+        (
+          item,
+        ) =>
+          item.id ===
+          config.defaultCase,
+      ) ??
+      config.cases[0]
+
+    setX0(
+      defaultCase?.anchor ??
+        0,
+    )
+
+    setH(0.8)
+
+    resetView()
+  }
+
+  // ==========================================================================
+  // Render
+  // ==========================================================================
+
+  return (
+    <ExperimentShell
+      // ======================================================================
+      // Header
+      // ======================================================================
+
+      breadcrumb={[
+        '高等数学（上册）',
+        '导数与微分',
+        config.title,
+      ]}
+
+      onBreadcrumbClick={() =>
+        navigate('/')
+      }
+
+      // ======================================================================
+      // 标题
+      // ======================================================================
+
+      title={
+        config.title
+      }
+
+      subtitle={
+        `${activeCase.name} · ` +
+        `x₀ = ${x0Value.toFixed(
+          2,
+        )} · ` +
+        `h = ${hValue.toFixed(
+          2,
+        )}`
+      }
+
+      // ======================================================================
+      // 图例
+      // ======================================================================
+
+      legend={[
+        {
+          label:
+            'P 点',
+
+          color:
+            '#60a5fa',
+        },
+
+        {
+          label:
+            'Q 点',
+
+          color:
+            '#fbbf24',
+        },
+
+        {
+          label:
+            '割线',
+
+          color:
+            '#38bdf8',
+        },
+
+        {
+          label:
+            '切线',
+
+          color:
+            '#f472b6',
+        },
+      ]}
+
+      // ======================================================================
+      // 左侧数学 Renderer
+      // ======================================================================
+
+      canvas={
+        <div
+          className="
+            relative
+            h-full
+            min-h-[420px]
+            w-full
+            overflow-hidden
+          "
+        >
+          <svg
+            ref={
+              svgRef
+            }
+            viewBox={
+              `0 0 ${W} ${H}`
+            }
+            preserveAspectRatio="xMidYMid meet"
+            aria-label="导数几何意义交互式函数图像"
+            className="
+              h-full
+              min-h-[420px]
+              w-full
+              cursor-grab
+              select-none
+
+              active:cursor-grabbing
+            "
+            {...handlers}
+          >
+            {/* ===========================================================
+                无限视口网格
+               =========================================================== */}
+
+            {grid.verts.map(
+              (
+                vertical,
+                index,
+              ) => (
+                <line
+                  key={`v-${index}`}
+                  x1={
+                    vertical.pos
+                  }
+                  y1={0}
+                  x2={
+                    vertical.pos
+                  }
+                  y2={H}
+                  stroke={
+                    vertical.major
+                      ? '#cbd5e1'
+                      : '#e2e8f0'
+                  }
+                  strokeWidth={
+                    1
+                  }
+                />
+              ),
+            )}
+
+            {grid.hors.map(
+              (
+                horizontal,
+                index,
+              ) => (
+                <line
+                  key={`h-${index}`}
+                  x1={0}
+                  y1={
+                    horizontal.pos
+                  }
+                  x2={W}
+                  y2={
+                    horizontal.pos
+                  }
+                  stroke={
+                    horizontal.major
+                      ? '#cbd5e1'
+                      : '#e2e8f0'
+                  }
+                  strokeWidth={
+                    1
+                  }
+                />
+              ),
+            )}
+
+            {/* 坐标轴 */}
+
+            {grid.axisX !==
+              null && (
+              <line
+                x1={
+                  grid.axisX
+                }
+                y1={0}
+                x2={
+                  grid.axisX
+                }
+                y2={H}
+                stroke="#64748b"
+                strokeWidth={
+                  1.5
+                }
+              />
+            )}
+
+            {grid.axisY !==
+              null && (
+              <line
+                x1={0}
+                y1={
+                  grid.axisY
+                }
+                x2={W}
+                y2={
+                  grid.axisY
+                }
+                stroke="#64748b"
+                strokeWidth={
+                  1.5
+                }
+              />
+            )}
+
+            {/* ===========================================================
+                世界坐标
+               =========================================================== */}
+
+            <g
+              transform={
+                `translate(` +
+                `${transform.tx} ` +
+                `${transform.ty}` +
+                `) ` +
+                `scale(` +
+                `${transform.scale}` +
+                `)`
+              }
+            >
+              {/* =========================================================
+                  Δx / Δy 三角形
+                 ========================================================= */}
+
+              {step >=
+                2 && (
+                <g
+                  stroke="#94a3b8"
+                  strokeWidth={
+                    1.1
+                  }
+                  strokeDasharray="5 4"
+                >
+                  <line
+                    x1={
+                      sx(
+                        x0Value +
+                          hValue,
+                      )
+                    }
+                    y1={
+                      sy(yP)
+                    }
+                    x2={
+                      sx(
+                        x0Value,
+                      )
+                    }
+                    y2={
+                      sy(yP)
+                    }
+                  />
+
+                  <line
+                    x1={
+                      sx(
+                        x0Value +
+                          hValue,
+                      )
+                    }
+                    y1={
+                      sy(yP)
+                    }
+                    x2={
+                      sx(
+                        x0Value +
+                          hValue,
+                      )
+                    }
+                    y2={
+                      sy(yQ)
+                    }
+                  />
                 </g>
               )}
 
-              {/* 函数曲线 */}
-              {curvePts.length > 0 && <path d={curvePts.join(' ')} fill="none" stroke="#60a5fa" strokeWidth={2.6} strokeLinecap="round" />}
+              {/* =========================================================
+                  函数曲线
+                 ========================================================= */}
 
-              {/* 切线（粉色，贯穿可视区域，step>=4） */}
-              {step >= 4 && (
-                <GeoLine x1={x0v} y1={yP} x2={x0v + 1} y2={yP + tangentSlope} color="#f472b6" width={2.2} coord={coord} transform={transform} W={W} H={H} />
-              )}
-
-              {/* 割线（亮蓝，贯穿可视区域，step>=2） */}
-              {step >= 2 && (
-                <GeoLine x1={x0v} y1={yP} x2={x0v + hh} y2={yQ} color="#38bdf8" coord={coord} transform={transform} W={W} H={H} />
-              )}
-
-              {/* P 点 / Q 点（可沿曲线拖动，割线/切线/数值联动） */}
-              <GeoPoint
-                label="P" x={x0v} y={yP} color="#60a5fa"
-                constraint="curve" curveY={f}
-                onMove={(wx) => setX0(wx)}
-                coord={coord} transform={transform} svgRef={svgRef} labelDx={-12}
-              />
-              {step >= 1 && (
-                <GeoPoint
-                  label="Q" x={x0v + hh} y={yQ} color="#fbbf24"
-                  constraint="curve" curveY={f}
-                  onMove={(wx) => setH(wx - x0v)}
-                  coord={coord} transform={transform} svgRef={svgRef}
+              {curvePoints.length >
+                0 && (
+                <path
+                  d={
+                    curvePoints.join(
+                      ' ',
+                    )
+                  }
+                  fill="none"
+                  stroke="#60a5fa"
+                  strokeWidth={
+                    2.6
+                  }
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               )}
 
-              {/* Δx / Δy 文字 */}
-              {step >= 2 && (
-                <g fontSize={11} fill="#cbd5e1">
-                  <text x={sx(x0v) + (sx(x0v + hh) - sx(x0v)) / 2 - 6} y={sy(yP) + 16}>Δx = h</text>
-                  <text x={sx(x0v + hh) + 8} y={(sy(yP) + sy(yQ)) / 2 + 4}>Δy</text>
+              {/* =========================================================
+                  切线
+                 ========================================================= */}
+
+              {step >=
+                4 && (
+                <GeoLine
+                  x1={
+                    x0Value
+                  }
+                  y1={
+                    yP
+                  }
+                  x2={
+                    x0Value +
+                    1
+                  }
+                  y2={
+                    yP +
+                    tangentSlope
+                  }
+                  color="#f472b6"
+                  width={
+                    2.2
+                  }
+                  coord={
+                    coord
+                  }
+                  transform={
+                    transform
+                  }
+                  W={W}
+                  H={H}
+                />
+              )}
+
+              {/* =========================================================
+                  割线
+                 ========================================================= */}
+
+              {step >=
+                2 && (
+                <GeoLine
+                  x1={
+                    x0Value
+                  }
+                  y1={
+                    yP
+                  }
+                  x2={
+                    x0Value +
+                    hValue
+                  }
+                  y2={
+                    yQ
+                  }
+                  color="#38bdf8"
+                  coord={
+                    coord
+                  }
+                  transform={
+                    transform
+                  }
+                  W={W}
+                  H={H}
+                />
+              )}
+
+              {/* =========================================================
+                  P 点
+                 ========================================================= */}
+
+              <GeoPoint
+                label="P"
+                x={
+                  x0Value
+                }
+                y={
+                  yP
+                }
+                color="#60a5fa"
+                constraint="curve"
+                curveY={
+                  f
+                }
+                onMove={(
+                  worldX,
+                ) =>
+                  setX0(
+                    worldX,
+                  )
+                }
+                coord={
+                  coord
+                }
+                transform={
+                  transform
+                }
+                svgRef={
+                  svgRef
+                }
+                labelDx={
+                  -12
+                }
+              />
+
+              {/* =========================================================
+                  Q 点
+                 ========================================================= */}
+
+              {step >=
+                1 && (
+                <GeoPoint
+                  label="Q"
+                  x={
+                    x0Value +
+                    hValue
+                  }
+                  y={
+                    yQ
+                  }
+                  color="#fbbf24"
+                  constraint="curve"
+                  curveY={
+                    f
+                  }
+                  onMove={(
+                    worldX,
+                  ) =>
+                    setH(
+                      normalizeH(
+                        worldX -
+                          x0Value,
+                        hValue,
+                      ),
+                    )
+                  }
+                  coord={
+                    coord
+                  }
+                  transform={
+                    transform
+                  }
+                  svgRef={
+                    svgRef
+                  }
+                />
+              )}
+
+              {/* =========================================================
+                  Δx / Δy 标签
+                 ========================================================= */}
+
+              {step >=
+                2 && (
+                <g
+                  fontSize={
+                    11
+                  }
+                  fill="#475569"
+                >
+                  <text
+                    x={
+                      sx(
+                        x0Value,
+                      ) +
+                      (
+                        sx(
+                          x0Value +
+                            hValue,
+                        ) -
+                        sx(
+                          x0Value,
+                        )
+                      ) /
+                        2 -
+                      6
+                    }
+                    y={
+                      sy(yP) +
+                      16
+                    }
+                  >
+                    Δx = h
+                  </text>
+
+                  <text
+                    x={
+                      sx(
+                        x0Value +
+                          hValue,
+                      ) +
+                      8
+                    }
+                    y={
+                      (
+                        sy(
+                          yP,
+                        ) +
+                        sy(
+                          yQ,
+                        )
+                      ) /
+                        2 +
+                      4
+                    }
+                  >
+                    Δy
+                  </text>
                 </g>
               )}
             </g>
-        </svg>
+          </svg>
 
-            {/* 动态数据面板 */}
-            <div className="absolute bottom-3 left-3 flex items-center gap-2 flex-wrap">
-              {[
-                { label: 'Δx = h', value: hh.toFixed(2) },
-                { label: 'Δy', value: (yQ - yP).toFixed(3) },
-                { label: '割线斜率', value: secantSlope.toFixed(3) },
-                { label: '切线斜率 f′', value: tangentSlope.toFixed(3) },
-              ].map((item) => (
-                <div key={item.label} className="px-3 py-2 rounded-xl bg-slate-800/80 border border-slate-700/50 backdrop-blur-sm">
-                  <div className="text-[10px] text-slate-400">{item.label}</div>
-                  <div className="text-xs font-semibold text-slate-100 font-mono">{item.value}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+          {/* =============================================================
+              动态数据
+             ============================================================= */}
 
-        {/* 右：控制面板 */}
-        <aside className="w-80 xl:w-96 shrink-0 hidden lg:flex flex-col gap-4 overflow-y-auto">
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-bold text-gray-800 mb-2">概念说明</h3>
-            <p className="text-[13px] text-gray-600 leading-relaxed">{config.summary}</p>
-          </section>
+          <div
+            className="
+              pointer-events-none
+              absolute
+              bottom-3
+              left-3
+              right-3
+              z-10
+              flex
+              flex-wrap
+              items-end
+              gap-2
+            "
+          >
+            {[
+              {
+                label:
+                  'Δx = h',
 
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <h3 className="text-sm font-bold text-gray-800 mb-3">案例与参数</h3>
-            <div className="flex rounded-xl bg-gray-100 p-1 mb-4">
-              {config.cases.map((c) => (
-                <button
-                  key={c.id}
-                  type="button"
-                  onClick={() => { setCaseId(c.id); setH(0.8); setX0(c.anchor ?? 0); setStep(4) }}
-                  className={`flex-1 px-2 py-1.5 rounded-lg text-xs font-semibold transition-colors ${c.id === caseId ? 'bg-indigo-600 text-white shadow' : 'text-gray-500 hover:text-gray-700'}`}
+                value:
+                  hValue.toFixed(
+                    2,
+                  ),
+              },
+
+              {
+                label:
+                  'Δy',
+
+                value:
+                  (
+                    yQ -
+                    yP
+                  ).toFixed(
+                    3,
+                  ),
+              },
+
+              {
+                label:
+                  '割线斜率',
+
+                value:
+                  secantSlope.toFixed(
+                    3,
+                  ),
+              },
+
+              {
+                label:
+                  '切线斜率 f′',
+
+                value:
+                  tangentSlope.toFixed(
+                    3,
+                  ),
+              },
+
+              {
+                label:
+                  '斜率误差',
+
+                value:
+                  diff.toFixed(
+                    3,
+                  ),
+              },
+            ].map(
+              (
+                item,
+              ) => (
+                <div
+                  key={
+                    item.label
+                  }
+                  className="
+                    rounded-xl
+                    border
+                    border-slate-700/50
+                    bg-slate-800/85
+                    px-3
+                    py-2
+                    shadow-sm
+                    backdrop-blur-sm
+                  "
                 >
-                  {c.name}
+                  <div
+                    className="
+                      text-[10px]
+                      text-slate-400
+                    "
+                  >
+                    {
+                      item.label
+                    }
+                  </div>
+
+                  <div
+                    className="
+                      mt-0.5
+                      whitespace-nowrap
+                      font-mono
+                      text-xs
+                      font-semibold
+                      text-slate-100
+                    "
+                  >
+                    {
+                      item.value
+                    }
+                  </div>
+                </div>
+              ),
+            )}
+          </div>
+        </div>
+      }
+
+      // ======================================================================
+      // Sidebar
+      // ======================================================================
+
+      sidebar={
+        <>
+          {/* =============================================================
+              概念说明
+             ============================================================= */}
+
+          <ExperimentCard title="概念说明">
+            <p
+              className="
+                text-[13px]
+                leading-6
+                text-gray-600
+              "
+            >
+              {config.summary}
+            </p>
+
+            {config.goals.length >
+              0 && (
+              <div
+                className="
+                  mt-4
+                  border-t
+                  border-gray-100
+                  pt-3
+                "
+              >
+                <div
+                  className="
+                    mb-2
+                    text-xs
+                    font-semibold
+                    text-gray-400
+                  "
+                >
+                  学习目标
+                </div>
+
+                <ul
+                  className="
+                    space-y-2
+                  "
+                >
+                  {config.goals.map(
+                    (
+                      goal,
+                    ) => (
+                      <li
+                        key={
+                          goal
+                        }
+                        className="
+                          flex
+                          items-start
+                          gap-2
+                          text-[12px]
+                          leading-5
+                          text-gray-500
+                        "
+                      >
+                        <span
+                          className="
+                            mt-2
+                            h-1.5
+                            w-1.5
+                            shrink-0
+                            rounded-full
+                            bg-indigo-500
+                          "
+                        />
+
+                        <span>
+                          {goal}
+                        </span>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </div>
+            )}
+          </ExperimentCard>
+
+          {/* =============================================================
+              案例与参数
+             ============================================================= */}
+
+          <ExperimentCard title="案例与参数">
+            {/* 案例 Tabs */}
+
+            <div
+              className="
+                flex
+                rounded-xl
+                bg-gray-100
+                p-1
+              "
+            >
+              {config.cases.map(
+                (
+                  item,
+                ) => {
+                  const active =
+                    item.id ===
+                    caseId
+
+                  return (
+                    <button
+                      key={
+                        item.id
+                      }
+                      type="button"
+                      onClick={() =>
+                        handleSelectCase(
+                          item,
+                        )
+                      }
+                      title={
+                        item.desc
+                      }
+                      className={[
+                        'min-w-0',
+                        'flex-1',
+                        'truncate',
+                        'rounded-lg',
+                        'px-2',
+                        'py-1.5',
+                        'text-xs',
+                        'font-semibold',
+                        'transition-all',
+
+                        active
+                          ? [
+                              'bg-indigo-600',
+                              'text-white',
+                              'shadow-sm',
+                            ].join(
+                              ' ',
+                            )
+                          : [
+                              'text-gray-500',
+                              'hover:bg-white/60',
+                              'hover:text-gray-700',
+                            ].join(
+                              ' ',
+                            ),
+                      ].join(
+                        ' ',
+                      )}
+                    >
+                      {item.name}
+                    </button>
+                  )
+                },
+              )}
+            </div>
+
+            {/* 案例描述 */}
+
+            {activeCase.desc && (
+              <p
+                className="
+                  mt-3
+                  rounded-lg
+                  bg-slate-50
+                  px-3
+                  py-2
+                  text-[11px]
+                  leading-5
+                  text-slate-500
+                "
+              >
+                {activeCase.desc}
+              </p>
+            )}
+
+            {/* x₀ */}
+
+            <div
+              className="
+                mt-4
+              "
+            >
+              <div
+                className="
+                  mb-1.5
+                  flex
+                  items-center
+                  justify-between
+                "
+              >
+                <span
+                  className="
+                    text-[13px]
+                    font-medium
+                    text-gray-700
+                  "
+                >
+                  固定点 x₀
+                </span>
+
+                <span
+                  className="
+                    font-mono
+                    text-xs
+                    font-semibold
+                    text-indigo-600
+                  "
+                >
+                  {x0Value.toFixed(
+                    2,
+                  )}
+                </span>
+              </div>
+
+              <input
+                type="range"
+                min={
+                  Math.round(
+                    (
+                      xMin +
+                      0.3
+                    ) *
+                      10,
+                  ) /
+                  10
+                }
+                max={
+                  Math.round(
+                    (
+                      xMax -
+                      0.3
+                    ) *
+                      10,
+                  ) /
+                  10
+                }
+                step={
+                  0.1
+                }
+                value={
+                  x0Value
+                }
+                onChange={(
+                  event,
+                ) =>
+                  setX0(
+                    Number.parseFloat(
+                      event.target
+                        .value,
+                    ),
+                  )
+                }
+                className="
+                  w-full
+                  accent-indigo-600
+                "
+              />
+            </div>
+
+            {/* h */}
+
+            <div
+              className="
+                mt-4
+              "
+            >
+              <div
+                className="
+                  mb-1.5
+                  flex
+                  items-center
+                  justify-between
+                "
+              >
+                <span
+                  className="
+                    text-[13px]
+                    font-medium
+                    text-gray-700
+                  "
+                >
+                  步长 h
+                  （h ≠ 0）
+                </span>
+
+                <span
+                  className="
+                    font-mono
+                    text-xs
+                    font-semibold
+                    text-indigo-600
+                  "
+                >
+                  {hValue.toFixed(
+                    2,
+                  )}
+                </span>
+              </div>
+
+              <div className="mb-3 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  aria-pressed={hValue < 0}
+                  onClick={() =>
+                    setH(
+                      -Math.max(
+                        MIN_H_ABS,
+                        Math.abs(
+                          hValue,
+                        ),
+                      ),
+                    )
+                  }
+                  className={hValue < 0
+                    ? 'rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white'
+                    : 'rounded-lg bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100'}
+                >
+                  ← 左侧趋近
                 </button>
-              ))}
-            </div>
 
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] font-medium text-gray-700">固定点 x₀</span>
-                <span className="text-xs font-mono text-indigo-600 font-semibold">{x0v.toFixed(2)}</span>
+                <button
+                  type="button"
+                  aria-pressed={hValue > 0}
+                  onClick={() =>
+                    setH(
+                      Math.max(
+                        MIN_H_ABS,
+                        Math.abs(
+                          hValue,
+                        ),
+                      ),
+                    )
+                  }
+                  className={hValue > 0
+                    ? 'rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white'
+                    : 'rounded-lg bg-indigo-50 px-3 py-2 text-xs font-semibold text-indigo-700 hover:bg-indigo-100'}
+                >
+                  右侧趋近 →
+                </button>
               </div>
+
               <input
                 type="range"
-                min={Math.round((xMin + 0.3) * 10) / 10}
-                max={Math.round((xMax - 0.3) * 10) / 10}
-                step={0.1}
-                value={x0v}
-                onChange={(e) => setX0(parseFloat(e.target.value))}
-                className="w-full"
+                min={
+                  -2
+                }
+                max={
+                  2
+                }
+                step={
+                  0.05
+                }
+                value={
+                  hValue
+                }
+                onChange={(
+                  event,
+                ) =>
+                  setH(
+                    normalizeH(
+                      Number.parseFloat(
+                        event.target
+                          .value,
+                      ),
+                      hValue,
+                    ),
+                  )
+                }
+                className="
+                  w-full
+                  accent-indigo-600
+                "
               />
-            </div>
 
-            <div className="mb-4">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[13px] font-medium text-gray-700">步长 h（h ≠ 0）</span>
-                <span className="text-xs font-mono text-indigo-600 font-semibold">{hh.toFixed(2)}</span>
-              </div>
-              <input
-                type="range"
-                min={0.05}
-                max={2}
-                step={0.05}
-                value={hh}
-                onChange={(e) => setH(parseFloat(e.target.value))}
-                className="w-full"
-              />
-              <p className="text-[11px] text-gray-400 mt-1">h 减小时，Q 沿曲线靠近 P，割线逼近切线</p>
-            </div>
-          </section>
-
-          <section className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-bold text-gray-800">教学判断</h3>
-              <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${step >= 4 ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'}`}>
-                {step >= 4 ? '趋近完成' : '进行中'}
-              </span>
-            </div>
-            <div className={`flex items-start gap-2.5 px-3.5 py-3 rounded-xl border mb-3 ${diff < 0.15 ? 'bg-emerald-50/60 border-emerald-100' : 'bg-blue-50/60 border-blue-100'}`}>
-              <svg className={`w-4 h-4 shrink-0 mt-0.5 ${diff < 0.15 ? 'text-emerald-500' : 'text-blue-500'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
-                <path d="M9 12l2 2 4-4m5.2 2a9 9 0 1 1-2.6-6.4" />
-              </svg>
-              <p className="text-[13px] text-gray-600 leading-relaxed">
-                割线斜率 {secantSlope.toFixed(3)}，切线斜率 {tangentSlope.toFixed(3)}，差值 {diff.toFixed(3)}。
-                {diff < 0.15 ? ' h 足够小时割线已趋近切线，差商趋近导数。' : ' 继续减小 h，割线将趋近切线。'}
+              <p
+                className="
+                  mt-1
+                  text-[11px]
+                  leading-5
+                  text-gray-400
+                "
+              >
+                当前从
+                {hValue < 0
+                  ? '左侧'
+                  : '右侧'}
+                趋近；拖动到零点另一侧可比较左、右差商。
               </p>
             </div>
-            <div className="px-3.5 py-2.5 rounded-xl bg-indigo-50/70 border border-indigo-100 text-center">
-              <span className="text-sm font-semibold text-indigo-700">f′(x₀) = {tangentSlope.toFixed(3)}</span>
-            </div>
-          </section>
-        </aside>
-      </div>
+          </ExperimentCard>
 
-      <PlayerBar
-        steps={config.steps}
-        step={step}
-        playing={playing}
-        onPrev={() => setStep((s) => Math.max(1, s - 1))}
-        onNext={() => setStep((s) => Math.min(4, s + 1))}
-        onTogglePlay={() => setPlaying((p) => !p)}
-        onReset={() => { setPlaying(false); setStep(1); setH(0.8) }}
-        stepDesc={config.steps[Math.min(step, 4) - 1]}
-      />
-    </div>
+          {/* =============================================================
+              教学判断
+             ============================================================= */}
+
+          <ExperimentCard
+            title="教学判断"
+            action={
+              <span
+                className={[
+                  'rounded-full',
+                  'px-2.5',
+                  'py-1',
+                  'text-xs',
+                  'font-semibold',
+
+                  step >=
+                  totalSteps
+                    ? [
+                        'bg-emerald-50',
+                        'text-emerald-600',
+                      ].join(
+                        ' ',
+                      )
+                    : [
+                        'bg-amber-50',
+                        'text-amber-600',
+                      ].join(
+                        ' ',
+                      ),
+                ].join(
+                  ' ',
+                )}
+              >
+                {step >=
+                totalSteps
+                  ? '趋近完成'
+                  : '进行中'}
+              </span>
+            }
+          >
+            {/* 斜率比较 */}
+
+            <div
+              className={[
+                'flex',
+                'items-start',
+                'gap-2.5',
+                'rounded-xl',
+                'border',
+                'px-3.5',
+                'py-3',
+
+                diff <
+                0.15
+                  ? [
+                      'border-emerald-100',
+                      'bg-emerald-50/60',
+                    ].join(
+                      ' ',
+                    )
+                  : [
+                      'border-blue-100',
+                      'bg-blue-50/60',
+                    ].join(
+                      ' ',
+                    ),
+              ].join(
+                ' ',
+              )}
+            >
+              <svg
+                className={[
+                  'mt-0.5',
+                  'h-4',
+                  'w-4',
+                  'shrink-0',
+
+                  diff <
+                  0.15
+                    ? 'text-emerald-500'
+                    : 'text-blue-500',
+                ].join(
+                  ' ',
+                )}
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={
+                  2.4
+                }
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M9 12l2 2 4-4m5.2 2a9 9 0 1 1-2.6-6.4" />
+              </svg>
+
+              <p
+                className="
+                  text-[13px]
+                  leading-6
+                  text-gray-600
+                "
+              >
+                割线斜率{' '}
+                <strong>
+                  {secantSlope.toFixed(
+                    3,
+                  )}
+                </strong>
+                ，切线斜率{' '}
+                <strong>
+                  {tangentSlope.toFixed(
+                    3,
+                  )}
+                </strong>
+                ，误差为{' '}
+                <strong>
+                  {diff.toFixed(
+                    3,
+                  )}
+                </strong>
+                。
+
+                {diff <
+                0.15
+                  ? ' h 已经足够小，可以观察到差商明显趋近导数。'
+                  : ' 继续减小 h，观察割线如何逐渐旋转并趋近切线。'}
+              </p>
+            </div>
+
+            {/* 导数结果 */}
+
+            <div
+              className="
+                mt-3
+                rounded-xl
+                border
+                border-indigo-100
+                bg-indigo-50/70
+                px-3.5
+                py-3
+                text-center
+              "
+            >
+              <div
+                className="
+                  text-[11px]
+                  text-indigo-400
+                "
+              >
+                当前点导数
+              </div>
+
+              <div
+                className="
+                  mt-1
+                  font-mono
+                  text-sm
+                  font-bold
+                  text-indigo-700
+                "
+              >
+                f′(x₀) ={' '}
+                {tangentSlope.toFixed(
+                  3,
+                )}
+              </div>
+            </div>
+
+            {/* 差商 */}
+
+            <div
+              className="
+                mt-3
+                rounded-xl
+                bg-gray-50
+                px-3
+                py-3
+              "
+            >
+              <div
+                className="
+                  text-center
+                  font-mono
+                  text-xs
+                  leading-6
+                  text-gray-600
+                "
+              >
+                [f(x₀+h) −
+                f(x₀)] / h
+              </div>
+
+              <div
+                className="
+                  mt-1
+                  text-center
+                  text-xs
+                  font-semibold
+                  text-sky-600
+                "
+              >
+                ≈{' '}
+                {secantSlope.toFixed(
+                  3,
+                )}
+              </div>
+            </div>
+          </ExperimentCard>
+        </>
+      }
+
+      // ======================================================================
+      // PlayerBar
+      // ======================================================================
+
+      player={{
+        steps:
+          config.steps,
+
+        step,
+
+        playing,
+
+        onPrev:
+          handlePrev,
+
+        onNext:
+          handleNext,
+
+        onTogglePlay:
+          handleTogglePlay,
+
+        onReset:
+          handleReset,
+      }}
+    />
   )
 }

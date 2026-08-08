@@ -1,3 +1,5 @@
+import '../../config/environment.js'
+
 export interface AgentModelConfig {
   provider: 'deepseek' | 'qwen'
   apiKey: string
@@ -54,7 +56,7 @@ export function loadAgentAIConfig(
           'deepseek-v4-flash',
         timeoutMs: readPositiveInteger(
           environment.DEEPSEEK_TIMEOUT_MS,
-          4_500,
+          8_000,
         ),
       }
     : null
@@ -71,7 +73,7 @@ export function loadAgentAIConfig(
           'qwen3.7-plus',
         timeoutMs: readPositiveInteger(
           environment.QWEN_TIMEOUT_MS,
-          4_500,
+          20_000,
         ),
       }
     : null

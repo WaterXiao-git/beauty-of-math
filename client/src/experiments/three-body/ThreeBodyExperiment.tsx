@@ -118,7 +118,7 @@ export default function ThreeBodyExperiment() {
               ref={canvasRef}
               width={760}
               height={560}
-              className="w-full rounded border border-gray-300 bg-slate-900"
+              className="w-full rounded border border-gray-300 bg-white"
             />
             <p className="text-xs text-gray-500 mt-2">总能量在理想情况下应保持守恒，可用来检验数值积分的精度。</p>
           </div>

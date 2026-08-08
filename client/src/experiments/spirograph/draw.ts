@@ -20,7 +20,7 @@ export function drawSpirograph(
   ctx.clearRect(0, 0, W, H)
 
   // 深色底衬托彩色曲线
-  ctx.fillStyle = '#0f172a'
+  ctx.fillStyle = '#ffffff'
   ctx.fillRect(0, 0, W, H)
 
   const pts = sampleCurve(p, 2400)

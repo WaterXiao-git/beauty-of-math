@@ -5,6 +5,11 @@ import { NarrationPresenter } from '../../components/NarrationPresenter'
 import { useNarrationOptional } from '../../contexts/NarrationContext'
 import { goldenRatioNarration } from '../../narrations/scripts/golden-ratio'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
+
+export const experimentV2 = true
 
 export default function GoldenRatioExperiment() {
   const [fibCount, setFibCount] = useState(15)
@@ -104,32 +109,22 @@ export default function GoldenRatioExperiment() {
 
   return (
     <>
-      {/* 全屏 PPT 讲解模式 */}
       {showPresenter && (
         <NarrationPresenter onExit={handleExitPresenter} />
       )}
 
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">黄金分割与斐波那契</h1>
-            <p className="text-gray-600">探索自然界中最美的数学比例</p>
-          </div>
-          <button
-            onClick={openPresenter}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-            </svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "黄金分割与斐波那契",
+        ]}
+        title="黄金分割与斐波那契"
+        subtitle="探索自然界中最美的数学比例"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full space-y-4 p-2 md:p-3 [&_.js-plotly-plot]:w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
               <div className="flex justify-between items-center mb-2">
                 <h3 className="text-lg font-semibold">斐波那契比值收敛</h3>
                 <button
@@ -173,13 +168,13 @@ export default function GoldenRatioExperiment() {
                   xaxis: { title: { text: 'n' } },
                   yaxis: { title: { text: 'F(n)/F(n-1)' }, range: [1, 2.2] },
                   legend: { orientation: 'h', y: -0.2 },
-                }}
+                 paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
                 config={{ responsive: true, displaylogo: false }}
                 className="w-full"
               />
             </div>
 
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
               <h3 className="text-lg font-semibold mb-2">黄金螺线</h3>
               <Plot
                 data={[
@@ -198,14 +193,13 @@ export default function GoldenRatioExperiment() {
                   xaxis: { scaleanchor: 'y', scaleratio: 1, showgrid: false },
                   yaxis: { showgrid: false },
                   showlegend: false,
-                }}
+                 paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
                 config={{ responsive: true, displaylogo: false }}
                 className="w-full"
               />
             </div>
           </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+<div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
             <h3 className="text-lg font-semibold mb-2">向日葵种子排列 (黄金角)</h3>
             <Plot
               data={[
@@ -228,34 +222,32 @@ export default function GoldenRatioExperiment() {
                 xaxis: { scaleanchor: 'y', scaleratio: 1, showgrid: false, zeroline: false },
                 yaxis: { showgrid: false, zeroline: false },
                 showlegend: false,
-              }}
+               paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
               config={{ responsive: true, displaylogo: false }}
               className="w-full"
             />
-            <p className="text-sm text-gray-600 mt-2">
+            <p className="text-sm text-slate-600 mt-2">
               每颗种子相对于前一颗旋转黄金角 (≈137.5°)，这种排列最大化了空间利用率。
             </p>
           </div>
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">黄金比例 φ</h3>
-            <div className="p-3 bg-amber-50 rounded-lg text-center">
+          </div>
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="黄金比例 φ">
+<div className="p-3 bg-amber-50 rounded-lg text-center">
               <div className="text-3xl font-bold text-amber-700">{PHI.toFixed(10)}</div>
             </div>
-            <div className="mt-3 space-y-2">
+<div className="mt-3 space-y-2">
               <MathFormula formula="\varphi = \frac{1 + \sqrt{5}}{2}" />
               <MathFormula formula="\varphi^2 = \varphi + 1" />
               <MathFormula formula="\frac{1}{\varphi} = \varphi - 1" />
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">参数设置</h3>
-            <div className="space-y-3">
+</ExperimentCard>
+<ExperimentCard title="参数设置">
+<div className="space-y-3">
               <div>
-                <label className="text-sm text-gray-600">斐波那契项数: {fibCount}</label>
+                <label className="text-sm text-slate-600">斐波那契项数: {fibCount}</label>
                 <input
                   type="range"
                   min="5"
@@ -266,7 +258,7 @@ export default function GoldenRatioExperiment() {
                 />
               </div>
               <div>
-                <label className="text-sm text-gray-600">螺线圈数: {spiralTurns}</label>
+                <label className="text-sm text-slate-600">螺线圈数: {spiralTurns}</label>
                 <input
                   type="range"
                   min="2"
@@ -277,46 +269,56 @@ export default function GoldenRatioExperiment() {
                 />
               </div>
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">斐波那契数列</h3>
-            <div className="p-3 bg-purple-50 rounded-lg">
+</ExperimentCard>
+<ExperimentCard title="斐波那契数列">
+<div className="p-3 bg-purple-50 rounded-lg">
               <MathFormula formula="F_n = F_{n-1} + F_{n-2}" />
             </div>
-            <div className="mt-3 flex flex-wrap gap-1">
+<div className="mt-3 flex flex-wrap gap-1">
               {fibonacci.slice(0, 12).map((f, i) => (
                 <span key={i} className="px-2 py-1 bg-gray-100 rounded text-sm font-mono">
                   {f}
                 </span>
               ))}
-              {fibCount > 12 && <span className="px-2 py-1 text-gray-400">...</span>}
+              {fibCount > 12 && <span className="px-2 py-1 text-slate-500">...</span>}
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">黄金角</h3>
-            <div className="p-3 bg-green-50 rounded-lg">
+</ExperimentCard>
+<ExperimentCard title="黄金角">
+<div className="p-3 bg-green-50 rounded-lg">
               <MathFormula formula="\theta = \frac{2\pi}{\varphi^2} \approx 137.5°" />
             </div>
-            <p className="text-sm text-gray-600 mt-2">
+<p className="text-sm text-slate-600 mt-2">
               黄金角是圆周被黄金比例分割后较小弧所对应的圆心角。
             </p>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">自然中的黄金比例</h3>
-            <ul className="text-sm text-gray-600 space-y-1">
+</ExperimentCard>
+<ExperimentCard title="自然中的黄金比例">
+<ul className="text-sm text-slate-600 space-y-1">
               <li>• 鹦鹉螺壳的螺旋</li>
               <li>• 向日葵种子排列</li>
               <li>• 松果鳞片排列</li>
               <li>• 人体比例</li>
               <li>• 银河系旋臂</li>
             </ul>
-          </div>
-        </div>
-      </div>
-      </div>
+</ExperimentCard>
+
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button
+            onClick={openPresenter}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+            </svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

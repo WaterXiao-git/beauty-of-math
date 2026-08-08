@@ -5,6 +5,11 @@ import { circleGeometryNarration } from '../../narrations/scripts/circle-geometr
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
 import { CIRCLE_TOPICS, circleMeasures, degToRad } from './circleGeometry'
 import { drawCircleGeometry } from './draw'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
+
+export const experimentV2 = true
 
 export default function CircleGeometryExperiment() {
   const [topicId, setTopicId] = useState('circumference')
@@ -39,26 +44,25 @@ export default function CircleGeometryExperiment() {
   return (
     <>
       {showPresenter && <NarrationPresenter onExit={handleExit} />}
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">圆的几何</h1>
-            <p className="text-gray-600">从周长面积到圆周角定理</p>
-          </div>
-          <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "圆的几何",
+        ]}
+        title="圆的几何"
+        subtitle="从周长面积到圆周角定理"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full p-3 text-slate-800 md:p-4">
             <h3 className="text-lg font-semibold mb-2">{info.label} · 圆心角 {angleDeg}°</h3>
-            <canvas ref={canvasRef} width={600} height={560} className="w-full rounded-lg" />
+<canvas ref={canvasRef} width={600} height={560} className="w-full rounded-lg" />
           </div>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">选择主题</h3>
-              <div className="space-y-2">
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="选择主题">
+<div className="space-y-2">
                 {CIRCLE_TOPICS.map((t) => (
                   <button
                     key={t.id}
@@ -73,10 +77,9 @@ export default function CircleGeometryExperiment() {
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">圆心角</h3>
-              <input
+</ExperimentCard>
+<ExperimentCard title="圆心角">
+<input
                 type="range"
                 min={10}
                 max={360}
@@ -85,26 +88,35 @@ export default function CircleGeometryExperiment() {
                 onChange={(e) => setAngleDeg(Number(e.target.value))}
                 className="w-full"
               />
-              <div className="text-sm text-gray-600 mt-2 space-y-1">
+<div className="text-sm text-gray-600 mt-2 space-y-1">
                 <div>半径取 1 时（圆心角 {angleDeg}°）：</div>
                 <div>• 弧长 ≈ {m.arcLength.toFixed(3)}</div>
                 <div>• 扇形面积 ≈ {m.sectorArea.toFixed(3)}</div>
                 <div>• 弦长 ≈ {m.chordLength.toFixed(3)}</div>
                 <div>• 圆周角 ≈ {(angleDeg / 2).toFixed(1)}°</div>
               </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">圆的趣闻</h3>
-              <ul className="text-sm text-gray-600 space-y-1.5">
+</ExperimentCard>
+<ExperimentCard title="圆的趣闻">
+<ul className="text-sm text-gray-600 space-y-1.5">
                 <li>• 圆是<b>周长一定时面积最大</b>的平面图形。</li>
                 <li>• 周长与面积都离不开常数<b>圆周率 π</b>。</li>
                 <li>• 弧长和扇形面积都与<b>圆心角成正比</b>。</li>
                 <li>• <b>圆周角定理</b>：同弧所对圆周角恒为圆心角的一半。</li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+</ExperimentCard>
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

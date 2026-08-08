@@ -1,0 +1,475 @@
+{
+  "generatedAt": "2026-08-08T14:32:30.841Z",
+  "mode": "apply",
+  "scanned": 300,
+  "candidateFiles": 25,
+  "replacementCount": 43,
+  "changedFiles": 25,
+  "files": [
+    {
+      "id": "birthday-paradox",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\birthday-paradox\\BirthdayParadoxExperiment.tsx",
+      "relativeFile": "src/experiments/birthday-paradox/BirthdayParadoxExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 58
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "caesar-cipher",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\caesar-cipher\\CaesarCipherExperiment.tsx",
+      "relativeFile": "src/experiments/caesar-cipher/CaesarCipherExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 58
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "clt",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\clt\\CLTExperiment.tsx",
+      "relativeFile": "src/experiments/clt/CLTExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 163
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 218
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 244
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 294
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "complex",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\complex\\ComplexExperiment.tsx",
+      "relativeFile": "src/experiments/complex/ComplexExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 107
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 137
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "digital-root",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\digital-root\\DigitalRootExperiment.tsx",
+      "relativeFile": "src/experiments/digital-root/DigitalRootExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 54
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 58
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "euler-totient",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\euler-totient\\EulerTotientExperiment.tsx",
+      "relativeFile": "src/experiments/euler-totient/EulerTotientExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 75
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "fourier",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\fourier\\FourierExperiment.tsx",
+      "relativeFile": "src/experiments/fourier/FourierExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"time-domain-chart bg-slate-900/70 rounded-xl md:rounded-2xl shadow-none border border-slate-700 overflow-hidden transition-all duration-300\">",
+          "to": "<div className=\"time-domain-chart bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300\">",
+          "line": 159
+        },
+        {
+          "from": "<div className=\"spectrum-chart bg-slate-900/70 rounded-xl md:rounded-2xl shadow-none border border-slate-700 overflow-hidden transition-all duration-300\">",
+          "to": "<div className=\"spectrum-chart bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300\">",
+          "line": 218
+        },
+        {
+          "from": "<div className=\"wave-selector bg-slate-900/70 rounded-xl md:rounded-2xl shadow-none border border-slate-700 overflow-hidden transition-all duration-300\">",
+          "to": "<div className=\"wave-selector bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300\">",
+          "line": 269
+        },
+        {
+          "from": "<div className=\"formula-card bg-slate-900/70 rounded-xl md:rounded-2xl shadow-none border border-slate-700 overflow-hidden transition-all duration-300\">",
+          "to": "<div className=\"formula-card bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300\">",
+          "line": 299
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "golden-ratio",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\golden-ratio\\GoldenRatioExperiment.tsx",
+      "relativeFile": "src/experiments/golden-ratio/GoldenRatioExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 127
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 177
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 202
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "henon-map",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\henon-map\\HenonMapExperiment.tsx",
+      "relativeFile": "src/experiments/henon-map/HenonMapExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 55
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "hypothesis-testing",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\hypothesis-testing\\HypothesisTestingExperiment.tsx",
+      "relativeFile": "src/experiments/hypothesis-testing/HypothesisTestingExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 60
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "josephus-problem",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\josephus-problem\\JosephusProblemExperiment.tsx",
+      "relativeFile": "src/experiments/josephus-problem/JosephusProblemExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 72
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "l-system",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\l-system\\LSystemExperiment.tsx",
+      "relativeFile": "src/experiments/l-system/LSystemExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"p-3 bg-slate-800 rounded-lg text-xs font-mono text-emerald-300 space-y-1\">",
+          "to": "<div className=\"p-3 bg-white rounded-lg text-xs font-mono text-emerald-300 space-y-1\">",
+          "line": 80
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "linear-algebra",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\linear-algebra\\LinearAlgebraExperiment.tsx",
+      "relativeFile": "src/experiments/linear-algebra/LinearAlgebraExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 179
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 242
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 246
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "lu-decomposition",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\lu-decomposition\\LuDecompositionExperiment.tsx",
+      "relativeFile": "src/experiments/lu-decomposition/LuDecompositionExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 69
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "mandelbrot-julia",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\mandelbrot-julia\\MandelbrotJuliaExperiment.tsx",
+      "relativeFile": "src/experiments/mandelbrot-julia/MandelbrotJuliaExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 79
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "monte-carlo",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\monte-carlo\\MonteCarloExperiment.tsx",
+      "relativeFile": "src/experiments/monte-carlo/MonteCarloExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 101
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 148
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "nyquist-sampling",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\nyquist-sampling\\NyquistSamplingExperiment.tsx",
+      "relativeFile": "src/experiments/nyquist-sampling/NyquistSamplingExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 57
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "parametric",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\parametric\\ParametricExperiment.tsx",
+      "relativeFile": "src/experiments/parametric/ParametricExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 200
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 244
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "polar",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\polar\\PolarExperiment.tsx",
+      "relativeFile": "src/experiments/polar/PolarExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 179
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 225
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "power-series",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\power-series\\PowerSeriesExperiment.tsx",
+      "relativeFile": "src/experiments/power-series/PowerSeriesExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 89
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "primitive-root",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\primitive-root\\PrimitiveRootExperiment.tsx",
+      "relativeFile": "src/experiments/primitive-root/PrimitiveRootExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 83
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "reaction-diffusion",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\reaction-diffusion\\ReactionDiffusionExperiment.tsx",
+      "relativeFile": "src/experiments/reaction-diffusion/ReactionDiffusionExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div\r\n          className=\"\r\n            inline-flex\r\n            items-center\r\n            gap-2\r\n            rounded-full\r\n            border\r\n            border-slate-700\r\n            bg-slate-900/80\r\n            px-3\r\n            py-1.5\r\n            text-xs\r\n            font-medium\r\n            text-slate-300\r\n          \"\r\n        >",
+          "to": "<div\r\n          className=\"inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-300\"\r\n        >",
+          "line": 160
+        },
+        {
+          "from": "<div\r\n        className=\"\r\n          mt-3\r\n          shrink-0\r\n          rounded-lg\r\n          border\r\n          border-slate-800\r\n          bg-slate-900/70\r\n          px-3\r\n          py-2\r\n          text-xs\r\n          leading-5\r\n          text-slate-400\r\n        \"\r\n      >",
+          "to": "<div\r\n        className=\"mt-3 shrink-0 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs leading-5 text-slate-400\"\r\n      >",
+          "line": 274
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "softmax",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\softmax\\SoftmaxExperiment.tsx",
+      "relativeFile": "src/experiments/softmax/SoftmaxExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 60
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "stereographic-projection",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\stereographic-projection\\StereographicProjectionExperiment.tsx",
+      "relativeFile": "src/experiments/stereographic-projection/StereographicProjectionExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 55
+        }
+      ],
+      "changed": true
+    },
+    {
+      "id": "trigonometry",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\trigonometry\\TrigExperiment.tsx",
+      "relativeFile": "src/experiments/trigonometry/TrigExperiment.tsx",
+      "nativeV2": true,
+      "usesShell": true,
+      "replacements": [
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 90
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 115
+        },
+        {
+          "from": "<div className=\"bg-slate-900/70 rounded-lg shadow-none border border-slate-700 p-4\">",
+          "to": "<div className=\"bg-white rounded-lg shadow-sm border border-slate-200 p-4\">",
+          "line": 139
+        }
+      ],
+      "changed": true
+    }
+  ]
+}

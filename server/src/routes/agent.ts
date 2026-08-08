@@ -22,6 +22,10 @@ import {
 } from '../agent/mathDomainGuard.js'
 
 import {
+  promoteGeneratableNoMatch,
+} from '../agent/generationOffer.js'
+
+import {
   routeQuestion,
 } from '../agent/questionRouter.js'
 
@@ -77,13 +81,20 @@ router.post('/route', async (req, res) => {
   try {
     const result = await routeQuestionWithAI(question)
 
+    const generationAllowed =
+      isGeneratableMathExperimentRequest(
+        question,
+        result.experiments,
+      )
+
     return res.json({
       ...result,
-      generationAllowed:
-        isGeneratableMathExperimentRequest(
-          question,
-          result.experiments,
+      routeDecision:
+        promoteGeneratableNoMatch(
+          result.routeDecision,
+          generationAllowed,
         ),
+      generationAllowed,
     })
   } catch {
     return res.status(500).json({

@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom'
 
 import {
   collectRouteCandidates,
-  getDirectRoutePath,
   requestAgentRoute,
   type AgentExperimentCandidate,
   type AgentRouteDecision,
@@ -26,6 +25,13 @@ const EXAMPLE_QUESTIONS = [
   '用有限个点补出一条连续曲线',
   '什么是群论中的群',
 ]
+
+interface DirectAIAnswer {
+  title: string
+  summary: string
+  keyPoints: string[]
+  example: string
+}
 
 const RESULT_PRESENTATION: Record<
   AgentRouteDecision,
@@ -83,6 +89,21 @@ function isAbortError(error: unknown): boolean {
     error instanceof Error &&
     error.name === 'AbortError'
   )
+}
+
+async function requestDirectAIAnswer(
+  question: string,
+  signal?: AbortSignal,
+): Promise<DirectAIAnswer> {
+  const response = await fetch('/api/answer', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ question }),
+    signal,
+  })
+  const body = await response.json() as DirectAIAnswer & { error?: string }
+  if (!response.ok) throw new Error(body.error ?? `AI 回答失败（${response.status}）`)
+  return body
 }
 
 function CandidateButton({
@@ -157,6 +178,8 @@ export default function AgentExperimentRouter() {
     useState(false)
   const [errorMessage, setErrorMessage] =
     useState<string | null>(null)
+  const [mode, setMode] = useState<'auto' | 'ai'>('auto')
+  const [directAnswer, setDirectAnswer] = useState<DirectAIAnswer | null>(null)
 
   useEffect(
     () => () => {
@@ -185,28 +208,21 @@ export default function AgentExperimentRouter() {
     setIsLoading(true)
     setErrorMessage(null)
     setResult(null)
+    setDirectAnswer(null)
 
     try {
+      if (mode === 'ai') {
+        setDirectAnswer(await requestDirectAIAnswer(normalizedQuestion, controller.signal))
+        return
+      }
+
       const routeResult = await requestAgentRoute(
         normalizedQuestion,
         controller.signal,
       )
 
-      const directPath =
-        getDirectRoutePath(routeResult)
-
-      if (directPath) {
-        const target =
-          routeResult.routeDecision.target
-
-        navigate(directPath, {
-          state: {
-            source: 'agent-route',
-            question: normalizedQuestion,
-            initialParameters:
-              target?.initialParameters ?? {},
-          },
-        })
+      if (routeResult.routeDecision.decision === 'no-match') {
+        setDirectAnswer(await requestDirectAIAnswer(normalizedQuestion, controller.signal))
         return
       }
 
@@ -244,6 +260,7 @@ export default function AgentExperimentRouter() {
   ) => {
     setQuestion(value)
     setResult(null)
+    setDirectAnswer(null)
     setErrorMessage(null)
   }
 
@@ -287,6 +304,33 @@ export default function AgentExperimentRouter() {
       ) {
         abortControllerRef.current = null
         setIsGenerating(false)
+      }
+    }
+  }
+
+  const handleDirectAI = async () => {
+    const normalizedQuestion = question.trim()
+    if (!normalizedQuestion || isLoading) return
+
+    abortControllerRef.current?.abort()
+    const controller = new AbortController()
+    abortControllerRef.current = controller
+    setMode('ai')
+    setIsLoading(true)
+    setErrorMessage(null)
+    setResult(null)
+    setDirectAnswer(null)
+
+    try {
+      setDirectAnswer(await requestDirectAIAnswer(normalizedQuestion, controller.signal))
+    } catch (error) {
+      if (!isAbortError(error)) {
+        setErrorMessage(error instanceof Error ? error.message : 'AI 回答失败，请稍后重试。')
+      }
+    } finally {
+      if (abortControllerRef.current === controller) {
+        abortControllerRef.current = null
+        setIsLoading(false)
       }
     }
   }
@@ -349,6 +393,33 @@ export default function AgentExperimentRouter() {
           </div>
         </div>
 
+        <div className="mb-3 inline-flex rounded-xl border border-indigo-100 bg-white/80 p-1" aria-label="提问模式">
+          <button
+            type="button"
+            onClick={() => {
+              setMode('auto')
+              setResult(null)
+              setDirectAnswer(null)
+            }}
+            aria-pressed={mode === 'auto'}
+            className={`rounded-lg px-4 py-2 text-xs font-semibold transition ${mode === 'auto' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-indigo-50'}`}
+          >
+            智能推荐
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              setMode('ai')
+              setResult(null)
+              setDirectAnswer(null)
+            }}
+            aria-pressed={mode === 'ai'}
+            className={`rounded-lg px-4 py-2 text-xs font-semibold transition ${mode === 'ai' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-500 hover:bg-indigo-50'}`}
+          >
+            直接问 AI
+          </button>
+        </div>
+
         <form
           onSubmit={handleSubmit}
           className="flex flex-col gap-3 sm:flex-row"
@@ -397,7 +468,7 @@ export default function AgentExperimentRouter() {
               </>
             ) : (
               <>
-                智能处理
+                {mode === 'ai' ? '直接提问' : '智能处理'}
                 <span aria-hidden="true">→</span>
               </>
             )}
@@ -430,6 +501,29 @@ export default function AgentExperimentRouter() {
           {errorMessage && (
             <div className="mt-4 rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
               {errorMessage}
+            </div>
+          )}
+
+          {directAnswer && (
+            <div className="mt-4 rounded-xl border border-cyan-200 bg-cyan-50/80 p-4">
+              <div className="flex items-center justify-between gap-3">
+                <h3 className="font-bold text-slate-800">{directAnswer.title}</h3>
+                <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-cyan-700">直接 AI · 已绕过路由</span>
+              </div>
+              <p className="mt-3 text-sm leading-7 text-slate-700">{directAnswer.summary}</p>
+              <ul className="mt-3 grid gap-2 text-sm text-slate-600 sm:grid-cols-2">
+                {directAnswer.keyPoints.map((point) => (
+                  <li key={point} className="flex gap-2">
+                    <span className="font-bold text-cyan-500">•</span>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+              {directAnswer.example && (
+                <p className="mt-3 rounded-lg bg-white/80 px-3 py-2 text-sm text-slate-600">
+                  <span className="font-semibold text-cyan-700">例子：</span>{directAnswer.example}
+                </p>
+              )}
             </div>
           )}
 
@@ -500,28 +594,37 @@ export default function AgentExperimentRouter() {
                 )}
 
               {candidates.length > 0 && (
-                <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {candidates.map(
-                    (candidate, index) => (
-                      <CandidateButton
-                        key={candidate.path}
-                        candidate={candidate}
-                        isPrimary={index === 0}
-                        onSelect={(selectedCandidate) =>
-                          navigate(selectedCandidate.path, {
-                            state: {
-                              source:
-                                'agent-suggestion',
-                              question,
-                              initialParameters:
-                                selectedCandidate.initialParameters,
-                            },
-                          })
-                        }
-                      />
-                    ),
-                  )}
-                </div>
+                <>
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {candidates.map(
+                      (candidate, index) => (
+                        <CandidateButton
+                          key={candidate.path}
+                          candidate={candidate}
+                          isPrimary={index === 0}
+                          onSelect={(selectedCandidate) =>
+                            navigate(selectedCandidate.path, {
+                              state: {
+                                source:
+                                  'agent-suggestion',
+                                question,
+                                initialParameters:
+                                  selectedCandidate.initialParameters,
+                              },
+                            })
+                          }
+                        />
+                      ),
+                    )}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => void handleDirectAI()}
+                    className="mt-3 min-h-11 w-full rounded-xl border border-indigo-300 bg-white px-4 text-sm font-semibold text-indigo-600 hover:bg-indigo-50"
+                  >
+                    不打开实验，直接问 AI
+                  </button>
+                </>
               )}
 
               {canGenerateExperiment && (

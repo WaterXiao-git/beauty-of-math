@@ -31,7 +31,7 @@ export function drawExponentialLog(
   const W = canvas.width
   const H = canvas.height
   ctx.clearRect(0, 0, W, H)
-  ctx.fillStyle = '#0f172a'
+  ctx.fillStyle = '#ffffff'
   ctx.fillRect(0, 0, W, H)
 
   const toPx = (x: number, y: number): Point => ({

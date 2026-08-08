@@ -5,6 +5,11 @@ import { NarrationPresenter } from '../../components/NarrationPresenter'
 import { useNarrationOptional } from '../../contexts/NarrationContext'
 import { monteCarloNarration } from '../../narrations/scripts/monte-carlo'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
+
+export const experimentV2 = true
 
 export default function MonteCarloExperiment() {
   const [points, setPoints] = useState<{ x: number; y: number; inside: boolean }[]>([])
@@ -79,31 +84,21 @@ export default function MonteCarloExperiment() {
 
   return (
     <>
-      {/* 全屏 PPT 讲解模式 */}
       {showPresenter && (
         <NarrationPresenter onExit={handleExitPresenter} />
       )}
 
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">蒙特卡洛方法</h1>
-            <p className="text-gray-600">用随机点估算圆周率 π</p>
-          </div>
-          <button
-            onClick={openPresenter}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-            </svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "蒙特卡洛方法",
+        ]}
+        title="蒙特卡洛方法"
+        subtitle="用随机点估算圆周率 π"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full space-y-4 p-2 md:p-3 [&_.js-plotly-plot]:w-full">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
             <h3 className="text-lg font-semibold mb-2">随机投点</h3>
             <Plot
               data={[
@@ -144,14 +139,13 @@ export default function MonteCarloExperiment() {
                   x0: -1, y0: -1, x1: 1, y1: 1,
                   line: { color: '#94a3b8', width: 1 },
                 }],
-              }}
+               paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
               config={{ responsive: true, displaylogo: false }}
               className="w-full"
             />
           </div>
-
-          {errorHistory.length > 0 && (
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+{errorHistory.length > 0 && (
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
               <h3 className="text-lg font-semibold mb-2">收敛过程</h3>
               <Plot
                 data={[
@@ -179,18 +173,18 @@ export default function MonteCarloExperiment() {
                   xaxis: { title: { text: '点数' } },
                   yaxis: { title: { text: 'π 估计值' }, range: [2.5, 4] },
                   legend: { orientation: 'h', y: -0.25 },
-                }}
+                 paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
                 config={{ responsive: true, displaylogo: false }}
                 className="w-full"
               />
             </div>
           )}
-        </div>
-
-        <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">控制面板</h3>
-            <div className="space-y-3">
+          </div>
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="控制面板">
+<div className="space-y-3">
               <button
                 onClick={() => setIsRunning(!isRunning)}
                 className={`w-full py-2 px-4 rounded-lg font-medium transition-colors ${
@@ -201,12 +195,12 @@ export default function MonteCarloExperiment() {
               </button>
               <button
                 onClick={reset}
-                className="w-full py-2 px-4 rounded-lg font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 transition-colors"
+                className="w-full py-2 px-4 rounded-lg font-medium bg-gray-200 text-slate-700 hover:bg-gray-300 transition-colors"
               >
                 重置
               </button>
               <div>
-                <label className="text-sm text-gray-600">速度 (每帧点数)</label>
+                <label className="text-sm text-slate-600">速度 (每帧点数)</label>
                 <input
                   type="range"
                   min="1"
@@ -215,20 +209,18 @@ export default function MonteCarloExperiment() {
                   onChange={(e) => setSpeed(parseInt(e.target.value))}
                   className="w-full mt-1"
                 />
-                <div className="text-right text-sm text-gray-500">{speed}</div>
+                <div className="text-right text-sm text-slate-500">{speed}</div>
               </div>
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">估算结果</h3>
-            <div className="space-y-3">
+</ExperimentCard>
+<ExperimentCard title="估算结果">
+<div className="space-y-3">
               <div className="p-3 bg-purple-100 rounded-lg text-center">
                 <div className="text-sm text-purple-600">π 估计值</div>
                 <div className="text-3xl font-bold text-purple-700">{piEstimate.toFixed(6)}</div>
               </div>
               <div className="p-2 bg-gray-50 rounded flex justify-between">
-                <span className="text-gray-600">总点数</span>
+                <span className="text-slate-600">总点数</span>
                 <span className="font-mono font-bold">{points.length.toLocaleString()}</span>
               </div>
               <div className="p-2 bg-green-50 rounded flex justify-between">
@@ -240,21 +232,35 @@ export default function MonteCarloExperiment() {
                 <span className="font-mono font-bold">{Math.abs(piEstimate - Math.PI).toFixed(6)}</span>
               </div>
             </div>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">原理</h3>
-            <div className="space-y-2">
+</ExperimentCard>
+<ExperimentCard title="原理">
+<div className="space-y-2">
               <MathFormula formula="\frac{\text{圆内点数}}{\text{总点数}} \approx \frac{\pi r^2}{(2r)^2} = \frac{\pi}{4}" />
               <MathFormula formula="\pi \approx 4 \times \frac{\text{圆内点数}}{\text{总点数}}" />
             </div>
-            <p className="text-sm text-gray-600 mt-3">
+<p className="text-sm text-slate-600 mt-3">
               在正方形内随机投点，落入内切圆的概率等于面积比 π/4。
             </p>
-          </div>
-        </div>
-      </div>
-    </div>
+</ExperimentCard>
+
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button
+            onClick={openPresenter}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+            </svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

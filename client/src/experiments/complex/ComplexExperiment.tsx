@@ -6,6 +6,11 @@ import { NarrationPresenter } from '../../components/NarrationPresenter'
 import { useNarrationOptional } from '../../contexts/NarrationContext'
 import { complexNarration } from '../../narrations/scripts/complex'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
+
+export const experimentV2 = true
 
 export default function ComplexExperiment() {
   const [params, setParams] = useState({
@@ -85,32 +90,21 @@ export default function ComplexExperiment() {
 
   return (
     <>
-      {/* 全屏 PPT 讲解模式 */}
       {showPresenter && (
         <NarrationPresenter onExit={handleExitPresenter} />
       )}
 
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">复数与复平面</h1>
-            <p className="text-gray-600">探索复数的几何意义与欧拉公式</p>
-          </div>
-          <button
-            onClick={openPresenter}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-            </svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          {/* 复数运算可视化 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "复数与复平面",
+        ]}
+        title="复数与复平面"
+        subtitle="探索复数的几何意义与欧拉公式"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full space-y-4 p-2 md:p-3 [&_.js-plotly-plot]:w-full">
+            <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
             <h3 className="text-lg font-semibold mb-2">复数运算</h3>
             <Plot
               data={[
@@ -135,14 +129,12 @@ export default function ComplexExperiment() {
                 xaxis: { title: { text: 'Re' }, range: [-3, 3], scaleanchor: 'y', scaleratio: 1 },
                 yaxis: { title: { text: 'Im' }, range: [-3, 3] },
                 legend: { orientation: 'h', y: -0.15 },
-              }}
+               paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
               config={{ responsive: true, displaylogo: false }}
               className="w-full"
             />
           </div>
-
-          {/* 欧拉公式可视化 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+<div className="bg-white rounded-lg shadow-sm border border-slate-200 p-4">
             <h3 className="text-lg font-semibold mb-2">欧拉公式: e^(iθ) = cos(θ) + i·sin(θ)</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Plot
@@ -166,7 +158,7 @@ export default function ComplexExperiment() {
                   xaxis: { range: [-1.5, 1.5], scaleanchor: 'y', scaleratio: 1, showgrid: false },
                   yaxis: { range: [-1.5, 1.5], showgrid: false },
                   showlegend: false,
-                }}
+                 paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#334155' }}}
                 config={{ responsive: true, displaylogo: false }}
                 className="w-full"
               />
@@ -192,11 +184,11 @@ export default function ComplexExperiment() {
               </div>
             </div>
           </div>
-        </div>
-
-        <div className="space-y-6">
-          {/* 复数 z1 参数 */}
-          <ParameterPanel
+          </div>
+        }
+        sidebar={
+          <>
+            <ParameterPanel
             title="复数 z₁"
             params={[
               { key: 'real1', label: '实部 (Re)', value: params.real1, min: -2, max: 2, step: 0.1 },
@@ -204,9 +196,7 @@ export default function ComplexExperiment() {
             ]}
             onChange={handleParamChange}
           />
-
-          {/* 复数 z2 参数 */}
-          <ParameterPanel
+<ParameterPanel
             title="复数 z₂"
             params={[
               { key: 'real2', label: '实部 (Re)', value: params.real2, min: -2, max: 2, step: 0.1 },
@@ -214,20 +204,15 @@ export default function ComplexExperiment() {
             ]}
             onChange={handleParamChange}
           />
-
-          {/* 欧拉角度 */}
-          <ParameterPanel
+<ParameterPanel
             title="欧拉公式"
             params={[
               { key: 'eulerTheta', label: '角度 θ', value: params.eulerTheta, min: 0, max: 360, step: 5, unit: '°' },
             ]}
             onChange={handleParamChange}
           />
-
-          {/* 计算结果 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">运算结果</h3>
-            <div className="space-y-2 text-sm">
+<ExperimentCard title="运算结果">
+<div className="space-y-2 text-sm">
               <div className="p-2 bg-blue-50 rounded">
                 <span className="text-blue-700">z₁ = {z1.re.toFixed(2)} + {z1.im.toFixed(2)}i</span>
                 <div className="text-xs text-blue-500">|z₁| = {mod1.toFixed(2)}, arg = {arg1.toFixed(1)}°</div>
@@ -244,20 +229,33 @@ export default function ComplexExperiment() {
                 <div className="text-xs text-red-500">|z₁×z₂| = {modProduct.toFixed(2)}, arg = {argProduct.toFixed(1)}°</div>
               </div>
             </div>
-          </div>
-
-          {/* 公式 */}
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-            <h3 className="text-lg font-semibold mb-3">核心公式</h3>
-            <div className="space-y-3">
+</ExperimentCard>
+<ExperimentCard title="核心公式">
+<div className="space-y-3">
               <MathFormula formula="e^{i\theta} = \cos\theta + i\sin\theta" />
               <MathFormula formula="z = r(\cos\theta + i\sin\theta) = re^{i\theta}" />
               <MathFormula formula="|z_1 \cdot z_2| = |z_1| \cdot |z_2|" />
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
+</ExperimentCard>
+
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button
+            onClick={openPresenter}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+            </svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

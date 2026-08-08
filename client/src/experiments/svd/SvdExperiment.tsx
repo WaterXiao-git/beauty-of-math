@@ -5,6 +5,11 @@ import { svdNarration } from '../../narrations/scripts/svd'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
 import { svd2, conditionNumber, numericRank, MATRIX_OPTIONS } from './svd'
 import { drawSvd } from './draw'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
+
+export const experimentV2 = true
 
 export default function SvdExperiment() {
   const [matrixId, setMatrixId] = useState('rotate-scale')
@@ -41,26 +46,25 @@ export default function SvdExperiment() {
   return (
     <>
       {showPresenter && <NarrationPresenter onExit={handleExit} />}
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">奇异值分解</h1>
-            <p className="text-gray-600">任意矩阵都是旋转、拉伸、再旋转</p>
-          </div>
-          <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "奇异值分解",
+        ]}
+        title="奇异值分解"
+        subtitle="任意矩阵都是旋转、拉伸、再旋转"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full p-3 text-slate-800 md:p-4">
             <h3 className="text-lg font-semibold mb-2">{option.label} · 单位圆 → 椭圆</h3>
-            <canvas ref={canvasRef} width={600} height={560} className="w-full rounded-lg" />
+<canvas ref={canvasRef} width={600} height={560} className="w-full rounded-lg" />
           </div>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">选择矩阵</h3>
-              <div className="space-y-2">
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="选择矩阵">
+<div className="space-y-2">
                 {MATRIX_OPTIONS.map((o) => (
                   <button
                     key={o.id}
@@ -72,19 +76,28 @@ export default function SvdExperiment() {
                   </button>
                 ))}
               </div>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">分解结果</h3>
-              <ul className="text-sm text-gray-600 space-y-1.5">
+</ExperimentCard>
+<ExperimentCard title="分解结果">
+<ul className="text-sm text-gray-600 space-y-1.5">
                 <li>• 奇异值 <b>σ1 = {res.S[0].toFixed(3)}</b>，<b>σ2 = {res.S[1].toFixed(3)}</b>。</li>
                 <li>• 条件数 σ1/σ2 = <b>{cond === Infinity ? '∞' : cond.toFixed(2)}</b>，越大越病态。</li>
                 <li>• 数值秩 = <b>{rank}</b>{rank < 2 ? '，矩阵退化为一维。' : '，满秩变换。'}</li>
                 <li>• 单位圆经变换后是椭圆，两条<b>半轴长正是奇异值</b>。</li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+</ExperimentCard>
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

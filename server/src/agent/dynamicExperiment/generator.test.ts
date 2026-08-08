@@ -48,6 +48,30 @@ function validSpec() {
   }
 }
 
+function sortingSpec() {
+  return {
+    version: 1,
+    title: '冒泡排序动态演示',
+    description: '逐轮比较相邻元素并交换，观察数组如何完成排序。',
+    gradeLevel: '高中',
+    formulaLatex: 'a_i > a_{i+1}',
+    parameters: [],
+    renderer: {
+      type: 'sandboxed-html',
+      document: '<canvas id="sorting"></canvas><script>/* bubble sort */</script>',
+      height: 520,
+    },
+    steps: [
+      {
+        title: '比较相邻元素',
+        description: '执行冒泡排序的一轮比较与交换。',
+        parameterValues: {},
+      },
+    ],
+    knowledgePoints: ['冒泡排序会重复比较并交换相邻的逆序元素。'],
+  }
+}
+
 class FakeProvider
 implements AgentModelProvider {
   readonly provider: 'deepseek' | 'qwen'
@@ -203,6 +227,47 @@ test('主模型失败时由千问生成配置', async () => {
   assert.deepEqual(result.generation.models, [
     'qwen/qwen3.7-plus',
   ])
+})
+
+test('主模型生成内容与需求错配时由复核模型重做', async () => {
+  const primary = new FakeProvider(
+    'deepseek',
+    validSpec(),
+  )
+  const reviewer = new FakeProvider(
+    'qwen',
+    sortingSpec(),
+  )
+
+  const result = await generateDynamicExperiment(
+    '动态演示冒泡排序算法',
+    { primary, reviewer },
+  )
+
+  assert.equal(result.spec.renderer.type, 'sandboxed-html')
+  assert.match(result.spec.title, /冒泡排序/)
+  assert.equal(result.generation.fallback, true)
+  assert.equal(primary.calls, 1)
+  assert.equal(reviewer.calls, 1)
+})
+
+test('两个模型都生成与需求无关的内容时拒绝展示', async () => {
+  const primary = new FakeProvider(
+    'deepseek',
+    validSpec(),
+  )
+  const reviewer = new FakeProvider(
+    'qwen',
+    validSpec(),
+  )
+
+  await assert.rejects(
+    generateDynamicExperiment(
+      '动态演示冒泡排序算法',
+      { primary, reviewer },
+    ),
+    /可安全渲染/,
+  )
 })
 
 test('拒绝两个模型返回的非法配置', async () => {

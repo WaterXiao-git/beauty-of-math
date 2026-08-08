@@ -158,7 +158,7 @@ function isQuestionAnalysis(
   )
 }
 
-function isAgentRouteResponse(
+export function isAgentRouteResponse(
   value: unknown,
 ): value is AgentRouteResponse {
   if (!isRecord(value)) {

@@ -5,9 +5,14 @@ import { kdTreeNarration } from '../../narrations/scripts/kd-tree'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
 import { makePoints, nearestNeighbor, buildKdTree, POINT_COUNTS, type Point } from './kdTree'
 import { drawKdTree } from './draw'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
 
 const W = 600
 const H = 480
+
+export const experimentV2 = true
 
 export default function KdTreeExperiment() {
   const [count, setCount] = useState(16)
@@ -43,26 +48,25 @@ export default function KdTreeExperiment() {
   return (
     <>
       {showPresenter && <NarrationPresenter onExit={handleExit} />}
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">KD树</h1>
-            <p className="text-gray-600">交替轴切分与最近邻</p>
-          </div>
-          <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "KD树",
+        ]}
+        title="KD树"
+        subtitle="交替轴切分与最近邻"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full p-3 text-slate-800 md:p-4">
             <h3 className="text-lg font-semibold mb-2">{count} 个点 · 移动鼠标查询最近邻</h3>
-            <canvas ref={canvasRef} width={W} height={H} onMouseMove={onMove} className="w-full rounded-lg bg-slate-50 cursor-crosshair" />
+<canvas ref={canvasRef} width={W} height={H} onMouseMove={onMove} className="w-full rounded-lg bg-slate-50 cursor-crosshair" />
           </div>
-          <div className="space-y-4">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">点数量</h3>
-              <div className="space-y-2">
+        }
+        sidebar={
+          <>
+            <ExperimentCard title="点数量">
+<div className="space-y-2">
                 {POINT_COUNTS.map((n) => (
                   <button
                     key={n}
@@ -73,23 +77,32 @@ export default function KdTreeExperiment() {
                   </button>
                 ))}
               </div>
-              <button onClick={() => setSeed((s) => s + 1)} className="w-full mt-3 px-3 py-2 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200">
+<button onClick={() => setSeed((s) => s + 1)} className="w-full mt-3 px-3 py-2 rounded-lg text-sm font-medium bg-purple-100 text-purple-700 hover:bg-purple-200">
                 🎲 重新随机分布
               </button>
-              <p className="mt-3 text-sm text-gray-600">本次查询访问 <b className="text-emerald-600">{visited}</b> / {count} 个节点</p>
-            </div>
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-              <h3 className="text-lg font-semibold mb-3">应用与趣闻</h3>
-              <ul className="text-sm text-gray-600 space-y-1.5">
+<p className="mt-3 text-sm text-gray-600">本次查询访问 <b className="text-emerald-600">{visited}</b> / {count} 个节点</p>
+</ExperimentCard>
+<ExperimentCard title="应用与趣闻">
+<ul className="text-sm text-gray-600 space-y-1.5">
                 <li>• <b>竖线</b>按 x 切分，<b>横线</b>按 y 切分，交替进行。</li>
                 <li>• 取中位数建树，保证左右子树<b>平衡</b>。</li>
                 <li>• 剪枝让最近邻查询平均只需 <b>O(log n)</b>。</li>
                 <li>• 广泛用于最近邻检索、光线追踪、KNN 分类。</li>
               </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+</ExperimentCard>
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

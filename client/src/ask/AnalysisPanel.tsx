@@ -8,11 +8,12 @@ interface AnalysisPanelProps {
   branchLabel: string
   /** 置信度 0-1 */
   confidence: number
-  /** 路由原因说明 */
-  reason: string
+  /** 识别到的课程章节路径 */
+  chapterPath: string
   /** Top 匹配（含分数） */
   topMatches: { title: string; match: number }[]
   goals: string[]
+  previewTitle: string
   onEnterDemo: () => void
   /** 继续追问：聚焦回输入框 */
   onContinueAsking: () => void
@@ -21,7 +22,7 @@ interface AnalysisPanelProps {
 /** ε−δ 可视化演示预览图（简化 SVG + 播放按钮） */
 function VisualizationPreview() {
   return (
-    <div className="relative rounded-lg bg-gradient-to-br from-gray-50 to-blue-50/50 border border-gray-100 overflow-hidden">
+    <div className="relative overflow-hidden rounded-lg border border-gray-100 bg-gradient-to-br from-gray-50 to-blue-50/50">
       <svg viewBox="0 0 300 150" className="w-full h-auto">
         <g stroke="#9ca3af" strokeWidth={1}>
           <line x1={28} y1={122} x2={282} y2={122} />
@@ -55,67 +56,74 @@ export default function AnalysisPanel({
   intentLabel,
   branchLabel,
   confidence,
-  reason,
+  chapterPath,
   topMatches,
   goals,
+  previewTitle,
   onEnterDemo,
   onContinueAsking,
 }: AnalysisPanelProps) {
   return (
-    <aside className="hidden xl:flex w-72 xl:w-80 shrink-0 bg-white rounded-xl border border-gray-100 shadow-sm p-5 flex-col gap-5 overflow-y-auto">
+    <aside className="hidden w-[320px] shrink-0 flex-col overflow-y-auto rounded-2xl border border-slate-200 bg-white p-4 shadow-sm xl:flex 2xl:w-[350px]">
       {/* 提问解析 */}
-      <section>
-        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">路由解析</h4>
+      <div className="mb-3 flex items-center gap-2 text-sm font-bold text-slate-900">
+        <span className="text-blue-600">✦</span>
+        当前提问解析
+      </div>
+
+      <section className="border-t border-slate-100 py-4">
+        <h4 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-800">
+          <span className="flex h-6 w-6 items-center justify-center rounded-lg bg-blue-50 text-blue-600">●</span>
+          用户问题
+        </h4>
 
         {/* 问题复述 */}
         <div className="flex items-start gap-2 mb-3">
           <svg className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
-          <p className="text-[13px] text-gray-600 leading-relaxed bg-gray-50 rounded-lg p-2.5 border border-gray-100">
-            {question}
+          <p className="rounded-lg bg-slate-50 p-2.5 text-[13px] leading-relaxed text-slate-600">
+            “{question}”
           </p>
         </div>
 
-        {/* 意图与分支 */}
-        <div className="mb-3">
-          <div className="text-xs text-gray-400 mb-1.5">识别结果</div>
-          <div className="flex items-center gap-2 text-xs text-blue-700 bg-blue-50/60 rounded-lg px-2.5 py-2 flex-wrap">
-            <span className="px-2 py-0.5 rounded-full bg-blue-600 text-white font-semibold">{intentLabel}</span>
-            <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-100">{branchLabel}</span>
-            <span className="text-gray-500">置信度 {(confidence * 100).toFixed(0)}%</span>
-          </div>
-        </div>
+      </section>
 
-        {/* 原因 */}
-        <p className="text-[12px] text-gray-500 leading-relaxed bg-gray-50 rounded-lg p-2.5 border border-gray-100">{reason}</p>
+      <section className="border-t border-slate-100 py-4">
+        <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-800">
+          <span className="text-blue-600">▣</span>识别章节
+        </h4>
+        <p className="text-xs leading-5 text-slate-600">{chapterPath || '等待识别课程章节'}</p>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-600">{intentLabel}</span>
+          <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-[11px] font-medium text-indigo-600">{branchLabel}</span>
+          {confidence > 0 && <span className="text-[11px] text-slate-400">置信度 {(confidence * 100).toFixed(0)}%</span>}
+        </div>
       </section>
 
       {/* Top 匹配 */}
-      <section>
-        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Top 匹配</h4>
+      <section className="border-t border-slate-100 py-4">
+        <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-800"><span className="text-blue-600">◎</span>匹配知识点（Top 3）</h4>
         {topMatches.length > 0 ? (
           <div className="space-y-1.5">
             {topMatches.map((m, i) => (
-              <div key={i} className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-gray-50 text-[13px]">
+              <div key={i} className="flex items-center justify-between rounded-lg px-2.5 py-1.5 text-[13px]">
                 <span className="flex items-center gap-2 text-gray-700">
-                  <span className="w-4 h-4 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center">
-                    {i + 1}
-                  </span>
+                  <span className="w-4 text-center text-xs text-slate-400">{i + 1}.</span>
                   <span className="truncate">{m.title}</span>
                 </span>
-                <span className="text-emerald-600 font-bold text-xs">{m.match}%</span>
+                <span className="text-xs font-medium text-emerald-600">匹配度 {m.match}%</span>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-[12px] text-gray-400">无匹配实验</p>
+          <p className="text-[12px] text-gray-400">等待解析结果</p>
         )}
       </section>
 
       {/* 推荐学习目标 */}
-      <section>
-        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">推荐学习目标</h4>
+      <section className="border-t border-slate-100 py-4">
+        <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-800"><span className="text-blue-600">▣</span>推荐学习目标</h4>
         {goals.length > 0 ? (
           <ul className="space-y-2">
             {goals.map((goal, i) => (
@@ -129,19 +137,19 @@ export default function AnalysisPanel({
             ))}
           </ul>
         ) : (
-          <p className="text-[12px] text-gray-400">进入对应知识点后展示</p>
+          <p className="text-[12px] text-gray-400">提交问题后推荐</p>
         )}
       </section>
 
       {/* 可视化预览 */}
-      <section>
-        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">推荐可视化演示</h4>
+      <section className="border-t border-slate-100 py-4">
+        <h4 className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-800"><span className="text-blue-600">▧</span>推荐可视化演示</h4>
         <VisualizationPreview />
-        <p className="text-[11px] text-gray-400 mt-1.5 text-center">y = f(x) · ε−δ 动画预览</p>
+        <p className="mt-1.5 text-center text-[11px] text-gray-400">{previewTitle}</p>
       </section>
 
       {/* CTA */}
-      <div className="space-y-2.5 mt-auto">
+      <div className="mt-auto space-y-2.5 border-t border-slate-100 pt-4">
         <button
           type="button"
           onClick={onEnterDemo}

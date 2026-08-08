@@ -1,6 +1,6 @@
 // ai / no-match 分支：生成确认卡 + 无匹配说明卡
 import { Link } from 'react-router-dom'
-import type { RouteResult } from './AskPage'
+import type { RouteResult } from './routeTypes'
 
 interface GenerateConfirmProps {
   route: RouteResult
@@ -72,7 +72,7 @@ export function GenerateConfirm({ route, onConfirmGenerate, onRefine, generating
           调整问题
         </button>
       </div>
-      <p className="text-[11px] text-gray-400 mt-3">* 临时实验生成将在下一步接入（模板优先 + 大模型配置 + Schema 校验）</p>
+      <p className="text-[11px] text-gray-400 mt-3">* 模板优先，并经过 Schema、渲染器能力与需求一致性校验；不匹配的结果不会展示。</p>
     </section>
   )
 }

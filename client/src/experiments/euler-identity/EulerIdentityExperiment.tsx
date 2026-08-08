@@ -1,164 +1,1248 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+
+import type {
+  ReactNode,
+} from 'react'
+
 import Plot from 'react-plotly.js'
+
 import MathFormula from '../../components/MathFormula/MathFormula'
 import { NarrationPresenter } from '../../components/NarrationPresenter'
+
 import { useNarrationOptional } from '../../contexts/NarrationContext'
-import { eulerIdentityNarration } from '../../narrations/scripts/euler-identity'
+
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
-import { eulerPoint, unitCirclePoints, arcPoints } from './euler'
 
-interface XY { x: number[]; y: number[] }
+import { eulerIdentityNarration } from '../../narrations/scripts/euler-identity'
 
-// 复平面可视化卡片
-function ComplexPlaneCard({ unitCircle, arc, re, im, theta }: {
-  unitCircle: XY; arc: XY; re: number; im: number; theta: number
-}) {
+import {
+  arcPoints,
+  eulerPoint,
+  unitCirclePoints,
+} from './euler'
+
+// ============================================================================
+// Experiment V2
+// ============================================================================
+
+export const experimentV2 =
+  true
+
+// ============================================================================
+// Types
+// ============================================================================
+
+interface XY {
+  x: number[]
+
+  y: number[]
+}
+
+interface SidebarCardProps {
+  title: string
+
+  children:
+    ReactNode
+}
+
+// ============================================================================
+// Sidebar Card
+//
+// 使用浅色 V2 控制卡，避免继续保留旧实验中的 bg-white Card 标记。
+// ============================================================================
+
+function SidebarCard({
+  title,
+  children,
+}: SidebarCardProps) {
   return (
-    <div className="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <h3 className="text-lg font-semibold mb-2">复平面单位圆 · e^(iθ)</h3>
+    <section
+      className="
+        rounded-xl
+        border
+        border-slate-200
+        bg-slate-50
+        p-4
+        shadow-sm
+      "
+    >
+      <h3
+        className="
+          mb-3
+          text-sm
+          font-bold
+          tracking-tight
+          text-slate-800
+        "
+      >
+        {title}
+      </h3>
+
+      {children}
+    </section>
+  )
+}
+
+// ============================================================================
+// Plotly Renderer
+// ============================================================================
+
+interface ComplexPlaneProps {
+  unitCircle:
+    XY
+
+  arc:
+    XY
+
+  re:
+    number
+
+  im:
+    number
+
+  theta:
+    number
+}
+
+function ComplexPlane({
+  unitCircle,
+  arc,
+  re,
+  im,
+  theta,
+}: ComplexPlaneProps) {
+  return (
+    <div
+      className="
+        absolute
+        inset-0
+        min-h-0
+        min-w-0
+      "
+    >
       <Plot
         data={[
-          { x: unitCircle.x, y: unitCircle.y, type: 'scatter', mode: 'lines', line: { color: '#cbd5e1', width: 1.5 }, name: '单位圆', hoverinfo: 'skip' },
-          { x: arc.x, y: arc.y, type: 'scatter', mode: 'lines', line: { color: '#8b5cf6', width: 3 }, name: '已扫过的弧', hoverinfo: 'skip' },
-          { x: [0, re], y: [0, im], type: 'scatter', mode: 'lines+markers', line: { color: '#ef4444', width: 2.5 }, marker: { size: [4, 12], color: '#ef4444' }, name: 'e^(iθ)' },
-          { x: [re], y: [0], type: 'scatter', mode: 'markers', marker: { size: 8, color: '#10b981' }, name: 'cosθ (实部)' },
-          { x: [0], y: [im], type: 'scatter', mode: 'markers', marker: { size: 8, color: '#f59e0b' }, name: 'sinθ (虚部)' },
+          {
+            x:
+              unitCircle.x,
+
+            y:
+              unitCircle.y,
+
+            type:
+              'scatter',
+
+            mode:
+              'lines',
+
+            line: {
+              color:
+                '#64748b',
+
+              width:
+                1.5,
+            },
+
+            name:
+              '单位圆',
+
+            hoverinfo:
+              'skip',
+          },
+
+          {
+            x:
+              arc.x,
+
+            y:
+              arc.y,
+
+            type:
+              'scatter',
+
+            mode:
+              'lines',
+
+            line: {
+              color:
+                '#8b5cf6',
+
+              width:
+                4,
+            },
+
+            name:
+              '已扫过的弧',
+
+            hoverinfo:
+              'skip',
+          },
+
+          {
+            x: [
+              0,
+              re,
+            ],
+
+            y: [
+              0,
+              im,
+            ],
+
+            type:
+              'scatter',
+
+            mode:
+              'lines+markers',
+
+            line: {
+              color:
+                '#fb7185',
+
+              width:
+                2.5,
+            },
+
+            marker: {
+              size: [
+                4,
+                12,
+              ],
+
+              color:
+                '#fb7185',
+            },
+
+            name:
+              'e^(iθ)',
+          },
+
+          {
+            x: [
+              re,
+            ],
+
+            y: [
+              0,
+            ],
+
+            type:
+              'scatter',
+
+            mode:
+              'markers',
+
+            marker: {
+              size:
+                9,
+
+              color:
+                '#34d399',
+            },
+
+            name:
+              'cosθ · 实部',
+          },
+
+          {
+            x: [
+              0,
+            ],
+
+            y: [
+              im,
+            ],
+
+            type:
+              'scatter',
+
+            mode:
+              'markers',
+
+            marker: {
+              size:
+                9,
+
+              color:
+                '#fbbf24',
+            },
+
+            name:
+              'sinθ · 虚部',
+          },
         ]}
         layout={{
-          autosize: true, height: 460,
-          margin: { t: 10, r: 10, b: 30, l: 30 },
-          xaxis: { range: [-1.4, 1.4], zeroline: true, scaleanchor: 'y', scaleratio: 1, title: { text: '实轴 Re' } },
-          yaxis: { range: [-1.4, 1.4], zeroline: true, title: { text: '虚轴 Im' } },
-          legend: { orientation: 'h', y: -0.12 },
-          annotations: [{ x: re, y: im, text: `θ=${theta.toFixed(2)}`, showarrow: true, arrowhead: 2, ax: 30, ay: -30, font: { color: '#ef4444' } }],
+          autosize:
+            true,
+
+          paper_bgcolor:
+            'rgba(0,0,0,0)',
+
+          plot_bgcolor:
+            'rgba(0,0,0,0)',
+
+          font: {
+            color:
+              '#cbd5e1',
+
+            family:
+              'Inter, ui-sans-serif, system-ui, sans-serif',
+          },
+
+          margin: {
+            t:
+              35,
+
+            r:
+              35,
+
+            b:
+              75,
+
+            l:
+              55,
+          },
+
+          xaxis: {
+            range: [
+              -1.4,
+              1.4,
+            ],
+
+            zeroline:
+              true,
+
+            zerolinecolor:
+              '#64748b',
+
+            zerolinewidth:
+              1,
+
+            gridcolor:
+              '#1e293b',
+
+            tickfont: {
+              color:
+                '#94a3b8',
+            },
+
+            title: {
+              text:
+                '实轴 Re',
+
+              font: {
+                color:
+                  '#94a3b8',
+              },
+            },
+
+            scaleanchor:
+              'y',
+
+            scaleratio:
+              1,
+          },
+
+          yaxis: {
+            range: [
+              -1.4,
+              1.4,
+            ],
+
+            zeroline:
+              true,
+
+            zerolinecolor:
+              '#64748b',
+
+            zerolinewidth:
+              1,
+
+            gridcolor:
+              '#1e293b',
+
+            tickfont: {
+              color:
+                '#94a3b8',
+            },
+
+            title: {
+              text:
+                '虚轴 Im',
+
+              font: {
+                color:
+                  '#94a3b8',
+              },
+            },
+          },
+
+          legend: {
+            orientation:
+              'h',
+
+            x:
+              0.5,
+
+            xanchor:
+              'center',
+
+            y:
+              -0.15,
+
+            font: {
+              color:
+                '#cbd5e1',
+            },
+          },
+
+          annotations: [
+            {
+              x:
+                re,
+
+              y:
+                im,
+
+              text:
+                `θ = ${theta.toFixed(
+                  2,
+                )}`,
+
+              showarrow:
+                true,
+
+              arrowhead:
+                2,
+
+              arrowcolor:
+                '#fb7185',
+
+              ax:
+                35,
+
+              ay:
+                -35,
+
+              font: {
+                color:
+                  '#fb7185',
+              },
+            },
+          ],
         }}
-        config={{ responsive: true, displaylogo: false }}
-        className="w-full"
+        config={{
+          responsive:
+            true,
+
+          displaylogo:
+            false,
+
+          scrollZoom:
+            false,
+
+          modeBarButtonsToRemove: [
+            'lasso2d',
+            'select2d',
+          ],
+        }}
+        useResizeHandler
+        style={{
+          width:
+            '100%',
+
+          height:
+            '100%',
+        }}
       />
     </div>
   )
 }
 
-// 侧边公式与控制面板
-function SidePanel({ theta, setTheta, isAnimating, setIsAnimating, re, im }: {
-  theta: number; setTheta: (n: number) => void
-  isAnimating: boolean; setIsAnimating: (b: boolean) => void
-  re: number; im: number
-}) {
-  const isPi = Math.abs(theta - Math.PI) < 0.05
-  return (
-    <div className="space-y-4">
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <h3 className="text-lg font-semibold mb-3">欧拉公式</h3>
-        <div className="p-3 bg-indigo-50 rounded-lg space-y-2">
-          <MathFormula formula="e^{i\theta} = \cos\theta + i\sin\theta" />
-        </div>
-        <div className="mt-3 p-3 bg-rose-50 rounded-lg text-center">
-          <MathFormula formula="e^{i\pi} + 1 = 0" />
-          <p className="text-xs text-rose-600 mt-2">当 θ = π 时的特例</p>
-        </div>
-      </div>
+// ============================================================================
+// Sidebar
+// ============================================================================
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <h3 className="text-lg font-semibold mb-3">当前值</h3>
-        <div className="space-y-1 font-mono text-sm">
-          <div>θ = {theta.toFixed(4)} rad</div>
-          <div className="text-emerald-600">cosθ = {re.toFixed(4)}</div>
-          <div className="text-amber-600">sinθ = {im.toFixed(4)}</div>
-          <div className={isPi ? 'text-rose-600 font-bold' : 'text-gray-700'}>
-            e^(iθ) = {re.toFixed(3)} {im >= 0 ? '+' : '−'} {Math.abs(im).toFixed(3)}i
-          </div>
-        </div>
-        {isPi && <div className="mt-2 text-xs text-rose-600">≈ −1，恰好抵达实轴负方向！</div>}
-      </div>
+interface EulerSidebarProps {
+  theta:
+    number
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <h3 className="text-lg font-semibold mb-3">控制</h3>
-        <button
-          onClick={() => setIsAnimating(!isAnimating)}
-          className={`w-full px-4 py-2 rounded-lg text-sm font-medium text-white mb-3 ${isAnimating ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
-        >{isAnimating ? '⏸ 暂停旋转' : '▶ 播放旋转'}</button>
-        <label className="text-sm text-gray-600">角度 θ: {(theta / Math.PI).toFixed(2)}π</label>
-        <input type="range" min="0" max={(Math.PI * 2).toFixed(3)} step="0.01" value={theta} onChange={(e) => { setIsAnimating(false); setTheta(parseFloat(e.target.value)) }} className="w-full" />
-        <div className="flex gap-2 mt-2">
-          {[0, 0.5, 1, 1.5].map((m) => (
-            <button key={m} onClick={() => { setIsAnimating(false); setTheta(m * Math.PI) }} className="flex-1 px-1 py-1 text-xs rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100">{m === 0 ? '0' : `${m}π`}</button>
-          ))}
-        </div>
-      </div>
+  setTheta:
+    (
+      value: number,
+    ) => void
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <h3 className="text-lg font-semibold mb-2">五大常数</h3>
-        <ul className="text-sm text-gray-600 space-y-1">
-          <li>• <b>e</b> 自然对数底 ≈ 2.718</li>
-          <li>• <b>i</b> 虚数单位，i² = −1</li>
-          <li>• <b>π</b> 圆周率 ≈ 3.14159</li>
-          <li>• <b>1</b> 乘法单位元</li>
-          <li>• <b>0</b> 加法单位元</li>
-        </ul>
-      </div>
-    </div>
-  )
+  isAnimating:
+    boolean
+
+  setIsAnimating:
+    (
+      value: boolean,
+    ) => void
+
+  re:
+    number
+
+  im:
+    number
+
+  onStartNarration:
+    () => void
 }
 
-export default function EulerIdentityExperiment() {
-  const [theta, setTheta] = useState(Math.PI) // 当前角度，默认 π
-  const [isAnimating, setIsAnimating] = useState(false)
-  const animRef = useRef<number | null>(null)
+function EulerSidebar({
+  theta,
+  setTheta,
+  isAnimating,
+  setIsAnimating,
+  re,
+  im,
+  onStartNarration,
+}: EulerSidebarProps) {
+  const isPi =
+    Math.abs(
+      theta -
+        Math.PI,
+    ) <
+    0.05
 
-  const narration = useNarrationOptional()
-  const { showPresenter, openPresenter, handleExit: handleExitPresenter } = usePresenterHistory(narration)
+  const setAngle =
+    (
+      multiplier: number,
+    ) => {
+      setIsAnimating(
+        false,
+      )
 
-  useEffect(() => {
-    if (narration) narration.loadScript(eulerIdentityNarration)
-  }, [narration])
-
-  // 旋转动画
-  useEffect(() => {
-    if (!isAnimating) return
-    const animate = () => {
-      setTheta((t) => {
-        const next = t + 0.02
-        return next > Math.PI * 2 ? 0 : next
-      })
-      animRef.current = requestAnimationFrame(animate)
+      setTheta(
+        multiplier *
+          Math.PI,
+      )
     }
-    animRef.current = requestAnimationFrame(animate)
-    return () => { if (animRef.current) cancelAnimationFrame(animRef.current) }
-  }, [isAnimating])
-
-  // 单位圆
-  const unitCircle = useMemo(() => unitCirclePoints(100), [])
-
-  // 当前点 e^(iθ) = cosθ + i·sinθ
-  const { re, im } = eulerPoint(theta)
-
-  // 走过的弧
-  const arc = useMemo(() => arcPoints(theta, 100), [theta])
 
   return (
     <>
-      {showPresenter && <NarrationPresenter onExit={handleExitPresenter} />}
-      <div className="space-y-6">
-        <header className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">欧拉恒等式</h1>
-            <p className="text-gray-600">最美的数学公式 e^(iπ) + 1 = 0</p>
-          </div>
-          <button onClick={openPresenter} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-medium text-sm shadow-lg shadow-indigo-500/25 hover:shadow-xl transition-all duration-200 hover:scale-105 active:scale-95">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z" clipRule="evenodd" /></svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <ComplexPlaneCard unitCircle={unitCircle} arc={arc} re={re} im={im} theta={theta} />
-          <SidePanel
-            theta={theta} setTheta={setTheta}
-            isAnimating={isAnimating} setIsAnimating={setIsAnimating}
-            re={re} im={im}
+      {/* ====================================================================
+          Concept
+      ==================================================================== */}
+
+      <SidebarCard title="欧拉公式">
+        <div
+          className="
+            rounded-lg
+            border
+            border-indigo-100
+            bg-indigo-50
+            p-3
+          "
+        >
+          <MathFormula
+            formula="e^{i\theta} = \cos\theta + i\sin\theta"
           />
         </div>
-      </div>
+
+        <div
+          className="
+            mt-3
+            rounded-lg
+            border
+            border-rose-100
+            bg-rose-50
+            p-3
+            text-center
+          "
+        >
+          <MathFormula
+            formula="e^{i\pi} + 1 = 0"
+          />
+
+          <p
+            className="
+              mt-2
+              text-xs
+              text-rose-600
+            "
+          >
+            θ = π 时，复指数恰好到达 −1。
+          </p>
+        </div>
+      </SidebarCard>
+
+      {/* ====================================================================
+          Current value
+      ==================================================================== */}
+
+      <SidebarCard title="当前复数">
+        <div
+          className="
+            space-y-2
+            font-mono
+            text-sm
+            text-slate-700
+          "
+        >
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              gap-3
+            "
+          >
+            <span className="text-slate-500">
+              θ
+            </span>
+
+            <span className="font-semibold">
+              {theta.toFixed(
+                4,
+              )}{' '}
+              rad
+            </span>
+          </div>
+
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              gap-3
+            "
+          >
+            <span className="text-slate-500">
+              cos θ
+            </span>
+
+            <span className="font-semibold text-emerald-600">
+              {re.toFixed(
+                4,
+              )}
+            </span>
+          </div>
+
+          <div
+            className="
+              flex
+              items-center
+              justify-between
+              gap-3
+            "
+          >
+            <span className="text-slate-500">
+              sin θ
+            </span>
+
+            <span className="font-semibold text-amber-600">
+              {im.toFixed(
+                4,
+              )}
+            </span>
+          </div>
+
+          <div
+            className="
+              mt-2
+              border-t
+              border-slate-200
+              pt-2
+            "
+          >
+            <div className="text-xs text-slate-500">
+              e^(iθ)
+            </div>
+
+            <div
+              className={[
+                'mt-1',
+                'font-bold',
+
+                isPi
+                  ? 'text-rose-600'
+                  : 'text-indigo-600',
+              ].join(
+                ' ',
+              )}
+            >
+              {re.toFixed(
+                3,
+              )}{' '}
+              {im >=
+              0
+                ? '+'
+                : '−'}{' '}
+              {Math.abs(
+                im,
+              ).toFixed(
+                3,
+              )}
+              i
+            </div>
+          </div>
+        </div>
+
+        {isPi && (
+          <div
+            className="
+              mt-3
+              rounded-lg
+              bg-rose-50
+              px-3
+              py-2
+              text-xs
+              font-medium
+              text-rose-600
+            "
+          >
+            当前点接近 −1，因此 e^(iπ) + 1 ≈ 0。
+          </div>
+        )}
+      </SidebarCard>
+
+      {/* ====================================================================
+          Parameters
+      ==================================================================== */}
+
+      <SidebarCard title="参数控制">
+        <button
+          type="button"
+          onClick={() =>
+            setIsAnimating(
+              !isAnimating,
+            )
+          }
+          className={[
+            'mb-4',
+            'w-full',
+            'rounded-lg',
+            'px-4',
+            'py-2.5',
+            'text-sm',
+            'font-semibold',
+            'text-white',
+            'transition',
+
+            isAnimating
+              ? 'bg-rose-500 hover:bg-rose-600'
+              : 'bg-emerald-500 hover:bg-emerald-600',
+          ].join(
+            ' ',
+          )}
+        >
+          {isAnimating
+            ? '⏸ 暂停旋转'
+            : '▶ 播放旋转'}
+        </button>
+
+        <div
+          className="
+            flex
+            items-center
+            justify-between
+            gap-3
+            text-xs
+          "
+        >
+          <label
+            htmlFor="euler-theta"
+            className="
+              font-semibold
+              text-slate-600
+            "
+          >
+            角度 θ
+          </label>
+
+          <span
+            className="
+              rounded-md
+              bg-slate-200
+              px-2
+              py-1
+              font-mono
+              text-slate-700
+            "
+          >
+            {(
+              theta /
+              Math.PI
+            ).toFixed(
+              2,
+            )}
+            π
+          </span>
+        </div>
+
+        <input
+          id="euler-theta"
+          type="range"
+          min="0"
+          max={(
+            Math.PI *
+            2
+          ).toFixed(
+            3,
+          )}
+          step="0.01"
+          value={
+            theta
+          }
+          onChange={(
+            event,
+          ) => {
+            setIsAnimating(
+              false,
+            )
+
+            setTheta(
+              Number(
+                event
+                  .target
+                  .value,
+              ),
+            )
+          }}
+          className="
+            mt-3
+            w-full
+            accent-indigo-600
+          "
+        />
+
+        <div
+          className="
+            mt-3
+            grid
+            grid-cols-4
+            gap-2
+          "
+        >
+          {[
+            0,
+            0.5,
+            1,
+            1.5,
+          ].map(
+            (
+              multiplier,
+            ) => (
+              <button
+                key={
+                  multiplier
+                }
+                type="button"
+                onClick={() =>
+                  setAngle(
+                    multiplier,
+                  )
+                }
+                className="
+                  rounded-lg
+                  border
+                  border-indigo-100
+                  bg-indigo-50
+                  px-1
+                  py-1.5
+                  text-xs
+                  font-semibold
+                  text-indigo-700
+                  transition
+                  hover:border-indigo-200
+                  hover:bg-indigo-100
+                "
+              >
+                {multiplier ===
+                0
+                  ? '0'
+                  : `${multiplier}π`}
+              </button>
+            ),
+          )}
+        </div>
+      </SidebarCard>
+
+      {/* ====================================================================
+          Constants
+      ==================================================================== */}
+
+      <SidebarCard title="五大数学常数">
+        <div
+          className="
+            grid
+            grid-cols-1
+            gap-2
+            text-xs
+            leading-5
+            text-slate-600
+          "
+        >
+          <div>
+            <strong className="text-slate-800">
+              e
+            </strong>
+            {' '}
+            — 自然对数底 ≈ 2.718
+          </div>
+
+          <div>
+            <strong className="text-slate-800">
+              i
+            </strong>
+            {' '}
+            — 虚数单位，i² = −1
+          </div>
+
+          <div>
+            <strong className="text-slate-800">
+              π
+            </strong>
+            {' '}
+            — 圆周率 ≈ 3.14159
+          </div>
+
+          <div>
+            <strong className="text-slate-800">
+              1
+            </strong>
+            {' '}
+            — 乘法单位元
+          </div>
+
+          <div>
+            <strong className="text-slate-800">
+              0
+            </strong>
+            {' '}
+            — 加法单位元
+          </div>
+        </div>
+      </SidebarCard>
+
+      {/* ====================================================================
+          Narration
+      ==================================================================== */}
+
+      <SidebarCard title="教学讲解">
+        <p
+          className="
+            mb-3
+            text-xs
+            leading-5
+            text-slate-500
+          "
+        >
+          从单位圆、复指数与 θ = π 三个角度逐步理解欧拉恒等式。
+        </p>
+
+        <button
+          type="button"
+          onClick={
+            onStartNarration
+          }
+          className="
+            inline-flex
+            w-full
+            items-center
+            justify-center
+            gap-2
+            rounded-lg
+            bg-indigo-600
+            px-4
+            py-2.5
+            text-sm
+            font-semibold
+            text-white
+            shadow-sm
+            transition
+            hover:bg-indigo-700
+          "
+        >
+          <svg
+            className="
+              h-4
+              w-4
+            "
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217z"
+              clipRule="evenodd"
+            />
+          </svg>
+
+          开始讲解
+        </button>
+      </SidebarCard>
+    </>
+  )
+}
+
+// ============================================================================
+// Experiment
+// ============================================================================
+
+export default function EulerIdentityExperiment() {
+  const [
+    theta,
+    setTheta,
+  ] =
+    useState(
+      Math.PI,
+    )
+
+  const [
+    isAnimating,
+    setIsAnimating,
+  ] =
+    useState(
+      false,
+    )
+
+  const animationRef =
+    useRef<
+      number | null
+    >(
+      null,
+    )
+
+  // ==========================================================================
+  // Narration
+  // ==========================================================================
+
+  const narration =
+    useNarrationOptional()
+
+  const {
+    showPresenter,
+    openPresenter,
+    handleExit:
+      handleExitPresenter,
+  } =
+    usePresenterHistory(
+      narration,
+    )
+
+  useEffect(
+    () => {
+      if (
+        narration
+      ) {
+        narration.loadScript(
+          eulerIdentityNarration,
+        )
+      }
+    },
+    [
+      narration,
+    ],
+  )
+
+  // ==========================================================================
+  // Rotation
+  // ==========================================================================
+
+  useEffect(
+    () => {
+      if (
+        !isAnimating
+      ) {
+        return
+      }
+
+      const animate =
+        () => {
+          setTheta(
+            (
+              current,
+            ) => {
+              const next =
+                current +
+                0.02
+
+              return next >
+                Math.PI *
+                  2
+                ? 0
+                : next
+            },
+          )
+
+          animationRef.current =
+            window.requestAnimationFrame(
+              animate,
+            )
+        }
+
+      animationRef.current =
+        window.requestAnimationFrame(
+          animate,
+        )
+
+      return () => {
+        if (
+          animationRef.current !==
+          null
+        ) {
+          window.cancelAnimationFrame(
+            animationRef.current,
+          )
+        }
+      }
+    },
+    [
+      isAnimating,
+    ],
+  )
+
+  // ==========================================================================
+  // Math data
+  // ==========================================================================
+
+  const unitCircle =
+    useMemo(
+      () =>
+        unitCirclePoints(
+          100,
+        ),
+      [],
+    )
+
+  const {
+    re,
+    im,
+  } =
+    eulerPoint(
+      theta,
+    )
+
+  const arc =
+    useMemo(
+      () =>
+        arcPoints(
+          theta,
+          100,
+        ),
+      [
+        theta,
+      ],
+    )
+
+  // ==========================================================================
+  // Render
+  // ==========================================================================
+
+  return (
+    <>
+      {showPresenter && (
+        <NarrationPresenter
+          onExit={
+            handleExitPresenter
+          }
+        />
+      )}
+
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          '复数与数学分析',
+          '欧拉恒等式',
+        ]}
+        title="欧拉恒等式"
+        subtitle="在复平面单位圆上观察 e^(iθ) = cosθ + i·sinθ，并理解 e^(iπ) + 1 = 0。"
+        legend={[
+          {
+            label:
+              '单位圆',
+
+            color:
+              '#64748b',
+          },
+
+          {
+            label:
+              '扫过的圆弧',
+
+            color:
+              '#8b5cf6',
+          },
+
+          {
+            label:
+              'e^(iθ)',
+
+            color:
+              '#fb7185',
+          },
+
+          {
+            label:
+              '实部 cosθ',
+
+            color:
+              '#34d399',
+          },
+
+          {
+            label:
+              '虚部 sinθ',
+
+            color:
+              '#fbbf24',
+          },
+        ]}
+        canvas={
+          <ComplexPlane
+            unitCircle={
+              unitCircle
+            }
+            arc={
+              arc
+            }
+            re={
+              re
+            }
+            im={
+              im
+            }
+            theta={
+              theta
+            }
+          />
+        }
+        sidebar={
+          <EulerSidebar
+            theta={
+              theta
+            }
+            setTheta={
+              setTheta
+            }
+            isAnimating={
+              isAnimating
+            }
+            setIsAnimating={
+              setIsAnimating
+            }
+            re={
+              re
+            }
+            im={
+              im
+            }
+            onStartNarration={
+              openPresenter
+            }
+          />
+        }
+      />
     </>
   )
 }

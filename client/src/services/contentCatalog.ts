@@ -46,6 +46,36 @@ export interface PublishedExperiment {
   difficulty: string
   hasAnimation: boolean
   hasSteps: boolean
+  courseId?: string
+  courseName?: string
+  chapterId?: string
+  chapterName?: string
+  knowledgePointIds?: string[]
+  knowledgePointNames?: string[]
+  tags?: string[]
+  keywords?: string[]
+}
+
+export interface ExperimentTaxonomyCourse {
+  id: string
+  name: string
+  count: number
+  chapterCount: number
+}
+
+export interface ExperimentTaxonomyChapter {
+  id: string
+  name: string
+  count: number
+  courseId: string
+}
+
+export interface ExperimentTaxonomyKnowledgePoint {
+  id: string
+  name: string
+  count: number
+  courseId: string
+  chapterId: string
 }
 
 export interface ExperimentCatalogResponse {
@@ -57,6 +87,12 @@ export interface ExperimentCatalogResponse {
   facets: {
     difficulties: Record<string, number>
     topics: Record<string, number>
+    taxonomy: {
+      courses: ExperimentTaxonomyCourse[]
+      chapters: ExperimentTaxonomyChapter[]
+      knowledgePoints: ExperimentTaxonomyKnowledgePoint[]
+      unclassifiedCount: number
+    }
   }
 }
 
@@ -89,6 +125,9 @@ export function fetchExperimentCatalog(
     q?: string
     difficulty?: string
     topic?: string
+    courseId?: string
+    chapterId?: string
+    knowledgePointId?: string
     offset?: number
     limit?: number
   },

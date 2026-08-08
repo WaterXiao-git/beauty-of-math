@@ -1,3 +1,146 @@
+## 2026-08-09 · 八门大学数学课程知识图谱
+
+**模块**：课程知识模型、章节目录、知识地图、知识点导航、AI 提问页与实验页目录
+
+**内容**：章节目录由单一高等数学扩展为八门课程：高等数学、线性代数、概率论与数理统计、离散数学与数论、数值分析与优化、解析几何与拓扑、应用数学与动力系统、基础数学与函数。每门课程均建立四章、分节和大学课程层级的核心知识点，并为知识点生成直接关联、先修关系与最多二层的递归邻接遍历。目录新增课程切换器；切换后左侧章节树、中央知识地图、下方同节知识点卡片、右侧简介与学习目标同步更新。首页、AI 提问页和 Experiment V2 实验页抽屉共用同一课程模型，实验页点击知识点仍回到对应课程的知识地图，由用户决定是否进入演示。
+
+**涉及文件**：`client/src/course/courseCatalog.ts`（新增）、`client/src/course/courseData.ts`、`client/src/course/KnowledgeNavigationPanel.tsx`、`client/src/course/DrawerSidebar.tsx`、`client/src/course/CourseHome.tsx`、`client/src/course/KnowledgeMap.tsx`、`client/src/ask/AskPage.tsx`、`client/src/demo/DemoHeader.tsx`
+
+**验证**：八门课程逐门切换后均显示各自四章内容；线性代数“矩阵及其运算”可展示关联知识地图、同节知识点卡片和课程专属详情；AI 提问页与 `/demo/epsilon-delta` 实验页目录均可选择八门课程，并保留“浏览全部 300 个可视化实验”入口。专项 ESLint 与 TypeScript 检查通过。
+
+---
+## 2026-08-09 · 删除旧实验外壳并统一 Experiment V2 入口
+
+**模块**：应用路由、历史布局、300 实验统一入口、课程目录抽屉
+
+**内容**：删除历史深色侧栏及其移动端头部，移除 `App.tsx` 中约 300 条直接渲染旧实验组件的重复顶级路由。所有正式实验统一通过 `/demo/:experimentId` 进入 `DemoPage → Experiment V2` 工作台；旧的 `/calculus`、`/fourier` 等单段地址保留兼容重定向并立即跳到相应 `/demo/*`，避免历史收藏失效，同时彻底消除旧侧栏与新版顶栏同时出现的双层导航。恢复章节目录抽屉底部“浏览全部 300 个可视化实验”入口，仍保留此前要求删除的右上角“全部”文字按钮。章节与小节改为“首次定位选中知识点时自动展开，之后尊重用户手动开合”，当前知识点不再强制锁定父级展开状态。AI 提问页增加仅限当前前端运行时的会话快照：进入实验后使用浏览器返回会恢复问题、匹配结果、学习路径和解析面板；刷新页面或从导航重新进入则保持空白初始态，不写入浏览器持久存储。
+
+**涉及文件**：`client/src/App.tsx`、`client/src/components/Layout/Layout.tsx`、`client/src/components/Layout/Sidebar.tsx`（删除）、`client/src/course/DrawerSidebar.tsx`、`client/src/course/KnowledgeNavigationPanel.tsx`、`client/src/course/CourseHome.tsx`、`client/src/ask/AskPage.tsx`
+
+**验证**：浏览器确认 `/calculus` 自动跳转到 `/demo/calculus`，页面只保留 Experiment V2 顶栏、课程目录、实验主画布和右侧控制区，不再出现深色侧栏；从 `/ask` 打开课程目录可见底部“浏览全部 300 个可视化实验”，点击后正确进入 `/experiments` 并显示 300 个结果；在 `/?point=limit-of-function` 中点击第一章和 `1.2 极限` 均可收起包含当前选中知识点的内容；提交“定积分怎么计算面积”进入实验后返回，问题和完整匹配结果恢复，重新加载 `/ask` 后恢复为 0/500 与“等待你的问题”。
+
+---
+## 2026-08-09 · 恢复知识地图首页与知识点目录
+
+**模块**：知识地图首页、AI 提问页、知识点目录、移动端抽屉、Experiment V2 面包屑
+
+**内容**：撤销课程卡片首页和误放在根路径的 AI 提问工作台，根路径 `/` 恢复为客户示意图中的知识地图首页，AI 自然语言提问继续使用独立 `/ask` 页面。首页与 AI 页初次进入时均不再默认绑定“函数的极限”：四个章节保持收起、无知识点选中；首页显示知识点选择引导，选择后才加载知识地图与详情；AI 页输入框为空，当前提问解析和 AI 理解结果显示未提问占位，提交后才进行知识点推断。首页左侧改回课程知识点目录，数据来自原课程章节、分节和知识点模型；知识点点击只更新 URL 的 `point` 参数、中央知识地图、知识点卡片和右侧详情，不直接进入实验。演示页中的同一目录也统一返回 `/?point=...` 知识地图页，由用户自行决定是否再次进入演示。目录采用客户图中的编号圆标、折叠箭头、竖向引导线和圆点知识项，并同时用于桌面常驻栏和移动端抽屉。完整的 8 门课程与 300 个实验分类仅保留在实验中心 `/experiments`。删除目录头部重复的“全部实验”快捷入口。首页面包屑精简为“首页 → 当前知识点”，实验页统一精简为“首页 → 实验库 → 实验名”，不再展示冗长的单课程章节路径。
+
+**涉及文件**：`client/src/App.tsx`、`client/src/course/CourseHome.tsx`、`client/src/course/KnowledgeNavigationPanel.tsx`、`client/src/course/DrawerSidebar.tsx`、`client/src/ask/AskPage.tsx`、`client/src/demo/DemoHeader.tsx`、`client/src/course/CourseSelectionHome.tsx`（删除）、`client/src/course/CourseTreeNavigation.tsx`（删除）
+
+**验证**：前端变更文件 ESLint 与 TypeScript 通过；上一轮生产构建确认 300/300 实验配置完整且主题违规为 0。浏览器验证 `/` 初始四章收起且显示“选择一个知识点开始学习”；`/ask` 输入为空、显示 0/500，并在中栏和右栏展示未提问状态；从 `/demo/epsilon-delta` 打开章节目录并点击“数列的极限”后进入 `/?point=limit-of-sequence` 的知识地图及详情，没有切换至对应实验。
+
+---
+## 2026-08-09 · 全课程首页与 300 实验统一导航
+
+**模块**：课程选择首页、全局课程抽屉、实验中心 URL 筛选、Experiment V2 面包屑
+
+**内容**：根路径 `/` 不再默认展示“高等数学（上册）”单课程知识页，改为面向全部内容的课程选择首页，展示 8 门课程及各自真实章节数、实验数，并提供全部实验和 AI 提问入口。全局课程抽屉从旧高数本地种子切换为 300 个真实实验的统一分类，支持展开 8 门课程、26 个章节、71 个知识点以及搜索，课程、章节、知识点均可进入对应实验筛选结果。实验中心新增 URL 查询参数同步，同一路由下从首页或抽屉切换课程也会正确更新结果。Experiment V2 顶栏为实验自动读取真实分类，统一显示并链接“首页 → 课程 → 章节 → 知识点 → 实验”；AI 提问页没有明确知识点上下文时不再默认突出高等数学。
+
+**涉及文件**：`client/src/App.tsx`、`client/src/course/CourseSelectionHome.tsx`、`client/src/course/DrawerSidebar.tsx`、`client/src/course/CourseHeader.tsx`、`client/src/course/ExperimentLibraryPage.tsx`、`client/src/course/ExperimentLibrary.tsx`、`client/src/demo/DemoHeader.tsx`、`client/src/ask/AskPage.tsx`
+
+**验证**：前端完整 ESLint、生产构建、300/300 课程配置检查与主题检查通过；涉及文件专项 ESLint 和 TypeScript 通过。浏览器确认 `/` 展示 8 门课程且高等数学只是其中一项；全局抽屉展示 8 门课程、300 个实验及课程内章节/知识点链接；从首页进入线性代数返回 28 个实验；`/demo/linear-algebra` 自动显示“首页 → 线性代数 → 矩阵与线性代数 → 矩阵与向量 → 线性代数”，首页链接可返回 `/`。
+
+---
+## 2026-08-09 · 300 个实验课程体系与 Agent 双模式验收
+
+**模块**：实验数据目录、实验中心、AI 智能提问、动态实验、统一 Experiment V2 工作台
+
+**内容**：按真实的 300 个实验 Manifest 建立“课程 → 章节 → 知识点 → 实验”统一分类，共形成 8 门课程、26 个章节和 71 个知识点，未分类实验为 0；实验目录接口新增课程、章节、知识点、难度与关键词组合查询，并返回由真实数据计算的层级聚合。实验中心增加课程卡片、章节/知识点联动筛选、搜索及完整分页浏览，结果数量均来自接口。AI 提问增加“智能推荐”和“直接问 AI”两种明确模式：直接模式绕过实验路由调用解释接口；智能推荐命中后不再强制跳转，由用户选择打开实验或改由 AI 解答；未命中时自动进入 AI 解释与临时实验生成流程。AI 临时实验页移除旧版侧边栏和独立布局，统一接入当前 Experiment V2 顶栏、课程抽屉、截图/全屏、上下文助教、参数区、知识点区和真实教学步骤播放器，同时保留原动态画布与参数交互。
+
+**涉及文件**：`server/src/content/experimentTaxonomy.ts`、`server/src/services/experimentCatalogService.ts`、`server/src/services/experimentCatalogService.test.ts`、`server/src/routes/content.ts`、`client/src/services/contentCatalog.ts`、`client/src/course/ExperimentLibrary.tsx`、`client/src/ask/QuestionInput.tsx`、`client/src/ask/AskPage.tsx`、`client/src/ask/MatchResults.tsx`、`client/src/ask/AnswerCard.tsx`、`client/src/components/AgentExperimentRouter/AgentExperimentRouter.tsx`、`client/src/components/Layout/Layout.tsx`、`client/src/experiments/dynamic/DynamicExperimentPage.tsx`
+
+**验证**：服务端 199 项测试、Manifest 检查与 TypeScript 构建通过；前端 257 个测试文件共 1855 项测试、完整 ESLint、TypeScript 与生产构建通过，构建期确认 300/300 实验课程配置完整且主题违规为 0。浏览器验证实验中心展示 300 个真实实验及 8 门课程的真实数量，关键词“极限 / 矩阵 / 概率”分别返回 5 / 25 / 33 项，高等数学课程筛选返回 50 项；验证智能推荐命中后保留用户选择、直接 AI 模式可取得 DeepSeek 教学解释；验证“四维超立方体的三维投影”生成 16 个顶点、32 条边及 4 个教学步骤，并以统一 Experiment V2 页面呈现。
+
+---
+## 2026-08-09 · 修复动态实验需求与输出错配
+
+**模块**：智能提问页、动态实验 Agent、生成接口、语义一致性校验
+
+**内容**：修复智能提问页仍调用旧二维 `/api/generate`、导致复杂需求被强行转换成无关函数曲线的问题。智能提问页现与首页 Agent 入口统一使用 `/api/agent/route` 和 `/api/agent/generate`；停止挂载落后的 `/api/route`、`/api/generate` 后台接口，并取消后端失败时会编造低置信候选的旧前端目录降级。统一路由继续沿用规则优先、候选召回、低置信度 Agent 增强与备用模型复核的原有算法；当问题明确属于数学可视化且没有可靠预设实验时，即使模型否定了弱候选，也会保留“确认生成”入口，避免可执行需求被降级成无操作死路。新增“需求—渲染器—教学内容”一致性门禁：三维/高维、算法、随机模拟、矩阵变换、分形和物理动态等需求必须使用通用隔离画布；极坐标、四则运算与显式函数分别使用匹配的结构化渲染器；核心数学概念必须同时出现在标题、描述、公式、步骤或知识点中。主模型错配时自动交由备用模型重做，双模型均不合格时拒绝展示，避免标题正确但图形无关。
+
+**涉及文件**：`client/src/ask/AskPage.tsx`、`client/src/ask/GenerateConfirm.tsx`、`client/src/ask/askData.ts`、`client/src/services/questionRoute.ts`、`client/src/services/questionRoute.test.ts`、`client/src/services/agentRouting.ts`、`server/src/index.ts`、`server/src/routes/agent.ts`、`server/src/agent/generationOffer.ts`、`server/src/agent/generationOffer.test.ts`、`server/src/agent/dynamicExperiment/alignment.ts`、`server/src/agent/dynamicExperiment/generator.ts`、`server/src/agent/dynamicExperiment/alignment.test.ts`、`server/src/agent/dynamicExperiment/generator.test.ts`
+
+**验证**：服务端 197 项测试、300 实验 Manifest 检查和 TypeScript 构建通过；前端路由与动态实验 7 项专项测试、TypeScript 及涉及文件 ESLint 通过。真实接口确认旧 `/api/route`、`/api/generate` 均返回 404；浏览器完整验证“四维超立方体的三维投影”先进入受约束生成确认，再生成 `sandboxed-html` 高维超立方体实验，画布正确显示 16 个顶点、32 条边和旋转/投影距离参数，未出现无关二维余弦曲线。
+
+---
+## 2026-08-09 · 精简实验底栏与模型故障兜底
+
+**模块**：Experiment V2、问题反馈入口、数学解释服务、质量检查
+
+**内容**：取消未与实验状态绑定的通用“观察 / 调整 / 比较 / 总结”播放器，普通实验释放底部空间；罗尔定理、导数和 ε−δ 三个具有真实教学状态的专用播放器继续保留。右下角反馈入口改为仅含问题图标的圆形按钮，保留点击反馈、悬浮说明及无障碍标签。修复外部模型调用被统一 4.5 秒提前中止及旧进程环境变量覆盖新密钥的问题：开发环境统一以 `server/.env` 为 AI 配置源，概念解释、路由 Agent、临时实验生成与模型复核共享同一套 DeepSeek/千问地址、模型、密钥和独立超时；生产环境仍优先使用部署平台变量。概念解释关闭不必要的深度思考，并在响应中标记真实模型或本地兜底来源。同步调整实验质量扫描规则，不再将主动不使用通用播放器判为缺陷。
+
+**涉及文件**：`client/src/experiment-v2/ExperimentShell.tsx`、`client/src/components/BugReport/BugReportButton.tsx`、`client/src/ask/AnswerCard.tsx`、`client/src/demo/ContextAssistant.tsx`、`client/scripts/check-experiment-v2-quality.ts`、`server/src/config/environment.ts`、`server/src/index.ts`、`server/src/services/llmService.ts`、`server/src/services/llmService.test.ts`、`server/src/agent/ai/config.ts`、`server/.env.example`
+
+**验证**：前端专项 ESLint 和 TypeScript 通过；服务端 189 项测试、300 实验 Manifest 检查和构建通过；浏览器验证普通实验无通用底栏、罗尔定理专用步骤保留、反馈按钮仅显示圆形图标且仍可打开表单；当前 `.env` 下 DeepSeek V4 Flash 与千问 3.7 Plus 均完成真实请求，`/api/answer` 返回 DeepSeek 来源，`/api/generate` 成功生成 161 个采样点与 4 个教学步骤，Agent 路由记录实际使用 `deepseek/deepseek-v4-flash`。
+
+---
+## 2026-08-08 · 全部实验统一接入 Experiment V2 工作台
+
+**模块**：实验路由、Experiment V2 兼容运行时、统一浅色主题、构建检查
+
+**内容**：将尚未原生迁移的 43 个历史实验统一改由 `LegacyExperimentRuntime` 加载，使 300 个实验均具备同一套顶栏、课程目录、截图/全屏、上下文 AI 助教与底部教学步骤；兼容运行时移除会挤压旧实验主区域的临时说明侧栏，并隐藏旧页面重复标题，同时保留原有 Canvas、Plotly、参数控制和讲解逻辑；`lazyRetry` 增加组件 Props 泛型支持；清理 `package.json` 中重复的主题检查脚本，并修正反应扩散实验浅色徽标的低对比度文字。
+
+**涉及文件**：`client/src/App.tsx`、`client/src/experiment-v2/LegacyExperimentRuntime.tsx`、`client/src/index.css`、`client/src/experiments/reaction-diffusion/ReactionDiffusionExperiment.tsx`、`client/package.json`
+
+**验证**：全仓 ESLint 通过；TypeScript 与生产构建通过；课程完整性检查确认 300/300；主题检查违规 0；浏览器抽查旧 Plotly（微积分）、旧 Canvas（加减乘除）和原生 V2（ε-δ）均正常渲染且控制台无错误。
+
+---
+## 2026-08-08 · 演示页上下文助教、截图模式与全屏
+
+**模块**：统一演示页、AI 概念解释服务、屏幕捕获、迁移工具
+
+**内容**：演示页顶部新增真正的页内上下文 AI 助教，提问会自动携带当前演示标题和课程面包屑；DeepSeek 主模型与千问备用模型均限制为 4.5 秒，双模型不可用时返回与罗尔定理、导数几何意义、ε−δ 或当前知识点匹配的本地教学解释，避免旧接口最长 60 秒的串行等待。截图入口改为专用演示模式，会隐藏课程目录、播放器与普通页头并提供保存 PNG、全屏和退出操作；普通演示页同时增加全屏切换。迁移产生的可重建备份目录加入 Git 忽略，但保留质量报告与迁移脚本供复查。
+
+**涉及文件**：`client/src/demo/ContextAssistant.tsx`、`client/src/demo/DemoHeader.tsx`、`client/src/demo/screenCapture.ts`、`client/src/experiment-v2/ExperimentShell.tsx`、`server/src/services/llmService.ts`、`server/src/services/llmService.test.ts`、`.gitignore`
+
+**验证**：服务端 189 项测试和 TypeScript 构建通过；前端相关文件 ESLint 与 TypeScript 通过；浏览器实测页内助教约 9 秒内完成本地兜底，截图模式隐藏侧栏和播放器，全屏进入、退出及普通布局恢复正常。
+
+---
+## 2026-08-08 · 统一白色实验画布与核心演示行为
+
+**模块**：Experiment V2、ε−δ、导数几何意义、罗尔定理、版本化内容种子
+
+**内容**：统一实验外壳改为客户要求的白底、浅灰网格和蓝色强调体系，并同步修正 245 个原本依赖深色文字的迁移实验；`usePanZoom` 增加显式复位，ε−δ 与导数演示的重置现在会同时恢复默认案例、参数、步骤、播放状态和画布视口；罗尔定理默认案例改为 `f(x)=x²−1`、区间 `[-1,1]`、`ξ=0`，重置会恢复全部三项条件并清除画布平移缩放；导数的 `h` 扩展为 `[-2,2]` 且跳过零点，新增左右趋近快捷按钮，可直接比较左、右差商；同时修复罗尔公式浮层的 KaTeX 转义。
+
+**涉及文件**：`client/src/experiment-v2/ExperimentShell.tsx`、`client/src/experiments/`、`client/src/demo/usePanZoom.ts`、`client/src/demo/EpsilonDeltaDemo.tsx`、`client/src/demo/DerivativeDemo.tsx`、`client/src/demo/RolleDemo.tsx`、`client/src/demo/RolleCanvas.tsx`、`client/src/demo/rolleData.ts`、`server/src/data/knowledge.ts`、`server/src/content/publishedSeed.ts`
+
+**验证**：前端相关文件专项 ESLint 与 TypeScript、服务端 TypeScript 构建通过；浏览器验证罗尔默认案例与完整重置、ε−δ 默认案例重置、导数左右差商和白色画布正常。
+
+---
+## 2026-08-08 · Experiment V2 React 规则修复
+
+**模块**：统一演示路由、微积分补充实验、Experiment V2 运行时
+
+**内容**：修复动态原生演示在渲染期间创建组件的问题；将两个函数曲线采样闭包收回 `useMemo`，使依赖与实际计算一致；移除通用播放器中不必要的同步重置 effect；把历史实验自动发现注册表拆分为纯工具模块，并使用按实验 ID 重新挂载的异步加载子组件替代 effect 内同步清空状态。由此清除 React Compiler、Hooks 和 Fast Refresh 报告的 7 个 ESLint 错误及 2 个相关警告，同时清理 255 个批量迁移实验中的空白行尾，恢复 `git diff --check` 零问题。
+
+**涉及文件**：`client/src/demo/DemoPage.tsx`、`client/src/demo/knowledge/CoreCalculusSupplementDemos.tsx`、`client/src/experiment-v2/ExperimentShell.tsx`、`client/src/experiment-v2/LegacyExperimentRuntime.tsx`、`client/src/experiment-v2/legacyExperimentRegistry.ts`
+
+**验证**：上述文件专项 ESLint 与前端 TypeScript 构建通过；完整 ESLint、测试与生产构建待最终回归。
+
+---
+## 2026-08-08 · AI 提问路由断线恢复
+
+**模块**：AI 提问页、路由请求客户端、本地实验目录
+
+**内容**：将 `/api/route` 调用抽离为带响应校验、1.5 秒短超时和一次自动重试的请求客户端；开发环境后端启动或热重载造成代理瞬断时，自动使用本地 300 项实验目录与可靠提示规则生成降级结果，不再把可继续处理的数学问题显示为红色失败。页面会明确区分“自动重试已恢复”和“本地降级结果”，后端恢复后可重新解析获得完整智能路由。
+
+**涉及文件**：`client/src/ask/AskPage.tsx`、`client/src/ask/GenerateConfirm.tsx`、`client/src/ask/routeTypes.ts`、`client/src/services/questionRoute.ts`
+
+**验证**：待执行前端专项测试、ESLint、TypeScript、生产构建及浏览器断线回归。
+
+---
+## 2026-08-06 · 客户版 AI 提问学习工作台
+
+**模块**：AI 提问页、课程语义适配、课程目录抽屉
+
+**内容**：按客户效果图将 `/ask` 从路由调试式结果页重构为自然语言提问学习工作台；新增带图片选择、语音与公式入口的多模态输入区，以及默认可见的知识点简介、学习路径、可视化模板、预计时长和关联知识卡片。真实 `/api/route` 结果会与课程章节、知识点、目标及演示路径合并，低质量实验候选不会覆盖同小节的课程语义推荐；概念解释、直接匹配、候选确认、临时实验生成和未匹配五类分支继续保留。右栏改为用户问题、识别章节、Top 3、学习目标和演示预览的结构化解析；课程目录继续默认隐藏，并将覆盖式抽屉宽度、关闭按钮和选中态对齐客户参考图。补充相对于同学前端第一版的完整更新说明，明确基线、成果边界、验证结果和未完成事项。
+
+**涉及文件**：`client/src/ask/AskPage.tsx`、`client/src/ask/QuestionInput.tsx`、`client/src/ask/MatchResults.tsx`、`client/src/ask/AnalysisPanel.tsx`、`client/src/course/DrawerSidebar.tsx`、`docs/updates-since-teammate-v1.md`
+
+**验证**：前端 TypeScript、变更文件 ESLint、256 个测试文件 / 1852 项测试及 Vite 生产构建通过；浏览器验证默认提问预览、真实极限路由、导数语义切换、Top 3 课程推荐、隐藏目录遮罩与 `/demo/derivative` 演示跳转正常。
+
+---
 ## 2026-08-06 · 后端完整课程导航目录
 
 **模块**：内容领域模型、课程目录种子、内容仓储服务、前端内容适配

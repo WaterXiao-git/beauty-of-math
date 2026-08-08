@@ -71,12 +71,11 @@ export default function KnowledgeMap({ point, relatedPoints, onSelectPoint }: Kn
       <div className={`relative rounded-lg bg-gradient-to-br from-gray-50 to-blue-50/40 border border-gray-100 transition-all duration-300 ${fullscreen ? 'h-[30rem]' : 'h-56 md:h-64'}`}>
         <svg viewBox="0 0 800 340" className="w-full h-full" preserveAspectRatio="xMidYMid meet">
           {/* 连线（浅蓝实线 + 虚线到中心） */}
-          {point.related.map((title, i) => {
+          {relatedPoints.slice(0, NODE_POSITIONS.length).map((rel, i) => {
             const pos = NODE_POSITIONS[i % NODE_POSITIONS.length]
-            const rel = relatedPoints.find((rp) => rp.title === title)
-            const color = rel ? STATUS_HEX[rel.status] : undefined
+            const color = STATUS_HEX[rel.status]
             return (
-              <g key={title}>
+              <g key={rel.id}>
                 <line
                   x1={CENTER.x} y1={CENTER.y} x2={pos.x} y2={pos.y}
                   stroke="#bfdbfe" strokeWidth={1.5}
@@ -84,25 +83,23 @@ export default function KnowledgeMap({ point, relatedPoints, onSelectPoint }: Kn
                 />
                 {/* 关联节点 */}
                 <g
-                  onClick={() => rel && onSelectPoint(rel.id)}
-                  className={rel ? 'cursor-pointer' : undefined}
+                  onClick={() => onSelectPoint(rel.id)}
+                  className="cursor-pointer"
                 >
                   <rect
                     x={pos.x - NODE_W / 2} y={pos.y - NODE_H / 2}
                     width={NODE_W} height={NODE_H} rx={17}
-                    fill={rel ? '#ffffff' : '#f8fafc'}
-                    stroke={rel && color ? color.border : '#e5e7eb'}
+                    fill="#ffffff"
+                    stroke={color.border}
                     strokeWidth={1.2}
                   />
-                  {rel && color && (
-                    <circle cx={pos.x - NODE_W / 2 + 14} cy={pos.y} r={4} fill={color.dot} />
-                  )}
+                  <circle cx={pos.x - NODE_W / 2 + 14} cy={pos.y} r={4} fill={color.dot} />
                   <text
                     x={pos.x} y={pos.y + 4.5}
                     textAnchor="middle" fontSize={13} fontWeight={rel ? 500 : 400}
-                    fill={rel ? '#374151' : '#9ca3af'}
+                    fill="#374151"
                   >
-                    {title}
+                    {rel.title}
                   </text>
                 </g>
               </g>

@@ -23,6 +23,10 @@ import {
   createKnownDynamicExperiment,
 } from './knownExperimentTemplates.js'
 
+import {
+  validateExperimentAlignment,
+} from './alignment.js'
+
 const GENERATOR_SYSTEM_PROMPT = `你是数学教学可视化实验设计器。请把用户需求转换成一个临时、可交互的数学实验配置。
 优先使用结构化渲染器；无法由固定渲染器表达的几何、算法、统计、物理或高维可视化，使用 sandboxed-html 生成原生 HTML/SVG/Canvas 交互图。只输出一个 JSON 对象，不要输出 Markdown。
 
@@ -45,6 +49,7 @@ knowledgePoints 为 1 到 8 条简短且可验证的数学知识。
 
 const REVIEW_SYSTEM_PROMPT = `你是数学教学实验审核员。检查草案的数学正确性、可渲染性、参数范围和课堂表达，并输出修正后的完整 JSON 配置。
 必须保持 version=1，只能使用 cartesian-2d、polar-2d、arithmetic-blocks、sandboxed-html，禁止输出 Markdown 或额外说明。
+必须逐项对照原始用户问题，确保标题、数学公式、渲染器、交互参数、步骤和知识点描述的是同一个主题。三维、高维、算法、模拟或离散结构不得退化为无关的二维函数曲线。
 表达式只能使用草案协议列出的安全 mathjs 标识符。无法确定的数学结论应删除或改为保守表述。`
 
 const GENERATION_TIMEOUT_MS = 20_000
@@ -225,6 +230,13 @@ async function requestGeneratedSpec(
     )
   }
 
+  const alignment = validateExperimentAlignment(question, spec)
+  if (!alignment.valid) {
+    throw new Error(
+      `${provider.provider} returned a mismatched experiment: ${alignment.reason}`,
+    )
+  }
+
   return spec
 }
 
@@ -250,6 +262,12 @@ async function requestReviewedSpec(
   if (!spec) {
     throw new Error(
       `${provider.provider} returned an invalid reviewed spec`,
+    )
+  }
+  const alignment = validateExperimentAlignment(question, spec)
+  if (!alignment.valid) {
+    throw new Error(
+      `${provider.provider} returned a mismatched reviewed experiment: ${alignment.reason}`,
     )
   }
 

@@ -28,6 +28,10 @@ export interface KnowledgePoint {
   goals: string[]
   /** 知识地图上的关联节点标题 */
   related: string[]
+  /** 关联知识点 id；用于跨小节知识图谱遍历 */
+  relatedIds?: string[]
+  /** 直接先修知识点 id；知识地图可继续向前递归 */
+  prerequisiteIds?: string[]
   /** 关联的真实实验路由（有则「进入演示」跳转真实页面） */
   experimentPath?: string
   /** 统一演示页 id（对应 /demo/:id 与后端 /api/knowledge/:id）；未配置则显示「建设中」占位 */

@@ -6,8 +6,13 @@ import { NarrationPresenter } from '../../components/NarrationPresenter'
 import { useNarrationOptional } from '../../contexts/NarrationContext'
 import { fourierNarration } from '../../narrations/scripts/fourier'
 import { usePresenterHistory } from '../../hooks/usePresenterHistory'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
+
 
 type WaveType = 'sine' | 'square' | 'sawtooth' | 'triangle'
+
+export const experimentV2 = true
 
 export default function FourierExperiment() {
   const [params, setParams] = useState({
@@ -137,39 +142,21 @@ export default function FourierExperiment() {
 
   return (
     <>
-      {/* 全屏 PPT 讲解模式 */}
       {showPresenter && (
         <NarrationPresenter onExit={handleExitPresenter} />
       )}
 
-      <div className="space-y-4 md:space-y-6">
-        {/* 页面标题 */}
-        <header className="flex items-center justify-between gap-3 md:gap-4">
-          <div className="flex items-center gap-3 md:gap-4">
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-              <span className="text-xl md:text-2xl">📊</span>
-            </div>
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold text-slate-800">傅里叶变换</h1>
-              <p className="text-slate-500 text-sm md:text-base">探索信号的时域与频域表示</p>
-            </div>
-          </div>
-          <button
-            onClick={openPresenter}
-            className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold text-sm md:text-base shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
-          >
-            <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
-            </svg>
-            <span>开始讲解</span>
-          </button>
-        </header>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-        {/* 图表区域 - 移动端全宽 */}
-        <div className="lg:col-span-2 space-y-4 md:space-y-6">
-          {/* 时域信号卡片 */}
-          <div className="time-domain-chart bg-white rounded-xl md:rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200/50 overflow-hidden transition-all duration-300">
+      <ExperimentShell
+        breadcrumb={[
+          '实验库',
+          "傅里叶变换",
+        ]}
+        title="傅里叶变换"
+        subtitle="探索信号的时域与频域表示"
+        canvasScrollable
+        canvas={
+          <div className="min-h-full w-full space-y-4 p-2 md:p-3 [&_.js-plotly-plot]:w-full">
+            <div className="time-domain-chart bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300">
             <div className="px-4 md:px-5 py-3 md:py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-md shadow-blue-500/20">
@@ -222,15 +209,13 @@ export default function FourierExperiment() {
                   legend: { orientation: 'h', y: -0.25, font: { size: 10 } },
                   paper_bgcolor: 'transparent',
                   plot_bgcolor: 'transparent',
-                }}
+                 font: { color: '#334155' }}}
                 config={{ responsive: true, displaylogo: false }}
                 className="w-full"
               />
             </div>
           </div>
-
-          {/* 频谱卡片 */}
-          <div className="spectrum-chart bg-white rounded-xl md:rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200/50 overflow-hidden transition-all duration-300">
+<div className="spectrum-chart bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300">
             <div className="px-4 md:px-5 py-3 md:py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-500 flex items-center justify-center shadow-md shadow-violet-500/20">
@@ -261,17 +246,17 @@ export default function FourierExperiment() {
                   yaxis: { title: { text: '幅度' }, gridcolor: '#f1f5f9' },
                   paper_bgcolor: 'transparent',
                   plot_bgcolor: 'transparent',
-                }}
+                 font: { color: '#334155' }}}
                 config={{ responsive: true, displaylogo: false }}
                 className="w-full"
               />
             </div>
           </div>
-        </div>
-
-        {/* 控制面板区域 */}
-        <div className="space-y-4 md:space-y-6">
-          <ParameterPanel
+          </div>
+        }
+        sidebar={
+          <>
+            <ParameterPanel
             title="参数控制"
             className="parameter-panel"
             params={[
@@ -281,9 +266,7 @@ export default function FourierExperiment() {
             ]}
             onChange={handleParamChange}
           />
-
-          {/* 波形选择卡片 */}
-          <div className="wave-selector bg-white rounded-xl md:rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200/50 overflow-hidden transition-all duration-300">
+<div className="wave-selector bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300">
             <div className="px-4 md:px-5 py-3 md:py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-md shadow-amber-500/20">
@@ -313,9 +296,7 @@ export default function FourierExperiment() {
               </div>
             </div>
           </div>
-
-          {/* 公式卡片 */}
-          <div className="formula-card bg-white rounded-xl md:rounded-2xl shadow-lg shadow-slate-200/50 border border-slate-200/50 overflow-hidden transition-all duration-300">
+<div className="formula-card bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all duration-300">
             <div className="px-4 md:px-5 py-3 md:py-4 bg-gradient-to-r from-slate-50 to-white border-b border-slate-100">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-md shadow-cyan-500/20">
@@ -330,9 +311,25 @@ export default function FourierExperiment() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+
+
+<ExperimentCard title="实验讲解">
+  <div className="[&>button]:w-full">
+    <button
+            onClick={openPresenter}
+            className="flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white font-semibold text-sm md:text-base shadow-lg shadow-indigo-500/25 hover:shadow-xl hover:shadow-indigo-500/30 transition-all duration-200 hover:scale-105 active:scale-95"
+          >
+            <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clipRule="evenodd" />
+            </svg>
+            <span>开始讲解</span>
+          </button>
+  </div>
+</ExperimentCard>
+
+          </>
+        }
+      />
     </>
   )
 }

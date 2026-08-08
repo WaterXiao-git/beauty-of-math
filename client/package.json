@@ -6,13 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "npx ts-node --esm scripts/check-course-integrity.ts",
+    "prebuild": "npm run check:experiment-theme && npx ts-node --esm scripts/check-course-integrity.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "test": "vitest run",
     "test:watch": "vitest",
     "preview": "vite preview",
     "check-courses": "npx ts-node --esm scripts/check-course-integrity.ts",
+    "check:experiment-theme": "npx tsx scripts/normalize-experiment-light-theme.ts",
+    "fix:experiment-theme": "npx tsx scripts/normalize-experiment-light-theme.ts --apply",
     "export-narrations": "npx tsx scripts/export-narrations.ts",
     "generate-audio": "python3 scripts/generate_audio.py"
   },

@@ -194,7 +194,7 @@ export const knowledgePoints: KnowledgeConfig[] = [
       '观察条件缺失时结论不再由定理保证',
       '理解 ξ 位于开区间 (a,b) 内',
     ],
-    defaultCase: 'double-valley',
+    defaultCase: 'x2-1',
     cases: [
       {
         id: 'x3-1',
@@ -217,14 +217,14 @@ export const knowledgePoints: KnowledgeConfig[] = [
         desc: '在 [0, π] 上两端等高，内部存在水平切线',
       },
       {
-        id: 'double-valley',
-        name: '双谷曲线',
-        expr: 'x^4 - x^2',
+        id: 'x2-1',
+        name: 'x²−1',
+        expr: 'x^2 - 1',
         domain: [-1, 1],
-        yRange: [-0.7, 1.0],
+        yRange: [-1.3, 0.35],
         naturallyEqual: true,
         anchor: 0,
-        desc: '当满足三条件时，曲线内部至少出现一条水平切线',
+        desc: '默认案例：f(x)=x²−1 在 [-1,1] 上端点等高，ξ=0 处存在水平切线',
       },
     ],
     steps: [

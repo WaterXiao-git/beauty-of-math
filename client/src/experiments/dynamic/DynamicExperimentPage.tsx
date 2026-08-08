@@ -10,6 +10,8 @@ import {
 
 import MathFormula from '../../components/MathFormula/MathFormula'
 import ParameterPanel from '../../components/ParameterPanel/ParameterPanel'
+import ExperimentCard from '../../experiment-v2/ExperimentCard'
+import ExperimentShell from '../../experiment-v2/ExperimentShell'
 
 import {
   loadDynamicExperimentPreview,
@@ -31,25 +33,20 @@ export default function DynamicExperimentPage() {
   )
   const [currentStep, setCurrentStep] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  const spec = response?.spec ?? null
   const [parameterValues, setParameterValues] =
     useState<Record<string, number>>(() => ({
       ...Object.fromEntries(
-        response?.spec.parameters.map(
-          (parameter) => [
-            parameter.id,
-            parameter.defaultValue,
-          ],
-        ) ?? [],
+        response?.spec.parameters.map((parameter) => [
+          parameter.id,
+          parameter.defaultValue,
+        ]) ?? [],
       ),
       ...(response?.spec.steps[0]?.parameterValues ?? {}),
     }))
 
-  const spec = response?.spec ?? null
-
   useEffect(() => {
-    if (!isPlaying || !spec) {
-      return
-    }
+    if (!isPlaying || !spec) return
 
     const timer = window.setInterval(() => {
       setCurrentStep((previous) => {
@@ -59,16 +56,13 @@ export default function DynamicExperimentPage() {
         }
 
         const nextStep = previous + 1
-
         setParameterValues((values) => ({
           ...values,
           ...spec.steps[nextStep].parameterValues,
         }))
-
         if (nextStep >= spec.steps.length - 1) {
           setIsPlaying(false)
         }
-
         return nextStep
       })
     }, 1_800)
@@ -94,20 +88,22 @@ export default function DynamicExperimentPage() {
 
   if (!response || !spec) {
     return (
-      <div className="mx-auto max-w-2xl rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center">
-        <h1 className="text-xl font-bold text-slate-800">
-          临时实验已失效
-        </h1>
-        <p className="mt-2 text-sm text-slate-600">
-          请返回首页重新描述并生成实验。
-        </p>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          className="mt-5 rounded-xl bg-indigo-600 px-5 py-2.5 font-semibold text-white"
-        >
-          返回首页
-        </button>
+      <div className="flex h-screen items-center justify-center bg-slate-100 p-6">
+        <div className="w-full max-w-lg rounded-2xl border border-amber-200 bg-white p-8 text-center shadow-sm">
+          <h1 className="text-xl font-bold text-slate-800">
+            临时实验已失效
+          </h1>
+          <p className="mt-2 text-sm text-slate-600">
+            临时实验只保存在当前浏览器会话中，请重新描述并生成。
+          </p>
+          <button
+            type="button"
+            onClick={() => navigate('/ask')}
+            className="mt-5 rounded-xl bg-indigo-600 px-5 py-2.5 font-semibold text-white"
+          >
+            返回智能提问
+          </button>
+        </div>
       </div>
     )
   }
@@ -117,7 +113,6 @@ export default function DynamicExperimentPage() {
       spec.steps.length - 1,
       Math.max(0, nextStep),
     )
-
     setIsPlaying(false)
     setCurrentStep(boundedStep)
     setParameterValues((previous) => ({
@@ -126,104 +121,70 @@ export default function DynamicExperimentPage() {
     }))
   }
 
+  const resetExperiment = () => {
+    setIsPlaying(false)
+    setCurrentStep(0)
+    setParameterValues({
+      ...Object.fromEntries(
+        spec.parameters.map((parameter) => [
+          parameter.id,
+          parameter.defaultValue,
+        ]),
+      ),
+      ...(spec.steps[0]?.parameterValues ?? {}),
+    })
+  }
+
   return (
-    <div className="space-y-6">
-      <header className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
-        <div>
-          <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-2xl font-bold text-slate-900">
-              {spec.title}
-            </h1>
-            <span className="rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
+    <ExperimentShell
+      breadcrumb={[
+        '临时实验',
+        'AI 生成',
+        spec.title,
+      ]}
+      title={spec.title}
+      subtitle={spec.description}
+      legend={[
+        {
+          label: RENDERER_LABELS[spec.renderer.type],
+          color: '#6366f1',
+        },
+        {
+          label: '当前会话临时预览',
+          color: '#a855f7',
+        },
+      ]}
+      canvasScrollable
+      canvas={
+        <div className="flex min-h-full w-full flex-col gap-4 p-3 text-slate-800 md:p-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-indigo-100 bg-indigo-50/60 px-4 py-3">
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-indigo-500">
+                数学模型
+              </div>
+              <MathFormula
+                formula={spec.formulaLatex}
+                className="mt-1 overflow-x-auto text-lg text-slate-800 md:text-xl"
+              />
+            </div>
+            <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-purple-600 ring-1 ring-purple-100">
               AI 临时实验 · 未保存
             </span>
           </div>
-          <p className="mt-1 text-slate-500">
-            {spec.description}
-          </p>
-        </div>
 
-        <button
-          type="button"
-          onClick={() => setIsPlaying((value) => !value)}
-          className={`rounded-xl px-5 py-3 font-semibold text-white shadow-lg transition-colors ${
-            isPlaying
-              ? 'bg-rose-500 shadow-rose-200'
-              : 'bg-emerald-500 shadow-emerald-200'
-          }`}
-        >
-          {isPlaying ? '暂停动画' : '播放动画'}
-        </button>
-      </header>
-
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,2fr)_minmax(320px,1fr)]">
-        <div className="space-y-6">
-          <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-800">
-              数学公式
-            </h2>
-            <MathFormula
-              formula={spec.formulaLatex}
-              className="mt-6 overflow-x-auto text-center text-2xl"
-            />
-          </section>
-
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="mb-4 flex items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold text-slate-800">
-                图形演示
-              </h2>
-              <span className="rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-600">
-                {RENDERER_LABELS[spec.renderer.type]}
-              </span>
-            </div>
+          <div className="min-h-[420px] flex-1">
             <DynamicVisualization
               renderer={spec.renderer}
               parameters={parameterValues}
             />
-          </section>
-
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-slate-800">
-              演示步骤
-            </h2>
-            <div className="space-y-3">
-              {spec.steps.map((item, index) => (
-                <button
-                  key={`${item.title}-${index}`}
-                  type="button"
-                  onClick={() => setStep(index)}
-                  className={`flex w-full gap-3 rounded-xl border p-4 text-left transition-colors ${
-                    currentStep === index
-                      ? 'border-blue-400 bg-blue-50'
-                      : 'border-slate-200 bg-slate-50 hover:bg-white'
-                  }`}
-                >
-                  <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full text-sm font-semibold ${
-                    currentStep === index
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-slate-200 text-slate-600'
-                  }`}>
-                    {index + 1}
-                  </span>
-                  <span>
-                    <span className="block font-semibold text-slate-800">
-                      {item.title}
-                    </span>
-                    <span className="mt-1 block text-sm leading-relaxed text-slate-600">
-                      {item.description}
-                    </span>
-                  </span>
-                </button>
-              ))}
-            </div>
-          </section>
+          </div>
         </div>
-
-        <aside className="space-y-6">
+      }
+      sidebar={
+        <>
           {sliderParameters.length > 0 && (
             <ParameterPanel
-              title="调整参数"
+              title="案例与参数"
               params={sliderParameters}
               onChange={(key, value) => {
                 setIsPlaying(false)
@@ -232,74 +193,65 @@ export default function DynamicExperimentPage() {
                   [key]: value,
                 }))
               }}
+              className="shadow-sm"
             />
           )}
 
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-800">
-              步骤控制
-            </h2>
-            <div className="mt-4 grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setStep(currentStep - 1)}
-                disabled={currentStep === 0}
-                className="rounded-lg bg-slate-100 px-3 py-2.5 font-medium text-slate-700 disabled:opacity-40"
-              >
-                上一步
-              </button>
-              <button
-                type="button"
-                onClick={() => setStep(currentStep + 1)}
-                disabled={
-                  currentStep === spec.steps.length - 1
-                }
-                className="rounded-lg bg-slate-100 px-3 py-2.5 font-medium text-slate-700 disabled:opacity-40"
-              >
-                下一步
-              </button>
+          <ExperimentCard
+            title="当前教学步骤"
+            action={
+              <span className="text-xs font-semibold text-indigo-600">
+                {currentStep + 1}/{spec.steps.length}
+              </span>
+            }
+          >
+            <div className="rounded-xl bg-indigo-50 p-3">
+              <div className="text-sm font-semibold text-slate-800">
+                {spec.steps[currentStep].title}
+              </div>
+              <p className="mt-1 text-xs leading-5 text-slate-600">
+                {spec.steps[currentStep].description}
+              </p>
             </div>
-            <button
-              type="button"
-              onClick={() => {
-                setStep(0)
-                setParameterValues(
-                  Object.fromEntries(
-                    spec.parameters.map((parameter) => [
-                      parameter.id,
-                      parameter.defaultValue,
-                    ]),
-                  ),
-                )
-              }}
-              className="mt-2 w-full rounded-lg bg-slate-100 px-3 py-2.5 font-medium text-slate-700"
-            >
-              重置
-            </button>
-          </section>
+          </ExperimentCard>
 
-          <section className="rounded-xl border border-indigo-100 bg-indigo-50/70 p-5 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-800">
-              知识点
-            </h2>
-            <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate-700">
+          <ExperimentCard title="知识点">
+            <ul className="space-y-2 text-sm leading-6 text-slate-600">
               {spec.knowledgePoints.map((point) => (
                 <li key={point} className="flex gap-2">
-                  <span className="text-indigo-500">•</span>
+                  <span className="font-bold text-indigo-500">•</span>
                   <span>{point}</span>
                 </li>
               ))}
             </ul>
-          </section>
+          </ExperimentCard>
 
-          <section className="rounded-xl border border-purple-200 bg-purple-50 p-4 text-xs leading-relaxed text-purple-800">
-            该实验由 Agent 即时生成，并在独立浏览器画布中运行，未写入项目文件。
-            {response.generation.reviewed
-              ? ' 数学内容已由备用模型复核。'
-              : ' 使用前请结合课堂内容复核数学结论。'}
-          </section>
-        </aside>
-      </div>
-    </div>
+          <ExperimentCard title="实验信息">
+            <p className="text-xs leading-5 text-slate-500">
+              该实验由 Agent 即时生成，在隔离画布中运行且不会写入项目文件。
+              {response.generation.reviewed
+                ? ' 数学内容已经备用模型复核。'
+                : ' 使用时请结合课堂内容复核数学结论。'}
+            </p>
+          </ExperimentCard>
+        </>
+      }
+      player={{
+        steps: spec.steps.map((step, index) => ({
+          id: `generated-step-${index + 1}`,
+          title: step.title,
+          desc: step.description,
+        })),
+        step: currentStep + 1,
+        playing: isPlaying,
+        onPrev: () => setStep(currentStep - 1),
+        onNext: () => setStep(currentStep + 1),
+        onTogglePlay: () => {
+          if (currentStep >= spec.steps.length - 1) setStep(0)
+          setIsPlaying((value) => !value)
+        },
+        onReset: resetExperiment,
+      }}
+    />
   )
 }

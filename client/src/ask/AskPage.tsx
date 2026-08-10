@@ -50,7 +50,7 @@ export default function AskPage() {
   const [route, setRoute] = useState<RouteResult | null>(null)
   const [error, setError] = useState('')
   const [generating, setGenerating] = useState(false)
-  const [sidebarPointId, setSidebarPointId] = useState('limit-of-function')
+  const [sidebarPointId, setSidebarPointId] = useState('function')
   const inputRef = useRef<HTMLTextAreaElement>(null)
 
   const focusInput = () => inputRef.current?.focus()

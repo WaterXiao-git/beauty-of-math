@@ -1,3 +1,62 @@
+# MathViz 改动存档（Change Log）
+
+
+## 2026-08-06 · 代码整理：CHANGELOG 标题归位 / gitignore / 默认值同步
+
+**模块**：工程基建 + 课程
+
+**内容**：
+- `docs/CHANGELOG.md` 标题「# MathViz 改动存档（Change Log）」移回文件顶部（此前被历史追加顶到文件末尾），新记录紧随标题
+- `.gitignore` 增加 `*.tsbuildinfo`（忽略 tsc -b 构建缓存文件，如 `server/tsconfig.tsbuildinfo`）
+- `CourseHome.tsx` 默认知识点兜底：`findPoint(DEFAULT_POINT_ID) ?? 课程首个知识点`，去掉裸非空断言的崩溃风险
+- `AskPage.tsx` 侧边栏默认选中知识点 `limit-of-function` 同步为 `function`（与主界面默认一致）
+
+**涉及文件**：`docs/CHANGELOG.md`、`.gitignore`、`client/src/course/CourseHome.tsx`、`client/src/ask/AskPage.tsx`
+
+**验证**：双端 tsc 0
+
+---
+## 2026-08-06 · 主界面默认定位 1.1 + 选中知识点缓存
+
+**模块**：课程主界面
+
+**内容**：
+- 默认选中知识点由 `limit-of-function`（函数的极限）改为 `function`（1.1 节「函数」首个知识点），首屏定位到 1.1
+- 选中知识点经 localStorage（key `mathviz.course.selectedPointId`）持久化：主界面内切换即写缓存，从演示页返回主界面（或刷新页面）时恢复上次浏览的章节/知识点；缓存值无效时回退默认
+
+**涉及文件**：`client/src/course/courseData.ts`、`client/src/course/CourseHome.tsx`
+
+**验证**：client tsc 0
+
+---
+## 2026-08-06 · 修复：演示配置 404（知识点 id 与 demoId 不一致）
+
+**模块**：前端演示模板
+
+**现象**：打开部分演示报「演示配置加载失败（Error: HTTP 404）」，后端 `/api/knowledge` 正常。
+
+**原因**：`/demo/:pointId` 中的 `pointId` 是课程知识点 id，而 FunctionPlotDemo 直接用 `pointId` 请求 `/api/knowledge/:id`。courseData 中 4 个知识点 id 与 demoId 不同：`function → function-plot`、`limit-of-function → epsilon-delta`、`mean-value-theorem → rolle`、`taylor → taylor-approximation`，导致请求了后端不存在的 id（如 `/api/knowledge/function`、`/api/knowledge/taylor`）返回 404。
+
+**修复**：FunctionPlotDemo 经 `findPoint(pointId).demoId` 解析后端配置 id（`configId`），兜底回退 `pointId`。
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`
+
+**验证**：双端 tsc 0
+
+---
+## 2026-08-06 · 修复：反比例函数正负两支被错误连线（分段曲线断点起笔）
+
+**模块**：前端演示模板
+
+**内容**：
+- FunctionPlotDemo 分段绘制曲线：原 `curveStarted` 为跨段全局标志，第二段首点误用 `L`（直线），SVG 会从上一段末尾（近 +∞/−∞ 的大 y 值）画直线连到下一段开头，导致反比例函数两支在垂直渐近线处被一条竖线相连
+- 改为每段独立 `segStarted`，每段首点一律 `M` 起笔；piecewise 多段之间的错误连线一并修复
+
+**涉及文件**：`client/src/demo/FunctionPlotDemo.tsx`
+
+**验证**：双端 tsc 0
+
+---
 ## 2026-08-06 · 修复：前端 tsc 9 处错误（死代码 / 未使用变量 / 错误占位符）
 
 **模块**：前端演示页 + 提问页
@@ -712,7 +771,6 @@
 **验证**：tsc 通过；vite 编译 5 模块 200；后端 /api/route 实测五分支正确。
 
 ---
-# MathViz 改动存档（Change Log）
 
 > 工作约定：每次代码改动后，在本文件追加一条记录（日期 / 模块 / 内容 / 涉及文件 / 验证）。
 > 按时间倒序排列，最新改动在最上方。

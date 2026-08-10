@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { compile, derivative as mathDerivative } from 'mathjs'
 import DemoHeader from './DemoHeader'
 import { useNavigate, useParams } from 'react-router-dom'
+import { findPoint } from '../course/courseData'
 import PlayerBar from './PlayerBar'
 import type { StepItem } from './PlayerBar'
 import { usePanZoom } from './usePanZoom'
@@ -113,6 +114,8 @@ function makeDerivParamFn(expr: string, params: Record<string, number>) {
 export default function FunctionPlotDemo() {
   const navigate = useNavigate()
   const { pointId = 'function-plot' } = useParams()
+  // 后端配置 id 用 demoId（知识点 id 可能与配置 id 不同，如 function -> function-plot、taylor -> taylor-approximation）
+  const configId = findPoint(pointId)?.demoId ?? pointId
   const { transform, handlers } = usePanZoom()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const [config, setConfig] = useState<KnowledgeConfig | null>(null)
@@ -124,7 +127,7 @@ export default function FunctionPlotDemo() {
   const [playing, setPlaying] = useState(false)
 
   useEffect(() => {
-    fetch('/api/knowledge/' + pointId)
+    fetch('/api/knowledge/' + configId)
       .then((r) => {
         if (!r.ok) throw new Error(`HTTP ${r.status}`)
         return r.json()
@@ -282,16 +285,17 @@ export default function FunctionPlotDemo() {
   const N = 300
   const refineTol = (yMax - yMin) / 300
   const curvePts: string[] = []
-  let curveStarted = false
   for (const seg of segments) {
     const segPts: { x: number; y: number }[] = []
     let prevX: number | null = null
     const flushSeg = () => {
       if (segPts.length === 0) return
       const refined = refineCurve(segPts, seg.fn, refineTol)
+      let segStarted = false
       for (const p of refined) {
-        curvePts.push((curveStarted ? 'L' : 'M') + sx(p.x).toFixed(1) + ' ' + sy(p.y).toFixed(1))
-        curveStarted = true
+        // 每段首点必须用 M 单独起笔,否则 SVG 会从上一段末尾连一条直线(如反比例正负两支被连成竖线)
+        curvePts.push((segStarted ? 'L' : 'M') + sx(p.x).toFixed(1) + ' ' + sy(p.y).toFixed(1))
+        segStarted = true
       }
       segPts.length = 0
     }

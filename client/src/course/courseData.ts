@@ -89,7 +89,7 @@ export const COURSE_TITLE = '高等数学（上册）'
 export const COURSE_SUBTITLE = '函数 · 极限 · 连续'
 
 /** 默认选中的知识点（对应设计规格中的「函数的极限」） */
-export const DEFAULT_POINT_ID = 'limit-of-function'
+export const DEFAULT_POINT_ID = 'function'
 
 export const chapters: CourseChapter[] = [
   {

@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-08-07T17:27:25.736Z",
+  "family": "plotly-custom",
+  "requested": 1,
+  "changed": 0,
+  "skipped": 1,
+  "failed": 0,
+  "backupDirectory": "",
+  "files": [
+    {
+      "id": "euler-identity",
+      "file": "src/experiments/euler-identity/EulerIdentityExperiment.tsx",
+      "status": "skipped",
+      "reason": "Grid 顶层列数量不是 2：0"
+    }
+  ]
+}

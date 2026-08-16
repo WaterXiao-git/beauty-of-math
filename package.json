@@ -1,0 +1,23 @@
+{
+  "name": "mathviz",
+  "version": "1.0.0",
+  "description": "数学之美 - 交互式数学可视化实验平台",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "generate:owned-experiments": "node scripts/generate-owned-experiment-registries.mjs",
+    "check:owned-experiments": "node scripts/generate-owned-experiment-registries.mjs --check",
+    "check:scope": "node scripts/check-product-scope.mjs",
+    "check:scope:dist": "node scripts/check-product-scope.mjs --dist",
+    "build:client": "npm --prefix client run build",
+    "build:server": "npm --prefix server run build",
+    "build": "npm run generate:owned-experiments && npm run check:scope && npm run build:client && npm run build:server && npm run check:scope:dist"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "typescript": "^5.7.3"
+  }
+}

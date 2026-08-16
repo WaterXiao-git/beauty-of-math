@@ -1,0 +1,342 @@
+{
+  "generatedAt": "2026-08-08T01:07:36.704Z",
+  "mode": "apply",
+  "scannedExperiments": 300,
+  "nativeV2PlotlyFiles": 10,
+  "candidateFiles": 10,
+  "changedFiles": 10,
+  "plotCount": 16,
+  "editCount": 16,
+  "unsafeLayouts": 0,
+  "backupPath": ".migration/backups/native-v2-plotly-theme-2026-08-08T01-07-36-658Z",
+  "files": [
+    {
+      "id": "clt",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\clt\\CLTExperiment.tsx",
+      "relativeFile": "src/experiments/clt/CLTExperiment.tsx",
+      "plotCount": 1,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 6880,
+          "end": 6880,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 207,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 181,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "complex",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\complex\\ComplexExperiment.tsx",
+      "relativeFile": "src/experiments/complex/ComplexExperiment.tsx",
+      "plotCount": 2,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 5560,
+          "end": 5560,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 132,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        },
+        {
+          "type": "insert",
+          "start": 7557,
+          "end": 7557,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 161,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 109,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        },
+        {
+          "line": 140,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "fourier",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\fourier\\FourierExperiment.tsx",
+      "relativeFile": "src/experiments/fourier/FourierExperiment.tsx",
+      "plotCount": 2,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 8330,
+          "end": 8330,
+          "text": " font: { color: '#cbd5e1' }",
+          "line": 212,
+          "reason": "add font"
+        },
+        {
+          "type": "insert",
+          "start": 10175,
+          "end": 10175,
+          "text": " font: { color: '#cbd5e1' }",
+          "line": 249,
+          "reason": "add font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 184,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        },
+        {
+          "line": 228,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "golden-ratio",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\golden-ratio\\GoldenRatioExperiment.tsx",
+      "relativeFile": "src/experiments/golden-ratio/GoldenRatioExperiment.tsx",
+      "plotCount": 3,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 5742,
+          "end": 5742,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 171,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        },
+        {
+          "type": "insert",
+          "start": 6729,
+          "end": 6729,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 196,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        },
+        {
+          "type": "insert",
+          "start": 7860,
+          "end": 7860,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 225,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 144,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        },
+        {
+          "line": 179,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        },
+        {
+          "line": 204,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "linear-algebra",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\linear-algebra\\LinearAlgebraExperiment.tsx",
+      "relativeFile": "src/experiments/linear-algebra/LinearAlgebraExperiment.tsx",
+      "plotCount": 1,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 7930,
+          "end": 7930,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 236,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 196,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "mobius",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\mobius\\MobiusExperiment.tsx",
+      "relativeFile": "src/experiments/mobius/MobiusExperiment.tsx",
+      "plotCount": 1,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 3070,
+          "end": 3070,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 81,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 61,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "monte-carlo",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\monte-carlo\\MonteCarloExperiment.tsx",
+      "relativeFile": "src/experiments/monte-carlo/MonteCarloExperiment.tsx",
+      "plotCount": 2,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 5075,
+          "end": 5075,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 142,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        },
+        {
+          "type": "insert",
+          "start": 6533,
+          "end": 6533,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 176,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 103,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        },
+        {
+          "line": 150,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "parametric",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\parametric\\ParametricExperiment.tsx",
+      "relativeFile": "src/experiments/parametric/ParametricExperiment.tsx",
+      "plotCount": 1,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 9005,
+          "end": 9005,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 239,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 202,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "polar",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\polar\\PolarExperiment.tsx",
+      "relativeFile": "src/experiments/polar/PolarExperiment.tsx",
+      "plotCount": 1,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 7025,
+          "end": 7025,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 220,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 181,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    },
+    {
+      "id": "trigonometry",
+      "file": "D:\\蓝山工作室\\数学教学可视化展示系统建设方案\\client\\src\\experiments\\trigonometry\\TrigExperiment.tsx",
+      "relativeFile": "src/experiments/trigonometry/TrigExperiment.tsx",
+      "plotCount": 2,
+      "edits": [
+        {
+          "type": "insert",
+          "start": 4847,
+          "end": 4847,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 109,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        },
+        {
+          "type": "insert",
+          "start": 7364,
+          "end": 7364,
+          "text": " paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { color: '#cbd5e1' }",
+          "line": 153,
+          "reason": "add paper_bgcolor, plot_bgcolor, font"
+        }
+      ],
+      "plots": [
+        {
+          "line": 92,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        },
+        {
+          "line": 141,
+          "mode": "inline-object",
+          "detail": "需要 1 个主题修改。"
+        }
+      ],
+      "unsafeCount": 0,
+      "changed": true
+    }
+  ]
+}

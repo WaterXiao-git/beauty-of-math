@@ -1,0 +1,20 @@
+{
+  "generatedAt": "2026-08-07T17:27:25.707Z",
+  "dryRun": false,
+  "family": "plotly-custom",
+  "totalCandidates": 1,
+  "selectedCount": 1,
+  "items": [
+    {
+      "order": 1,
+      "id": "euler-identity",
+      "file": "src/experiments/euler-identity/EulerIdentityExperiment.tsx",
+      "family": "plotly-custom",
+      "renderer": "plotly",
+      "layout": "standard-three-column",
+      "risk": "low",
+      "lineCount": 165,
+      "strategy": "standard-plotly-shell"
+    }
+  ]
+}

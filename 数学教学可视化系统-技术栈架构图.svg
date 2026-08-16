@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-labelledby="title description">
+  <title id="title">数学教学可视化系统技术栈与运行流程</title>
+  <desc id="description">高等数学文本问题经过 React 前端和规则优先路由后，分别进入自研实验、数学解释或受约束临时实验生成流程。</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="0.52" stop-color="#eef2ff"/>
+      <stop offset="1" stop-color="#faf5ff"/>
+    </linearGradient>
+    <linearGradient id="primary" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4f46e5"/>
+      <stop offset="1" stop-color="#9333ea"/>
+    </linearGradient>
+    <linearGradient id="existing" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0ea5e9"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="answer" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#06b6d4"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="generate" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a855f7"/>
+      <stop offset="1" stop-color="#db2777"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#312e81" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L12,6 L0,12 z" fill="#64748b"/>
+    </marker>
+    <style>
+      text { font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Segoe UI", sans-serif; }
+      .title { font-size: 42px; font-weight: 700; fill: #172554; }
+      .subtitle { font-size: 21px; fill: #64748b; }
+      .column { font-size: 18px; font-weight: 700; fill: #64748b; letter-spacing: 2px; }
+      .box-title { font-size: 25px; font-weight: 700; fill: #0f172a; }
+      .box-subtitle { font-size: 18px; font-weight: 600; fill: #475569; }
+      .body { font-size: 17px; fill: #475569; }
+      .small { font-size: 15px; fill: #64748b; }
+      .white-title { font-size: 24px; font-weight: 700; fill: #ffffff; }
+      .white-body { font-size: 16px; fill: #f8fafc; }
+      .pill { font-size: 14px; font-weight: 700; fill: #ffffff; }
+      .flow { fill: none; stroke: #64748b; stroke-width: 3; marker-end: url(#arrow); }
+      .soft-flow { fill: none; stroke: #94a3b8; stroke-width: 2.5; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#background)"/>
+  <circle cx="1770" cy="80" r="230" fill="#c4b5fd" opacity="0.12"/>
+  <circle cx="120" cy="1010" r="270" fill="#67e8f9" opacity="0.10"/>
+
+  <text x="64" y="72" class="title">数学教学可视化系统技术栈与运行流程</text>
+  <text x="66" y="108" class="subtitle">高等数学上册四章 · 18 个自研 Native 实验 · 规则优先 · 双模型协作</text>
+
+  <text x="60" y="165" class="column">用户输入</text>
+  <text x="350" y="165" class="column">WEB 前端</text>
+  <text x="710" y="165" class="column">本地路由核心</text>
+  <text x="1130" y="165" class="column">决策与 AGENT</text>
+  <text x="1490" y="165" class="column">最终呈现</text>
+
+  <!-- 用户输入 -->
+  <g filter="url(#shadow)">
+    <rect x="55" y="365" width="245" height="190" rx="24" fill="#ffffff" stroke="#c7d2fe" stroke-width="2"/>
+    <circle cx="177" cy="413" r="28" fill="url(#primary)"/>
+    <text x="177" y="421" text-anchor="middle" font-size="27" font-weight="700" fill="#ffffff">∑</text>
+    <text x="177" y="466" text-anchor="middle" class="box-title">教师 / 学生</text>
+    <text x="177" y="503" text-anchor="middle" class="body">自然语言文本问题</text>
+    <text x="177" y="530" text-anchor="middle" class="small">查找实验 · 概念解释 · 生成演示</text>
+  </g>
+
+  <!-- Web 前端 -->
+  <g filter="url(#shadow)">
+    <rect x="350" y="315" width="300" height="290" rx="24" fill="#ffffff" stroke="#c7d2fe" stroke-width="2"/>
+    <rect x="350" y="315" width="300" height="68" rx="24" fill="url(#primary)"/>
+    <path d="M350 359 H650 V383 H350 Z" fill="url(#primary)"/>
+    <text x="500" y="358" text-anchor="middle" class="white-title">智能实验导航</text>
+    <text x="500" y="420" text-anchor="middle" class="box-subtitle">React 19 + TypeScript + Vite</text>
+    <rect x="380" y="449" width="240" height="42" rx="12" fill="#eef2ff"/>
+    <text x="500" y="475" text-anchor="middle" class="body">React Router · Tailwind CSS</text>
+    <rect x="380" y="504" width="240" height="42" rx="12" fill="#f5f3ff"/>
+    <text x="500" y="530" text-anchor="middle" class="body">文本提问 · 课程导航 · 结果呈现</text>
+    <text x="500" y="570" text-anchor="middle" class="small">Native 实验入口 · 临时实验会话预览</text>
+  </g>
+
+  <!-- 本地路由核心 -->
+  <g filter="url(#shadow)">
+    <rect x="710" y="235" width="355" height="450" rx="24" fill="#ffffff" stroke="#a5b4fc" stroke-width="2"/>
+    <rect x="710" y="235" width="355" height="76" rx="24" fill="#312e81"/>
+    <path d="M710 287 H1065 V311 H710 Z" fill="#312e81"/>
+    <text x="887" y="279" text-anchor="middle" class="white-title">规则优先路由</text>
+    <text x="887" y="340" text-anchor="middle" class="box-subtitle">Node.js + Express + TypeScript</text>
+
+    <rect x="745" y="370" width="285" height="54" rx="14" fill="#eef2ff"/>
+    <circle cx="773" cy="397" r="11" fill="#6366f1"/>
+    <text x="797" y="403" class="body">高数意图与问题类型识别</text>
+
+    <rect x="745" y="438" width="285" height="54" rx="14" fill="#eff6ff"/>
+    <circle cx="773" cy="465" r="11" fill="#3b82f6"/>
+    <text x="797" y="471" class="body">18 个自研实验 Registry</text>
+
+    <rect x="745" y="506" width="285" height="54" rx="14" fill="#ecfeff"/>
+    <circle cx="773" cy="533" r="11" fill="#06b6d4"/>
+    <text x="797" y="539" class="body">关键词 + pinyin-pro 召回</text>
+
+    <rect x="745" y="574" width="285" height="54" rx="14" fill="#f0fdf4"/>
+    <circle cx="773" cy="601" r="11" fill="#10b981"/>
+    <text x="797" y="607" class="body">语义评分 · 参数提取 · 分支决策</text>
+
+    <text x="887" y="660" text-anchor="middle" class="small">明确命中不调用模型，降低延迟与费用</text>
+  </g>
+
+  <!-- 已有实验分支 -->
+  <g filter="url(#shadow)">
+    <rect x="1125" y="190" width="300" height="200" rx="22" fill="url(#existing)"/>
+    <rect x="1150" y="213" width="116" height="30" rx="15" fill="#ffffff" opacity="0.22"/>
+    <text x="1208" y="233" text-anchor="middle" class="pill">direct / suggest</text>
+    <text x="1275" y="281" text-anchor="middle" class="white-title">命中自研实验</text>
+    <text x="1275" y="319" text-anchor="middle" class="white-body">精确命中 / 语义匹配 / 相近推荐</text>
+    <text x="1275" y="350" text-anchor="middle" class="white-body">从 Registry 解析可信页面路径</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1480" y="190" width="380" height="200" rx="22" fill="#ffffff" stroke="#93c5fd" stroke-width="2"/>
+    <text x="1510" y="231" class="box-title">Native 实验页面</text>
+    <text x="1510" y="270" class="body">ExperimentShell · DemoHeader</text>
+    <text x="1510" y="305" class="body">SVG · Canvas · React 交互状态</text>
+    <text x="1510" y="340" class="body">KaTeX · Math.js · 自研数值算法</text>
+    <rect x="1510" y="356" width="130" height="24" rx="12" fill="#dbeafe"/>
+    <text x="1575" y="373" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">自研正式实验</text>
+  </g>
+
+  <!-- 数学解释分支 -->
+  <g filter="url(#shadow)">
+    <rect x="1125" y="430" width="300" height="210" rx="22" fill="url(#answer)"/>
+    <rect x="1150" y="453" width="82" height="30" rx="15" fill="#ffffff" opacity="0.22"/>
+    <text x="1191" y="473" text-anchor="middle" class="pill">answer</text>
+    <text x="1275" y="522" text-anchor="middle" class="white-title">数学概念解释</text>
+    <text x="1275" y="560" text-anchor="middle" class="white-body">DeepSeek v4-flash 主模型</text>
+    <text x="1275" y="591" text-anchor="middle" class="white-body">Qwen 3.7-plus 故障接管</text>
+    <text x="1275" y="620" text-anchor="middle" class="white-body">正常请求不串行复核</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1480" y="430" width="380" height="210" rx="22" fill="#ffffff" stroke="#67e8f9" stroke-width="2"/>
+    <text x="1510" y="474" class="box-title">结构化解释卡片</text>
+    <text x="1510" y="516" class="body">概念标题 + 通俗摘要</text>
+    <text x="1510" y="551" class="body">2–6 条关键知识点</text>
+    <text x="1510" y="586" class="body">数学示例或应用场景</text>
+    <rect x="1510" y="605" width="150" height="24" rx="12" fill="#ccfbf1"/>
+    <text x="1585" y="622" text-anchor="middle" font-size="13" font-weight="700" fill="#0f766e">无需打开实验</text>
+  </g>
+
+  <!-- 临时实验生成分支 -->
+  <g filter="url(#shadow)">
+    <rect x="1125" y="680" width="300" height="310" rx="22" fill="url(#generate)"/>
+    <rect x="1150" y="703" width="110" height="30" rx="15" fill="#ffffff" opacity="0.22"/>
+    <text x="1205" y="723" text-anchor="middle" class="pill">ai / no-match</text>
+    <text x="1275" y="770" text-anchor="middle" class="white-title">确认后生成实验</text>
+    <text x="1275" y="810" text-anchor="middle" class="white-body">① 自研可靠模板优先</text>
+    <text x="1275" y="843" text-anchor="middle" class="white-body">② DeepSeek 生成受约束配置</text>
+    <text x="1275" y="876" text-anchor="middle" class="white-body">③ Qwen 复核 / 故障接管</text>
+    <text x="1275" y="909" text-anchor="middle" class="white-body">④ Schema 与需求一致性校验</text>
+    <rect x="1150" y="938" width="250" height="32" rx="16" fill="#ffffff" opacity="0.18"/>
+    <text x="1275" y="959" text-anchor="middle" class="pill">受控配置生成，不直接写入项目源码</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="1480" y="680" width="380" height="310" rx="22" fill="#ffffff" stroke="#e9a8ff" stroke-width="2"/>
+    <text x="1510" y="724" class="box-title">临时交互实验页</text>
+    <text x="1510" y="765" class="body">DynamicExperimentSpec</text>
+    <text x="1510" y="800" class="body">公式 · 参数 · 步骤 · 知识点</text>
+
+    <rect x="1510" y="827" width="320" height="48" rx="12" fill="#f5f3ff"/>
+    <text x="1670" y="857" text-anchor="middle" class="body">直角坐标 / 极坐标 / 四则运算</text>
+    <rect x="1510" y="887" width="320" height="48" rx="12" fill="#fdf2f8"/>
+    <text x="1670" y="917" text-anchor="middle" class="body">隔离 iframe：HTML / SVG / Canvas</text>
+    <text x="1510" y="963" class="small">仅当前会话预览，不写入源码或永久路由</text>
+  </g>
+
+  <!-- 流程线 -->
+  <path d="M300 460 C318 460 326 460 350 460" class="flow"/>
+  <path d="M650 460 C674 460 682 460 710 460" class="flow"/>
+  <path d="M1065 330 C1094 330 1095 290 1125 290" class="flow"/>
+  <path d="M1065 455 C1094 455 1095 535 1125 535" class="flow"/>
+  <path d="M1065 575 C1094 575 1092 835 1125 835" class="flow"/>
+  <path d="M1425 290 C1445 290 1452 290 1480 290" class="soft-flow"/>
+  <path d="M1425 535 C1445 535 1452 535 1480 535" class="soft-flow"/>
+  <path d="M1425 835 C1445 835 1452 835 1480 835" class="soft-flow"/>
+
+  <!-- 底部横向能力 -->
+  <rect x="55" y="1018" width="1005" height="38" rx="19" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="558" y="1043" text-anchor="middle" class="small">数据与状态：课程 JSON · 自研实验 Registry · SessionStorage 临时实验</text>
+  <rect x="1125" y="1018" width="735" height="38" rx="19" fill="#ffffff" stroke="#cbd5e1"/>
+  <text x="1492" y="1043" text-anchor="middle" class="small">范围保障：1 门课程 · 4 章知识导航 · 18 个自研实验 · 旧实验零交付</text>
+</svg>

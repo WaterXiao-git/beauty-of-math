@@ -1,6 +1,6 @@
 # MathViz - 数学之美
 
-一个基于 React 19 与 Node.js 20+ 构建的现代化数学教学可视化系统。本项目致力于通过动态图表、地理信息映射与 AI 辅助生成，将抽象的数学概念转化为直观的交互式实验。
+一个基于 React 19 与 Node.js 20+ 构建的现代化数学教学可视化系统。本项目致力于通过动态图表、地理信息映射与 AI 辅助生成，将抽象的数学概念转化为直观的交互式实验项目。
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-55.6%25-blue)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)

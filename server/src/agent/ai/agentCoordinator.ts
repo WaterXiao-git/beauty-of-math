@@ -11,6 +11,14 @@ import {
   type QuestionRouteResult,
 } from '../questionRouter.js'
 
+import {
+  routeQuestionWithSemanticSearch,
+} from '../semanticQuestionRouter.js'
+
+import type {
+  ExperimentSemanticRetriever,
+} from '../embedding/experimentSemanticRetriever.js'
+
 import type {
   RouteDecisionResult,
 } from '../routeDecision.js'
@@ -67,6 +75,7 @@ interface AgentCoordinatorOptions {
   enabled?: boolean
   primary?: AgentModelProvider | null
   reviewer?: AgentModelProvider | null
+  semanticRetriever?: ExperimentSemanticRetriever | null
 }
 
 interface CandidateContext {
@@ -375,11 +384,14 @@ function applyProposal(
     ),
   ]).slice(0, 6)
 
-  /**
-   * 原问题完全没有候选时，模型改写只能用强匹配或完整标题召回。
-   * 弱相似度不足以证明“新需求”属于某个已有实验，避免为了推荐
-   * 而把四维投影之类的问题硬塞给旋转体等页面。
-   */
+  // 原问题的向量证据可用于推荐；模型改写产生的弱匹配不能冒充原始证据。
+  const originalSemanticIds = new Set(
+    result.experiments
+      .filter((candidate) => candidate.matchedSignals.some(
+        (signal) => signal.startsWith('语义向量:'),
+      ))
+      .map((candidate) => candidate.id),
+  )
   const hasTrustedOriginalCandidate =
     result.experiments.some(
       (candidate) =>
@@ -389,7 +401,8 @@ function applyProposal(
     !hasTrustedOriginalCandidate
       ? allExpandedCandidates.filter(
           (candidate) =>
-            candidate.matchQuality !== 'related',
+            candidate.matchQuality !== 'related' ||
+            originalSemanticIds.has(candidate.id),
         )
       : allExpandedCandidates
 
@@ -602,7 +615,10 @@ export async function routeQuestionWithAI(
   question: string,
   options: AgentCoordinatorOptions = {},
 ): Promise<AgentEnhancedRouteResult> {
-  const result = routeQuestion(question)
+  const result = await routeQuestionWithSemanticSearch(
+    question,
+    options.semanticRetriever,
+  )
   const needsExplanation =
     shouldExplainWithAI(result)
 

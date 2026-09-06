@@ -14,6 +14,7 @@ interface PlayerBarProps {
   onNext: () => void
   onTogglePlay: () => void
   onReset: () => void
+  onStepSelect?: (step: number) => void
 
   stepDesc: {
     title: string
@@ -42,6 +43,7 @@ export default function PlayerBar({
   onNext,
   onTogglePlay,
   onReset,
+  onStepSelect,
   stepDesc,
 }: PlayerBarProps) {
   const totalSteps = steps.length
@@ -367,7 +369,11 @@ export default function PlayerBar({
                     "
                   >
                     {/* 节点 */}
-                    <div
+                    <button
+                      type="button"
+                      onClick={() => onStepSelect?.(stepNumber)}
+                      disabled={!onStepSelect}
+                      aria-label={`切换到步骤 ${stepNumber}：${item.title}`}
                       className="
                         flex
                         w-20
@@ -375,6 +381,7 @@ export default function PlayerBar({
                         flex-col
                         items-center
                         gap-1.5
+                        disabled:cursor-default
                       "
                     >
                       <span
@@ -459,7 +466,7 @@ export default function PlayerBar({
                           item.title
                         }
                       </span>
-                    </div>
+                    </button>
 
                     {/* 节点连接线 */}
                     {index <

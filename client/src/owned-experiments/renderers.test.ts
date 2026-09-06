@@ -15,4 +15,8 @@ describe('自研实验 renderer', () => {
     expect(getOwnedRenderer('constructor')).toBeNull()
     expect(getOwnedRenderer('toString')).toBeNull()
   })
+
+  it('150 个实验使用 150 个不同的组件入口', () => {
+    expect(new Set(Object.values(OWNED_EXPERIMENT_RENDERERS)).size).toBe(150)
+  })
 })

@@ -44,17 +44,19 @@ function pickPrompts(count: number): string[] {
 const ALL_POINTS = courses.flatMap(collectCoursePoints)
 
 const POINT_KEYWORDS: Record<string, string[]> = {
-  'limit-of-function': ['函数极限', '极限', 'epsilon', 'ϵ', 'ε', 'delta', 'δ'],
-  'limit-of-sequence': ['数列极限', '数列收敛'],
-  'limit-laws': ['极限运算', '极限法则'],
-  derivative: ['导数', '切线斜率', '变化率'],
-  differential: ['微分', '线性主部'],
-  'mean-value-theorem': ['中值定理', '罗尔', '拉格朗日', '柯西'],
-  taylor: ['泰勒', '麦克劳林'],
-  continuity: ['连续函数', '连续性', '间断点'],
-  'definite-integral': ['定积分', '黎曼和', '曲边梯形'],
-  'indefinite-integral': ['不定积分', '原函数'],
-  'newton-method': ['牛顿迭代', '牛顿法'],
+  'hm-02-02': ['函数极限', '极限', 'epsilon', 'ϵ', 'ε', 'delta', 'δ'],
+  'hm-02-01': ['数列极限', '数列收敛'],
+  'hm-02-07': ['极限运算', '极限法则'],
+  'hm-04-05': ['导数', '切线斜率', '变化率'],
+  'hm-04-12': ['微分', '线性主部'],
+  'hm-05-01': ['中值定理', '罗尔'],
+  'hm-05-02': ['拉格朗日中值定理', '拉格朗日'],
+  'hm-05-03': ['柯西中值定理', '柯西'],
+  'hm-14-08': ['泰勒', '麦克劳林'],
+  'hm-03-01': ['连续函数', '连续性'],
+  'hm-03-04': ['间断点', '可去间断'],
+  'hm-07-01': ['定积分', '黎曼和', '曲边梯形'],
+  'hm-06-02': ['不定积分', '原函数'],
 }
 
 function pointDestination(point: KnowledgePoint): string {
@@ -88,14 +90,14 @@ function inferPoint(question: string): KnowledgePoint | undefined {
 }
 
 function learningPathFor(point?: KnowledgePoint): string[] {
-  if (point?.id === 'limit-of-function') return LEARNING_PATH
+  if (point?.id === 'hm-02-02') return LEARNING_PATH
   return ['概念引入', '核心定义', '图像理解', '例题验证', '应用拓展']
 }
 
 const FORMULAS: Record<string, string> = {
-  '极限的运算法则': '\\lim(f+g)=\\lim f+\\lim g',
+  '极限的四则运算': '\\lim(f+g)=\\lim f+\\lim g',
   '两个重要极限': '\\lim_{x\\to 0}\\frac{\\sin x}{x}=1',
-  '导数': "f'(x)=\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}",
+  '导数的定义': "f'(x)=\\lim_{h\\to0}\\frac{f(x+h)-f(x)}{h}",
 }
 
 interface AskSessionSnapshot {

@@ -58,6 +58,28 @@ test('识别计算意图', () => {
   assert.equal(result.primaryIntent, 'calculate')
 })
 
+test('识别求表达式定积分的计算意图', () => {
+  const result = classifyIntent(
+    '求 x^2 从 0 到 1 的定积分',
+  )
+
+  assert.equal(result.primaryIntent, 'calculate')
+})
+
+test('识别连续但不可导这类关系解释问题', () => {
+  const result = classifyIntent(
+    '函数在一点连续但不可导为什么',
+  )
+
+  const intents = result.candidates.map(
+    (candidate) => candidate.intent,
+  )
+
+  assert.ok(intents.includes('explain'))
+  assert.ok(intents.includes('compare'))
+  assert.equal(result.needsAI, true)
+})
+
 test('识别比较意图', () => {
   const result = classifyIntent(
     '比较左端点和中点黎曼和的误差',

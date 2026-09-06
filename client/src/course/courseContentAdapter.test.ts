@@ -29,9 +29,9 @@ const tree: PublishedCourseTree = {
           children: [],
           knowledgePoints: [
             {
-              id: 'function',
-              code: 'function-concept',
-              title: '函数的概念',
+              id: 'hm-01-01',
+              code: 'function-domain-range',
+              title: '函数的定义域和值域',
               summary: '来自后端目录的函数摘要',
               aliases: ['函数'],
               tags: ['函数'],
@@ -41,7 +41,7 @@ const tree: PublishedCourseTree = {
               templateKey: null,
             },
             {
-              id: 'limit-of-function',
+              id: 'hm-02-02',
               code: 'epsilon-delta-definition',
               title: 'ε−δ 极限定义（已发布）',
               summary: '来自后端的正式摘要',
@@ -49,8 +49,8 @@ const tree: PublishedCourseTree = {
               tags: ['极限'],
               availability: 'published',
               contentVersion: '1.0.0',
-              demoPath: '/demo/epsilon-delta',
-              templateKey: 'epsilon-delta',
+              demoPath: '/demo/hm-02-02',
+              templateKey: '函数极限交互可视化',
             },
           ],
         },
@@ -65,17 +65,17 @@ describe('mergePublishedCourseTree', () => {
     const points = result.chapters.flatMap((chapter) =>
       chapter.sections.flatMap((section) => section.points),
     )
-    const limitPoint = points.find((point) => point.id === 'limit-of-function')
+    const limitPoint = points.find((point) => point.id === 'hm-02-02')
 
-    expect(points).toHaveLength(18)
-    expect(limitPoint?.title).toBe('函数的极限')
+    expect(points).toHaveLength(150)
+    expect(limitPoint?.title).toBe('函数在某一点的极限')
     expect(limitPoint?.summary).toBe('来自后端的正式摘要')
     expect(limitPoint?.source).toBe('published')
-    expect(limitPoint?.rendererId).toBe('epsilon-delta')
-    expect(limitPoint?.backendId).toBe('limit-of-function')
-    expect(result.syncedPointIds.has('limit-of-function')).toBe(true)
-    expect(points.find((point) => point.id === 'function')?.source).toBe('catalog')
-    expect(points.find((point) => point.id === 'function')?.rendererId).toBe('function')
-    expect(points.find((point) => point.id === 'function-representation')?.source).toBeUndefined()
+    expect(limitPoint?.rendererId).toBe('hm-02-02')
+    expect(limitPoint?.backendId).toBe('hm-02-02')
+    expect(result.syncedPointIds.has('hm-02-02')).toBe(true)
+    expect(points.find((point) => point.id === 'hm-01-01')?.source).toBe('catalog')
+    expect(points.find((point) => point.id === 'hm-01-01')?.rendererId).toBe('hm-01-01')
+    expect(points.find((point) => point.id === 'hm-01-02')?.source).toBe('catalog')
   })
 })

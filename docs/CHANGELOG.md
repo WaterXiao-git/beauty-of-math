@@ -1,3 +1,47 @@
+## 2026-09-06 · 修复语义路由断点并落地千问索引持久化
+
+**模块**：实验路由、千问 Embedding、实验语义描述
+
+**内容**：移除语义检索前的关键词门槛，保留原问题的向量候选，修复 AI 复核后候选被清空的问题。新增磁盘索引与启动预热，按模型、地址、维度区分缓存，按文档摘要增量更新；支持损坏重建和只读磁盘内存回退，状态接口展示构建与复用情况。为 150 个知识点补充独立数学描述并同步生成前后端目录。配置示例去除无效占位域名，本地 `.env` 使用用户提供的千问 Key 和业务空间兼容地址；密钥及缓存均被 Git 忽略。
+
+**涉及文件**：`server/src/agent/semanticQuestionRouter*`、`server/src/agent/ai/agentCoordinator*`、`server/src/agent/embedding/*`、`server/src/routes/agent.ts`、`server/src/index.ts`、`server/.env.example`、`config/experiment-descriptions.json`、`scripts/generate-owned-experiment-registries.mjs`、生成的实验目录、`docs/SEMANTIC_ROUTING.md`。
+
+**验证**：相关 41 个定向测试通过，后端 `tsc --noEmit` 通过。实际千问生成 150 条 1024 维索引并落盘，新进程复用全部 150 条。“越走越靠近一个数”经向量检索和真实 AI 复核成功推荐数列趋近过程；“曲线切片累加”语义检索首选黎曼和。
+
+---
+
+## 2026-08-31 · 剩余 135 个高数知识点切换为专属 Native 实验
+
+**模块**：极限、连续、导数与应用、积分与应用、微分方程、空间解析几何、多元函数、重积分、场积分、无穷级数
+
+**内容**：`hm-02-01` 至 `hm-14-09` 全部退出旧的 `KnowledgeExperiment` 通用模板。135 个知识点分别配置唯一公式、双参数、四个专属教学动作和唯一 SVG 场景签名，并按知识内容使用数列与 ε 邻域、各类间断、差商/切线、积分微元、方向场、三维向量/曲面、等高线/梯度、重积分体元、环流/通量和级数部分和等绘制体系。正式 Renderer 表现在由已完成的 15 个函数实验和新增的 135 个 Native 实验直接组成，不再生成通用生产回退组件。
+
+**涉及文件**：`client/src/demo/knowledge-native/*`、`client/src/owned-experiments/renderers.ts`、`client/src/owned-experiments/renderers.test.ts`
+
+---
+
+## 2026-08-31 · 函数与基本图像 15 个独立 Native 实验
+
+**模块**：函数与基本图像、Experiment V2、PlayerBar
+
+**内容**：将 `hm-01-01` 至 `hm-01-15` 从通用曲线模板替换为 15 个独立实现，分别覆盖定义域和值域、图像生成、单调性、奇偶性、周期性、反函数、复合函数、分段函数、参数方程、极坐标、基本初等函数、平移、伸缩、翻折与二次函数参数影响。每页拥有专属数学状态、控制参数、SVG 场景和四步教学过程；底部步骤节点现在可以直接点击，并与画布、参数、标记和观察结论联动，播放、暂停、前后步和重置也使用同一状态控制。
+
+**涉及文件**：`client/src/demo/PlayerBar.tsx`、`client/src/experiment-v2/ExperimentShell.tsx`、`client/src/demo/function-basics/*`、`client/src/owned-experiments/renderers.ts`
+
+---
+
+## 2026-08-31 · 十四模块与 150 个高数知识点独立实验
+
+**模块**：高等数学课程目录、Native 实验页面、实验注册表、AI 路由、后端课程仓储
+
+**内容**：根据《实验的完善与补充需求》建立 14 个高等数学模块和 150 个知识点的唯一课程清单，每个知识点分配独立 `hm-XX-YY` 标识与 `/demo/:id` 页面。所有页面统一使用 Native Experiment V2 的 `ExperimentShell`、画布、参数侧栏和四步 `PlayerBar`，并按函数、极限、连续、导数、积分、微分方程、空间几何、多元函数、重积分、场积分和级数等模块选择交互画布。课程目录、知识点导航、实验库、前端渲染表、后端 AI 匹配注册表和发布内容仓储均由同一份课程配置生成；后端旧 18 项课程种子已替换为 14 模块、150 个已发布知识点。
+
+**涉及文件**：`config/high-math-curriculum.json`、`scripts/generate-owned-experiment-registries.mjs`、`client/src/course/highMathCurriculum.generated.ts`、`client/src/course/courseData.ts`、`client/src/demo/knowledge/KnowledgeExperiment.tsx`、`client/src/owned-experiments/catalog.generated.ts`、`client/src/owned-experiments/renderers.ts`、`server/src/agent/ownedExperimentRegistry.generated.ts`、`server/src/content/highMathCurriculum.generated.ts`、`server/src/content/courseNavigationSeed.ts`、`server/src/content/publishedSeed.ts`
+
+**验证**：生成器确认 14 个模块、150 个知识点与 150 个唯一实验 ID；产品范围检查、前后端 TypeScript 构建、课程完整性检查及前后端测试均以新课程规模为准。
+
+---
+
 ## 2026-08-14 · 高数实验入口收敛
 **模块**：实验目录、应用路由、退役内容页
 **内容**：实验目录改为仅展示 8 个自研高数实验，所有卡片统一进入 `/demo/*`。根路径直接加载知识地图；历史单段实验重定向已移除，未匹配地址统一进入退役页。退役页仅提供返回知识地图和高数实验两个入口。

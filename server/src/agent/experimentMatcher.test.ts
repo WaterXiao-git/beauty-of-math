@@ -9,23 +9,7 @@ import {
   matchExperiments,
 } from './experimentMatcher.js'
 
-const OWNED_EXPERIMENT_IDS = new Set([
-  'continuity',
-  'continuity-properties',
-  'function',
-  'function-properties',
-  'function-representation',
-  'limit-of-sequence',
-  'taylor',
-  'epsilon-delta',
-  'limit-laws',
-  'two-important-limits',
-  'infinitesimal',
-  'derivative',
-  'differential',
-  'rolle',
-  'graphing',
-])
+const OWNED_EXPERIMENT_ID_PATTERN = /^hm-\d{2}-\d{2}$/
 
 function classifyAndMatch(question: string) {
   const intentResult = classifyIntent(question)
@@ -51,7 +35,7 @@ test('能够匹配自研高数实验', () => {
     'observe' as never,
   )
 
-  assert.equal(result.candidates[0]?.id, 'derivative')
+  assert.equal(result.candidates[0]?.id, 'hm-04-05')
 })
 
 test('极限定义的自然语言表达能够匹配自研实验', () => {
@@ -59,7 +43,7 @@ test('极限定义的自然语言表达能够匹配自研实验', () => {
     '为什么 ε 邻域和 δ 邻域可以定义函数极限',
   )
 
-  assert.equal(result.candidates[0]?.id, 'epsilon-delta')
+  assert.equal(result.candidates[0]?.id, 'hm-02-02')
 })
 
 test('无关问题不返回实验候选', () => {
@@ -78,7 +62,7 @@ test('所有候选都属于自研高数白名单', () => {
   assert.ok(result.candidates.length > 0)
   assert.equal(
     result.candidates.every(
-      ({ id }) => OWNED_EXPERIMENT_IDS.has(id),
+      ({ id }) => OWNED_EXPERIMENT_ID_PATTERN.test(id),
     ),
     true,
   )
@@ -96,13 +80,51 @@ test('比较问题可以同时召回两个自研知识点', () => {
     (candidate) => candidate.id,
   )
 
-  assert.ok(candidateIds.includes('derivative'))
-  assert.ok(candidateIds.includes('differential'))
+  assert.ok(candidateIds.includes('hm-04-05'))
+  assert.ok(candidateIds.includes('hm-04-12'))
+})
+
+test('比较数列极限和函数极限时不会误命中极限四则运算', () => {
+  const result = classifyAndMatch(
+    '比较数列极限和函数极限',
+  )
+  const candidateIds = result.candidates.map(
+    (candidate) => candidate.id,
+  )
+
+  assert.deepEqual(
+    candidateIds.slice(0, 2),
+    ['hm-02-01', 'hm-02-02'],
+  )
+  assert.equal(candidateIds.includes('hm-02-07'), false)
+})
+
+test('泰勒展开自然语言能够召回泰勒级数实验', () => {
+  const result = classifyAndMatch(
+    '泰勒展开到五阶会怎样',
+  )
+
+  assert.equal(result.candidates[0]?.id, 'hm-14-08')
+})
+
+test('定积分面积表达优先召回平面图形面积实验', () => {
+  const result = classifyAndMatch(
+    '用图像解释定积分怎么计算面积',
+  )
+
+  assert.equal(result.candidates[0]?.id, 'hm-08-01')
 })
 
 test('轻微错字仍可匹配自研实验标题', () => {
   const result = classifyAndMatch('罗尔定里')
 
-  assert.equal(result.candidates[0]?.id, 'rolle')
+  assert.equal(result.candidates[0]?.id, 'hm-05-01')
+  assert.equal(result.candidates[0]?.matchQuality, 'related')
+})
+
+test('拼音输入只作为低权重召回实验候选', () => {
+  const result = classifyAndMatch('luo er ding li')
+
+  assert.equal(result.candidates[0]?.id, 'hm-05-01')
   assert.equal(result.candidates[0]?.matchQuality, 'related')
 })

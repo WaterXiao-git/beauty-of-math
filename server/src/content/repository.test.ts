@@ -26,16 +26,15 @@ test(
 
     assert.equal(courses.length, 1)
     assert.deepEqual(courses[0], {
-      id: 'higher-mathematics-volume-1',
-      code: 'higher-mathematics-1',
-      title: '高等数学（上册）',
-      description:
-        '以函数、极限、导数和微分中值定理为主线的交互式课程。',
+      id: 'higher-mathematics',
+      code: 'higher-mathematics',
+      title: '高等数学',
+      description: '从函数与极限到无穷级数',
       sortOrder: 1,
-      chapterCount: 4,
-      sectionCount: 11,
-      knowledgePointCount: 18,
-      publishedKnowledgePointCount: 3,
+      chapterCount: 14,
+      sectionCount: 14,
+      knowledgePointCount: 150,
+      publishedKnowledgePointCount: 150,
     })
   },
 )
@@ -44,26 +43,26 @@ test(
   '课程树包含章节、小节和已发布知识点',
   () => {
     const tree = getPublishedCourseTree(
-      'higher-mathematics-volume-1',
+      'higher-mathematics',
       createRepository(),
     )
 
     assert.ok(tree)
-    assert.equal(tree.chapters.length, 4)
-    assert.equal(tree.chapters[0].children.length, 3)
+    assert.equal(tree.chapters.length, 14)
+    assert.equal(tree.chapters[0].children.length, 1)
 
     const points = tree.chapters.flatMap((chapter) =>
       chapter.children.flatMap((section) => section.knowledgePoints),
     )
-    const functionPoint = points.find((point) => point.id === 'function')
-    const limitPoint = points.find((point) => point.id === 'epsilon-delta')
+    const functionPoint = points.find((point) => point.id === 'hm-01-01')
+    const limitPoint = points.find((point) => point.id === 'hm-02-02')
 
-    assert.equal(points.length, 18)
-    assert.equal(functionPoint?.availability, 'cataloged')
-    assert.equal(functionPoint?.contentVersion, null)
-    assert.equal(functionPoint?.demoPath, null)
+    assert.equal(points.length, 150)
+    assert.equal(functionPoint?.availability, 'published')
+    assert.equal(functionPoint?.contentVersion, '1.0.0')
+    assert.equal(functionPoint?.demoPath, '/demo/hm-01-01')
     assert.equal(limitPoint?.availability, 'published')
-    assert.equal(limitPoint?.demoPath, '/demo/epsilon-delta')
+    assert.equal(limitPoint?.demoPath, '/demo/hm-02-02')
   },
 )
 
@@ -71,32 +70,32 @@ test(
   '知识点详情固定到发布版本、案例、步骤和主模板',
   () => {
     const detail = getPublishedKnowledgePoint(
-      'derivative',
+      'hm-04-05',
       createRepository(),
     )
 
     assert.ok(detail)
-    assert.equal(detail.knowledgePoint.title, '导数')
+    assert.equal(detail.knowledgePoint.title, '导数的几何意义')
     assert.equal(detail.version.contentVersion, '1.0.0')
     assert.match(
       detail.version.contentHash ?? '',
       /^sha256:[a-f0-9]{64}$/,
     )
-    assert.equal(detail.cases.length, 2)
+    assert.equal(detail.cases.length, 1)
     assert.equal(detail.steps.length, 4)
     assert.equal(detail.templateBindings.length, 1)
     assert.equal(
       detail.primaryTemplate?.implementationRef,
-      'client/src/demo/DerivativeDemo.tsx',
+      'client/src/demo/knowledge/KnowledgeExperiment.tsx',
     )
   },
 )
 
 test(
-  '仅进入课程目录的知识点不会伪装成已发布演示',
+  '不存在的知识点不会伪装成已发布演示',
   () => {
     const detail = getPublishedKnowledgePoint(
-      'function',
+      'missing-point',
       createRepository(),
     )
 
@@ -109,11 +108,11 @@ test(
   () => {
     const repository = createRepository()
     const versions = listPublishedKnowledgePointVersions(
-      'rolle',
+      'hm-05-01',
       repository,
     )
     const bundle = getPublishedKnowledgePointVersion(
-      'rolle',
+      'hm-05-01',
       '1.0.0',
       repository,
     )
@@ -123,7 +122,7 @@ test(
     assert.equal(bundle?.version.contentVersion, '1.0.0')
     assert.equal(
       getPublishedKnowledgePointVersion(
-        'rolle',
+        'hm-05-01',
         '9.9.9',
         repository,
       ),

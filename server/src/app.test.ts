@@ -48,8 +48,18 @@ test('API 挂载面保留现有能力并移除旧实验链路', async () => {
     const agentStatusBody: unknown = await agentStatus.json()
     assert.ok(isRecord(agentStatusBody))
     assert.equal(typeof agentStatusBody.enabled, 'boolean')
+    assert.ok(isRecord(agentStatusBody.semanticRouting))
+    assert.equal(
+      typeof agentStatusBody.semanticRouting.enabled,
+      'boolean',
+    )
     assert.ok(isRecord(agentStatusBody.tools))
     assert.equal(typeof agentStatusBody.tools.createExperiment, 'string')
+    assert.ok(
+      ['rule-fallback', 'semantic-and-rule'].includes(
+        String(agentStatusBody.tools.searchExperiments),
+      ),
+    )
 
     const intent = await fetch(`${baseUrl}/api/agent/intent`, {
       method: 'POST',

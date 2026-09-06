@@ -24,6 +24,7 @@ export const ROUTE_DECISION_REASONS = [
   'mixed-intent',
   'ambiguous-experiment',
   'intent-without-experiment',
+  'calculation-request',
   'no-experiment-candidate',
   'ai-enhanced-suggestion',
   'ai-clarification',
@@ -200,6 +201,28 @@ export function decideRoute(
       intent,
       target,
     )
+
+  /**
+   * 数值计算由回答服务处理；现有实验只作为相关学习入口保留，
+   * 不把不支持 calculate 的可视化页面当成计算器直接打开。
+   */
+  if (
+    effectiveIntent.primaryIntent === 'calculate' &&
+    !hasMixedIntent(effectiveIntent)
+  ) {
+    return {
+      decision: 'answer',
+      reason: 'calculation-request',
+      message: target
+        ? '已识别计算请求，并保留相关实验作为学习参考。'
+        : '已识别计算请求，将直接给出解答。',
+      target,
+      alternatives,
+      scoreGap: target
+        ? target.score - (alternatives[0]?.score ?? 0)
+        : 0,
+    }
+  }
 
   /**
    * 完全没有实验候选。

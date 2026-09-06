@@ -19,30 +19,32 @@ export interface OwnedExperimentRouteDefinition {
 
 export const OWNED_EXPERIMENT_REGISTRY = [
   {
-    "id": "continuity",
-    "title": "连续的概念",
-    "path": "/demo/continuity",
-    "knowledgePointId": "continuity",
-    "description": "比较左右极限与函数值，辨认连续点和常见间断类型。",
+    "id": "hm-01-01",
+    "title": "函数的定义域和值域",
+    "path": "/demo/hm-01-01",
+    "knowledgePointId": "hm-01-01",
+    "description": "函数把允许的输入对应到唯一输出。关注横轴可取范围与纵轴实际得到的范围，以及限制输入区间后值域如何改变。",
     "topics": [
-      "连续",
-      "间断点",
-      "左右极限"
+      "函数与基本图像",
+      "函数的定义域和值域"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "连续的概念",
-      "continuity"
+      "函数的定义域和值域",
+      "hm-01-01",
+      "hm 01 01",
+      "函数定义域",
+      "函数值域",
+      "函数的概念"
     ],
     "strongPhrases": [
-      "比较左右极限与函数值，辨认连续点和常见间断类型。"
+      "函数把允许的输入对应到唯一输出。关注横轴可取范围与纵轴实际得到的范围，以及限制输入区间后值域如何改变。"
     ],
     "keywords": [
-      "连续",
-      "间断点",
-      "左右极限",
-      "continuity"
+      "函数与基本图像",
+      "函数的定义域和值域",
+      "hm 01 01"
     ],
     "supportedIntents": [
       "visualize",
@@ -52,278 +54,31 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "continuity-properties",
-    "title": "连续函数的性质",
-    "path": "/demo/continuity-properties",
-    "knowledgePointId": "continuity-properties",
-    "description": "演示闭区间连续函数的零点、介值和最值定理。",
+    "id": "hm-01-02",
+    "title": "函数图像",
+    "path": "/demo/hm-01-02",
+    "knowledgePointId": "hm-01-02",
+    "description": "从对应法则计算数值对，再把点描到坐标平面。关注离散采样如何表达函数曲线，以及数值表、解析式与图像的对应。",
     "topics": [
-      "连续函数",
-      "零点定理",
-      "介值定理",
-      "最值定理"
-    ],
-    "ownership": "self-developed",
-    "semanticEnabled": true,
-    "aliases": [
-      "连续函数的性质",
-      "continuity-properties",
-      "continuity properties"
-    ],
-    "strongPhrases": [
-      "演示闭区间连续函数的零点、介值和最值定理。"
-    ],
-    "keywords": [
-      "连续函数",
-      "零点定理",
-      "介值定理",
-      "最值定理",
-      "continuity properties"
-    ],
-    "supportedIntents": [
-      "visualize",
-      "explain",
-      "compare",
-      "find-experiment"
-    ]
-  },
-  {
-    "id": "definite-integral",
-    "title": "定积分",
-    "path": "/demo/definite-integral",
-    "knowledgePointId": "definite-integral",
-    "description": "用黎曼和矩形逐步逼近曲边面积，理解定积分的分割、求和与取极限。",
-    "topics": [
-      "定积分",
-      "黎曼和",
-      "曲边面积",
-      "积分区间"
-    ],
-    "ownership": "self-developed",
-    "semanticEnabled": true,
-    "aliases": [
-      "定积分",
-      "definite-integral",
-      "definite integral"
-    ],
-    "strongPhrases": [
-      "用黎曼和矩形逐步逼近曲边面积，理解定积分的分割、求和与取极限。"
-    ],
-    "keywords": [
-      "定积分",
-      "黎曼和",
-      "曲边面积",
-      "积分区间",
-      "definite integral"
-    ],
-    "supportedIntents": [
-      "visualize",
-      "explain",
-      "compare",
-      "find-experiment"
-    ]
-  },
-  {
-    "id": "derivative",
-    "title": "导数的几何意义",
-    "path": "/demo/derivative",
-    "knowledgePointId": "derivative",
-    "description": "通过割线趋近切线理解导数的几何意义。",
-    "topics": [
-      "导数",
-      "切线",
-      "变化率"
-    ],
-    "ownership": "self-developed",
-    "semanticEnabled": true,
-    "aliases": [
-      "导数的几何意义",
-      "derivative"
-    ],
-    "strongPhrases": [
-      "通过割线趋近切线理解导数的几何意义。"
-    ],
-    "keywords": [
-      "导数",
-      "切线",
-      "变化率",
-      "derivative"
-    ],
-    "supportedIntents": [
-      "visualize",
-      "explain",
-      "compare",
-      "find-experiment"
-    ]
-  },
-  {
-    "id": "differential",
-    "title": "微分",
-    "path": "/demo/differential",
-    "knowledgePointId": "differential",
-    "description": "比较函数增量与线性主部，理解微分近似。",
-    "topics": [
-      "微分",
-      "线性近似"
-    ],
-    "ownership": "self-developed",
-    "semanticEnabled": true,
-    "aliases": [
-      "微分",
-      "differential"
-    ],
-    "strongPhrases": [
-      "比较函数增量与线性主部，理解微分近似。"
-    ],
-    "keywords": [
-      "微分",
-      "线性近似",
-      "differential"
-    ],
-    "supportedIntents": [
-      "visualize",
-      "explain",
-      "compare",
-      "find-experiment"
-    ]
-  },
-  {
-    "id": "epsilon-delta",
-    "title": "ε–δ 极限定义",
-    "path": "/demo/epsilon-delta",
-    "knowledgePointId": "limit-of-function",
-    "description": "通过 ε 误差带和 δ 邻域理解函数极限定义。",
-    "topics": [
-      "函数极限",
-      "ε-δ定义",
-      "邻域"
-    ],
-    "ownership": "self-developed",
-    "semanticEnabled": true,
-    "aliases": [
-      "ε–δ 极限定义",
-      "epsilon-delta",
-      "epsilon delta",
-      "limit-of-function",
-      "limit of function"
-    ],
-    "strongPhrases": [
-      "通过 ε 误差带和 δ 邻域理解函数极限定义。"
-    ],
-    "keywords": [
-      "函数极限",
-      "ε-δ定义",
-      "邻域",
-      "limit of function"
-    ],
-    "supportedIntents": [
-      "visualize",
-      "explain",
-      "compare",
-      "find-experiment"
-    ]
-  },
-  {
-    "id": "function",
-    "title": "函数的概念",
-    "path": "/demo/function",
-    "knowledgePointId": "function",
-    "description": "通过定义域、值域和对应关系判断一个映射是否构成函数。",
-    "topics": [
-      "函数概念",
-      "定义域",
-      "值域",
-      "对应法则"
-    ],
-    "ownership": "self-developed",
-    "semanticEnabled": true,
-    "aliases": [
-      "函数的概念",
-      "function"
-    ],
-    "strongPhrases": [
-      "通过定义域、值域和对应关系判断一个映射是否构成函数。"
-    ],
-    "keywords": [
-      "函数概念",
-      "定义域",
-      "值域",
-      "对应法则",
-      "function"
-    ],
-    "supportedIntents": [
-      "visualize",
-      "explain",
-      "compare",
-      "find-experiment"
-    ]
-  },
-  {
-    "id": "function-properties",
-    "title": "函数的性质",
-    "path": "/demo/function-properties",
-    "knowledgePointId": "function-properties",
-    "description": "从图像观察函数的有界性、单调性、奇偶性和周期性。",
-    "topics": [
-      "函数性质",
-      "单调性",
-      "奇偶性",
-      "周期性",
-      "有界性"
-    ],
-    "ownership": "self-developed",
-    "semanticEnabled": true,
-    "aliases": [
-      "函数的性质",
-      "function-properties",
-      "function properties"
-    ],
-    "strongPhrases": [
-      "从图像观察函数的有界性、单调性、奇偶性和周期性。"
-    ],
-    "keywords": [
-      "函数性质",
-      "单调性",
-      "奇偶性",
-      "周期性",
-      "有界性",
-      "function properties"
-    ],
-    "supportedIntents": [
-      "visualize",
-      "explain",
-      "compare",
-      "find-experiment"
-    ]
-  },
-  {
-    "id": "function-representation",
-    "title": "函数的表示法",
-    "path": "/demo/function-representation",
-    "knowledgePointId": "function-representation",
-    "description": "联动解析式、数值表和函数图像，理解同一函数的多种表示。",
-    "topics": [
-      "函数表示法",
-      "解析式",
-      "表格",
+      "函数与基本图像",
       "函数图像"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "函数的表示法",
-      "function-representation",
-      "function representation"
-    ],
-    "strongPhrases": [
-      "联动解析式、数值表和函数图像，理解同一函数的多种表示。"
-    ],
-    "keywords": [
-      "函数表示法",
-      "解析式",
-      "表格",
       "函数图像",
-      "function representation"
+      "hm-01-02",
+      "hm 01 02",
+      "函数图形",
+      "函数作图"
+    ],
+    "strongPhrases": [
+      "从对应法则计算数值对，再把点描到坐标平面。关注离散采样如何表达函数曲线，以及数值表、解析式与图像的对应。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "函数图像",
+      "hm 01 02"
     ],
     "supportedIntents": [
       "visualize",
@@ -333,32 +88,29 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "graphing",
-    "title": "函数图形描绘",
-    "path": "/demo/graphing",
-    "knowledgePointId": "graphing",
-    "description": "结合单调性、极值和凹凸性描绘函数图形。",
+    "id": "hm-01-03",
+    "title": "函数的单调性",
+    "path": "/demo/hm-01-03",
+    "knowledgePointId": "hm-01-03",
+    "description": "在指定区间比较两个输入及其输出的大小，判断函数随输入增加而上升还是下降。单调性必须连同区间一起讨论。",
     "topics": [
-      "函数作图",
-      "单调性",
-      "极值",
-      "凹凸性"
+      "函数与基本图像",
+      "函数的单调性"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "函数图形描绘",
-      "graphing"
+      "函数的单调性",
+      "hm-01-03",
+      "hm 01 03"
     ],
     "strongPhrases": [
-      "结合单调性、极值和凹凸性描绘函数图形。"
+      "在指定区间比较两个输入及其输出的大小，判断函数随输入增加而上升还是下降。单调性必须连同区间一起讨论。"
     ],
     "keywords": [
-      "函数作图",
-      "单调性",
-      "极值",
-      "凹凸性",
-      "graphing"
+      "函数与基本图像",
+      "函数的单调性",
+      "hm 01 03"
     ],
     "supportedIntents": [
       "visualize",
@@ -368,33 +120,29 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "indefinite-integral",
-    "title": "不定积分",
-    "path": "/demo/indefinite-integral",
-    "knowledgePointId": "indefinite-integral",
-    "description": "联动被积函数、原函数族与积分常数，理解不定积分是求导的逆运算。",
+    "id": "hm-01-04",
+    "title": "函数的奇偶性",
+    "path": "/demo/hm-01-04",
+    "knowledgePointId": "hm-01-04",
+    "description": "比较 f(x) 与 f(-x)，理解关于纵轴或原点的对称。判断奇偶性之前需要确认定义域关于原点对称。",
     "topics": [
-      "不定积分",
-      "原函数",
-      "积分常数",
-      "求导"
+      "函数与基本图像",
+      "函数的奇偶性"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "不定积分",
-      "indefinite-integral",
-      "indefinite integral"
+      "函数的奇偶性",
+      "hm-01-04",
+      "hm 01 04"
     ],
     "strongPhrases": [
-      "联动被积函数、原函数族与积分常数，理解不定积分是求导的逆运算。"
+      "比较 f(x) 与 f(-x)，理解关于纵轴或原点的对称。判断奇偶性之前需要确认定义域关于原点对称。"
     ],
     "keywords": [
-      "不定积分",
-      "原函数",
-      "积分常数",
-      "求导",
-      "indefinite integral"
+      "函数与基本图像",
+      "函数的奇偶性",
+      "hm 01 04"
     ],
     "supportedIntents": [
       "visualize",
@@ -404,28 +152,29 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "infinitesimal",
-    "title": "无穷小",
-    "path": "/demo/infinitesimal",
-    "knowledgePointId": "infinitesimal",
-    "description": "观察无穷小量随自变量变化趋近于零的过程。",
+    "id": "hm-01-05",
+    "title": "函数的周期性",
+    "path": "/demo/hm-01-05",
+    "knowledgePointId": "hm-01-05",
+    "description": "研究图形沿横轴移动一定距离后是否重合，即 f(x+T)=f(x)。关注重复间隔和最小正周期，而非局部形状相似。",
     "topics": [
-      "无穷小",
-      "极限"
+      "函数与基本图像",
+      "函数的周期性"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "无穷小",
-      "infinitesimal"
+      "函数的周期性",
+      "hm-01-05",
+      "hm 01 05"
     ],
     "strongPhrases": [
-      "观察无穷小量随自变量变化趋近于零的过程。"
+      "研究图形沿横轴移动一定距离后是否重合，即 f(x+T)=f(x)。关注重复间隔和最小正周期，而非局部形状相似。"
     ],
     "keywords": [
-      "无穷小",
-      "极限",
-      "infinitesimal"
+      "函数与基本图像",
+      "函数的周期性",
+      "hm 01 05"
     ],
     "supportedIntents": [
       "visualize",
@@ -435,29 +184,29 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "limit-laws",
-    "title": "极限运算法则",
-    "path": "/demo/limit-laws",
-    "knowledgePointId": "limit-laws",
-    "description": "观察和、差、积、商的极限如何由基础极限组合得到。",
+    "id": "hm-01-06",
+    "title": "反函数",
+    "path": "/demo/hm-01-06",
+    "knowledgePointId": "hm-01-06",
+    "description": "交换函数的输入和输出，原图像与反函数图像关于 y=x 对称。关注一一对应，以及非单调函数为什么需要限制定义域。",
     "topics": [
-      "极限",
-      "运算法则"
+      "函数与基本图像",
+      "反函数"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "极限运算法则",
-      "limit-laws",
-      "limit laws"
+      "反函数",
+      "hm-01-06",
+      "hm 01 06"
     ],
     "strongPhrases": [
-      "观察和、差、积、商的极限如何由基础极限组合得到。"
+      "交换函数的输入和输出，原图像与反函数图像关于 y=x 对称。关注一一对应，以及非单调函数为什么需要限制定义域。"
     ],
     "keywords": [
-      "极限",
-      "运算法则",
-      "limit laws"
+      "函数与基本图像",
+      "反函数",
+      "hm 01 06"
     ],
     "supportedIntents": [
       "visualize",
@@ -467,31 +216,320 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "limit-of-sequence",
-    "title": "数列的极限",
-    "path": "/demo/limit-of-sequence",
-    "knowledgePointId": "limit-of-sequence",
-    "description": "通过 ε 误差带和 N 分界点理解数列极限的 ε–N 定义。",
+    "id": "hm-01-07",
+    "title": "复合函数",
+    "path": "/demo/hm-01-07",
+    "knowledgePointId": "hm-01-07",
+    "description": "一个函数的输出作为另一个函数的输入，形成 f(g(x))。关注内外层顺序及中间结果是否落在外层函数的定义域。",
     "topics": [
+      "函数与基本图像",
+      "复合函数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "复合函数",
+      "hm-01-07",
+      "hm 01 07"
+    ],
+    "strongPhrases": [
+      "一个函数的输出作为另一个函数的输入，形成 f(g(x))。关注内外层顺序及中间结果是否落在外层函数的定义域。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "复合函数",
+      "hm 01 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-01-08",
+    "title": "分段函数",
+    "path": "/demo/hm-01-08",
+    "knowledgePointId": "hm-01-08",
+    "description": "同一函数在不同输入区间采用不同表达式。关注分界点采用哪一段、端点是否包含，以及拼接处的函数值和左右变化。",
+    "topics": [
+      "函数与基本图像",
+      "分段函数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "分段函数",
+      "hm-01-08",
+      "hm 01 08"
+    ],
+    "strongPhrases": [
+      "同一函数在不同输入区间采用不同表达式。关注分界点采用哪一段、端点是否包含，以及拼接处的函数值和左右变化。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "分段函数",
+      "hm 01 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-01-09",
+    "title": "参数方程",
+    "path": "/demo/hm-01-09",
+    "knowledgePointId": "hm-01-09",
+    "description": "用同一个参数 t 分别确定 x 和 y，描述点随参数变化走出的轨迹。区分轨迹形状、运动方向和参数变化速度。",
+    "topics": [
+      "函数与基本图像",
+      "参数方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "参数方程",
+      "hm-01-09",
+      "hm 01 09"
+    ],
+    "strongPhrases": [
+      "用同一个参数 t 分别确定 x 和 y，描述点随参数变化走出的轨迹。区分轨迹形状、运动方向和参数变化速度。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "参数方程",
+      "hm 01 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-01-10",
+    "title": "极坐标方程",
+    "path": "/demo/hm-01-10",
+    "knowledgePointId": "hm-01-10",
+    "description": "用到原点的距离 r 和角度 θ 定位平面点。理解 r(θ) 如何形成曲线，并通过 x=r cosθ、y=r sinθ 联系直角坐标。",
+    "topics": [
+      "函数与基本图像",
+      "极坐标方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "极坐标方程",
+      "hm-01-10",
+      "hm 01 10"
+    ],
+    "strongPhrases": [
+      "用到原点的距离 r 和角度 θ 定位平面点。理解 r(θ) 如何形成曲线，并通过 x=r cosθ、y=r sinθ 联系直角坐标。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "极坐标方程",
+      "hm 01 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-01-11",
+    "title": "基本初等函数",
+    "path": "/demo/hm-01-11",
+    "knowledgePointId": "hm-01-11",
+    "description": "比较幂函数、指数、对数和三角函数等基本类型的图像特征。关注定义域、增长方式及对称性带来的差异。",
+    "topics": [
+      "函数与基本图像",
+      "基本初等函数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "基本初等函数",
+      "hm-01-11",
+      "hm 01 11"
+    ],
+    "strongPhrases": [
+      "比较幂函数、指数、对数和三角函数等基本类型的图像特征。关注定义域、增长方式及对称性带来的差异。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "基本初等函数",
+      "hm 01 11"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-01-12",
+    "title": "函数图像的平移",
+    "path": "/demo/hm-01-12",
+    "knowledgePointId": "hm-01-12",
+    "description": "理解 y=f(x-h)+k 中横向与纵向移动的不同作用。关注括号内部符号与实际移动方向，曲线形状保持不变。",
+    "topics": [
+      "函数与基本图像",
+      "函数图像的平移"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数图像的平移",
+      "hm-01-12",
+      "hm 01 12"
+    ],
+    "strongPhrases": [
+      "理解 y=f(x-h)+k 中横向与纵向移动的不同作用。关注括号内部符号与实际移动方向，曲线形状保持不变。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "函数图像的平移",
+      "hm 01 12"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-01-13",
+    "title": "函数图像的伸缩",
+    "path": "/demo/hm-01-13",
+    "knowledgePointId": "hm-01-13",
+    "description": "理解 y=a f(bx) 中输出倍数和输入倍数对图形的作用。区分纵向放缩与横向放缩，横向尺度与 |b| 成倒数关系。",
+    "topics": [
+      "函数与基本图像",
+      "函数图像的伸缩"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数图像的伸缩",
+      "hm-01-13",
+      "hm 01 13"
+    ],
+    "strongPhrases": [
+      "理解 y=a f(bx) 中输出倍数和输入倍数对图形的作用。区分纵向放缩与横向放缩，横向尺度与 |b| 成倒数关系。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "函数图像的伸缩",
+      "hm 01 13"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-01-14",
+    "title": "函数图像的翻折",
+    "path": "/demo/hm-01-14",
+    "knowledgePointId": "hm-01-14",
+    "description": "比较 f(-x)、-f(x) 与原函数，理解关于纵轴和横轴的镜像。关注被取负的是输入还是输出。",
+    "topics": [
+      "函数与基本图像",
+      "函数图像的翻折"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数图像的翻折",
+      "hm-01-14",
+      "hm 01 14"
+    ],
+    "strongPhrases": [
+      "比较 f(-x)、-f(x) 与原函数，理解关于纵轴和横轴的镜像。关注被取负的是输入还是输出。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "函数图像的翻折",
+      "hm 01 14"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-01-15",
+    "title": "参数变化对函数图像的影响",
+    "path": "/demo/hm-01-15",
+    "knowledgePointId": "hm-01-15",
+    "description": "研究函数系数变化对开口、顶点和位置的影响。通过保持部分系数不变，区分不同参数各自决定的图形特征。",
+    "topics": [
+      "函数与基本图像",
+      "参数变化对函数图像的影响"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "参数变化对函数图像的影响",
+      "hm-01-15",
+      "hm 01 15"
+    ],
+    "strongPhrases": [
+      "研究函数系数变化对开口、顶点和位置的影响。通过保持部分系数不变，区分不同参数各自决定的图形特征。"
+    ],
+    "keywords": [
+      "函数与基本图像",
+      "参数变化对函数图像的影响",
+      "hm 01 15"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-02-01",
+    "title": "数列趋近过程",
+    "path": "/demo/hm-02-01",
+    "knowledgePointId": "hm-02-01",
+    "description": "观察一项接一项的数是否越来越靠近同一个数。关注项号增大后的误差，以及给定 ε 后是否所有足够靠后的项都落入误差带。",
+    "topics": [
+      "数列极限与函数极限",
+      "数列趋近过程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "数列趋近过程",
+      "hm-02-01",
+      "hm 02 01",
       "数列极限",
-      "ε-N定义",
-      "收敛"
-    ],
-    "ownership": "self-developed",
-    "semanticEnabled": true,
-    "aliases": [
       "数列的极限",
-      "limit-of-sequence",
-      "limit of sequence"
+      "数列收敛"
     ],
     "strongPhrases": [
-      "通过 ε 误差带和 N 分界点理解数列极限的 ε–N 定义。"
+      "观察一项接一项的数是否越来越靠近同一个数。关注项号增大后的误差，以及给定 ε 后是否所有足够靠后的项都落入误差带。"
     ],
     "keywords": [
-      "数列极限",
-      "ε-N定义",
-      "收敛",
-      "limit of sequence"
+      "数列极限与函数极限",
+      "数列趋近过程",
+      "hm 02 01"
     ],
     "supportedIntents": [
       "visualize",
@@ -501,33 +539,33 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "newton-method",
-    "title": "牛顿迭代法",
-    "path": "/demo/newton-method",
-    "knowledgePointId": "newton-method",
-    "description": "用函数切线与横轴交点反复更新近似值，观察迭代收敛到方程零点。",
+    "id": "hm-02-02",
+    "title": "函数在某一点的极限",
+    "path": "/demo/hm-02-02",
+    "knowledgePointId": "hm-02-02",
+    "description": "让输入从观察点附近靠近，研究输出是否趋向固定值。用 ε 控制输出误差、δ 控制输入距离，极限不依赖观察点本身的函数值。",
     "topics": [
-      "牛顿迭代法",
-      "切线",
-      "函数零点",
-      "数值计算"
+      "数列极限与函数极限",
+      "函数在某一点的极限"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "牛顿迭代法",
-      "newton-method",
-      "newton method"
+      "函数在某一点的极限",
+      "hm-02-02",
+      "hm 02 02",
+      "函数极限",
+      "函数的极限",
+      "ε-δ极限定义",
+      "epsilon-delta"
     ],
     "strongPhrases": [
-      "用函数切线与横轴交点反复更新近似值，观察迭代收敛到方程零点。"
+      "让输入从观察点附近靠近，研究输出是否趋向固定值。用 ε 控制输出误差、δ 控制输入距离，极限不依赖观察点本身的函数值。"
     ],
     "keywords": [
-      "牛顿迭代法",
-      "切线",
-      "函数零点",
-      "数值计算",
-      "newton method"
+      "数列极限与函数极限",
+      "函数在某一点的极限",
+      "hm 02 02"
     ],
     "supportedIntents": [
       "visualize",
@@ -537,30 +575,31 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "rolle",
-    "title": "罗尔定理",
-    "path": "/demo/rolle",
-    "knowledgePointId": "mean-value-theorem",
-    "description": "检查罗尔定理条件并观察水平切线的出现。",
+    "id": "hm-02-03",
+    "title": "函数在无穷远处的极限",
+    "path": "/demo/hm-02-03",
+    "knowledgePointId": "hm-02-03",
+    "description": "让输入越来越大或越来越小，研究输出是否逐渐稳定。关注远处的误差与水平渐近行为，区别于靠近某个有限点。",
     "topics": [
-      "罗尔定理",
-      "中值定理"
+      "数列极限与函数极限",
+      "函数在无穷远处的极限"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "罗尔定理",
-      "rolle",
-      "mean-value-theorem",
-      "mean value theorem"
+      "函数在无穷远处的极限",
+      "hm-02-03",
+      "hm 02 03",
+      "无穷远极限",
+      "无穷极限"
     ],
     "strongPhrases": [
-      "检查罗尔定理条件并观察水平切线的出现。"
+      "让输入越来越大或越来越小，研究输出是否逐渐稳定。关注远处的误差与水平渐近行为，区别于靠近某个有限点。"
     ],
     "keywords": [
-      "罗尔定理",
-      "中值定理",
-      "mean value theorem"
+      "数列极限与函数极限",
+      "函数在无穷远处的极限",
+      "hm 02 03"
     ],
     "supportedIntents": [
       "visualize",
@@ -570,32 +609,29 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "taylor",
-    "title": "泰勒公式",
-    "path": "/demo/taylor",
-    "knowledgePointId": "taylor",
-    "description": "调整展开中心和阶数，对比函数、泰勒多项式与余项误差。",
+    "id": "hm-02-04",
+    "title": "左极限与右极限",
+    "path": "/demo/hm-02-04",
+    "knowledgePointId": "hm-02-04",
+    "description": "分别从观察点左侧和右侧靠近，比较两个趋近值。两侧极限存在且相等时，两侧合并的函数极限才存在。",
     "topics": [
-      "泰勒公式",
-      "麦克劳林公式",
-      "多项式逼近",
-      "余项"
+      "数列极限与函数极限",
+      "左极限与右极限"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
-      "泰勒公式",
-      "taylor"
+      "左极限与右极限",
+      "hm-02-04",
+      "hm 02 04"
     ],
     "strongPhrases": [
-      "调整展开中心和阶数，对比函数、泰勒多项式与余项误差。"
+      "分别从观察点左侧和右侧靠近，比较两个趋近值。两侧极限存在且相等时，两侧合并的函数极限才存在。"
     ],
     "keywords": [
-      "泰勒公式",
-      "麦克劳林公式",
-      "多项式逼近",
-      "余项",
-      "taylor"
+      "数列极限与函数极限",
+      "左极限与右极限",
+      "hm 02 04"
     ],
     "supportedIntents": [
       "visualize",
@@ -605,29 +641,4209 @@ export const OWNED_EXPERIMENT_REGISTRY = [
     ]
   },
   {
-    "id": "two-important-limits",
+    "id": "hm-02-05",
+    "title": "无穷小与无穷大",
+    "path": "/demo/hm-02-05",
+    "knowledgePointId": "hm-02-05",
+    "description": "研究趋向零与绝对值无限增大的变量之间的关系。关注非零无穷小的倒数，以及无穷大和很大的固定数的区别。",
+    "topics": [
+      "数列极限与函数极限",
+      "无穷小与无穷大"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "无穷小与无穷大",
+      "hm-02-05",
+      "hm 02 05",
+      "无穷小",
+      "无穷大"
+    ],
+    "strongPhrases": [
+      "研究趋向零与绝对值无限增大的变量之间的关系。关注非零无穷小的倒数，以及无穷大和很大的固定数的区别。"
+    ],
+    "keywords": [
+      "数列极限与函数极限",
+      "无穷小与无穷大",
+      "hm 02 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-02-06",
+    "title": "极限的局部性质",
+    "path": "/demo/hm-02-06",
+    "knowledgePointId": "hm-02-06",
+    "description": "极限只取决于观察点附近的去心邻域。关注唯一性、局部有界性及非零极限的保号性，不把局部结论推广到整个定义域。",
+    "topics": [
+      "数列极限与函数极限",
+      "极限的局部性质"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "极限的局部性质",
+      "hm-02-06",
+      "hm 02 06"
+    ],
+    "strongPhrases": [
+      "极限只取决于观察点附近的去心邻域。关注唯一性、局部有界性及非零极限的保号性，不把局部结论推广到整个定义域。"
+    ],
+    "keywords": [
+      "数列极限与函数极限",
+      "极限的局部性质",
+      "hm 02 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-02-07",
+    "title": "极限的四则运算",
+    "path": "/demo/hm-02-07",
+    "knowledgePointId": "hm-02-07",
+    "description": "把已知极限的函数相加、相减、相乘或相除。关注各极限是否存在，尤其商法则要求分母极限不为零。",
+    "topics": [
+      "数列极限与函数极限",
+      "极限的四则运算"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "极限的四则运算",
+      "hm-02-07",
+      "hm 02 07",
+      "极限运算法则",
+      "极限的运算法则",
+      "极限法则"
+    ],
+    "strongPhrases": [
+      "把已知极限的函数相加、相减、相乘或相除。关注各极限是否存在，尤其商法则要求分母极限不为零。"
+    ],
+    "keywords": [
+      "数列极限与函数极限",
+      "极限的四则运算",
+      "hm 02 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-02-08",
     "title": "两个重要极限",
-    "path": "/demo/two-important-limits",
-    "knowledgePointId": "two-important-limits",
-    "description": "比较两个重要极限的数值与图像收敛过程。",
+    "path": "/demo/hm-02-08",
+    "knowledgePointId": "hm-02-08",
+    "description": "研究 sin x/x 在 x 趋零时趋向 1，以及 (1+x)^(1/x) 趋向 e。关注弧度制、趋近条件及等价变形。",
     "topics": [
-      "重要极限",
-      "收敛"
+      "数列极限与函数极限",
+      "两个重要极限"
     ],
     "ownership": "self-developed",
     "semanticEnabled": true,
     "aliases": [
       "两个重要极限",
-      "two-important-limits",
-      "two important limits"
+      "hm-02-08",
+      "hm 02 08"
     ],
     "strongPhrases": [
-      "比较两个重要极限的数值与图像收敛过程。"
+      "研究 sin x/x 在 x 趋零时趋向 1，以及 (1+x)^(1/x) 趋向 e。关注弧度制、趋近条件及等价变形。"
     ],
     "keywords": [
-      "重要极限",
-      "收敛",
-      "two important limits"
+      "数列极限与函数极限",
+      "两个重要极限",
+      "hm 02 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-02-09",
+    "title": "等价无穷小",
+    "path": "/demo/hm-02-09",
+    "knowledgePointId": "hm-02-09",
+    "description": "比较两个趋零量的比值是否趋向 1，例如 sin x 与 x。关注替换在乘除中的作用，不能任意用于发生抵消的加减式。",
+    "topics": [
+      "数列极限与函数极限",
+      "等价无穷小"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "等价无穷小",
+      "hm-02-09",
+      "hm 02 09"
+    ],
+    "strongPhrases": [
+      "比较两个趋零量的比值是否趋向 1，例如 sin x 与 x。关注替换在乘除中的作用，不能任意用于发生抵消的加减式。"
+    ],
+    "keywords": [
+      "数列极限与函数极限",
+      "等价无穷小",
+      "hm 02 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-02-10",
+    "title": "夹逼准则",
+    "path": "/demo/hm-02-10",
+    "knowledgePointId": "hm-02-10",
+    "description": "一个量始终夹在两个量之间，而上下两者趋于同一值时，中间量也趋于该值。关注夹住关系是否在趋近过程中持续成立。",
+    "topics": [
+      "数列极限与函数极限",
+      "夹逼准则"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "夹逼准则",
+      "hm-02-10",
+      "hm 02 10"
+    ],
+    "strongPhrases": [
+      "一个量始终夹在两个量之间，而上下两者趋于同一值时，中间量也趋于该值。关注夹住关系是否在趋近过程中持续成立。"
+    ],
+    "keywords": [
+      "数列极限与函数极限",
+      "夹逼准则",
+      "hm 02 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-02-11",
+    "title": "单调有界准则",
+    "path": "/demo/hm-02-11",
+    "knowledgePointId": "hm-02-11",
+    "description": "数列持续上升且有上界，或持续下降且有下界时必定收敛。关注单调性和有界性缺一不可，但准则不直接给出极限数值。",
+    "topics": [
+      "数列极限与函数极限",
+      "单调有界准则"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "单调有界准则",
+      "hm-02-11",
+      "hm 02 11"
+    ],
+    "strongPhrases": [
+      "数列持续上升且有上界，或持续下降且有下界时必定收敛。关注单调性和有界性缺一不可，但准则不直接给出极限数值。"
+    ],
+    "keywords": [
+      "数列极限与函数极限",
+      "单调有界准则",
+      "hm 02 11"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-01",
+    "title": "函数在一点连续",
+    "path": "/demo/hm-03-01",
+    "knowledgePointId": "hm-03-01",
+    "description": "比较观察点的函数值与附近的趋近值。连续要求函数在该点有定义、极限存在且两者相等，图像在这里没有断开。",
+    "topics": [
+      "连续与间断",
+      "函数在一点连续"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数在一点连续",
+      "hm-03-01",
+      "hm 03 01",
+      "连续的概念",
+      "连续性"
+    ],
+    "strongPhrases": [
+      "比较观察点的函数值与附近的趋近值。连续要求函数在该点有定义、极限存在且两者相等，图像在这里没有断开。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "函数在一点连续",
+      "hm 03 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-02",
+    "title": "左连续与右连续",
+    "path": "/demo/hm-03-02",
+    "knowledgePointId": "hm-03-02",
+    "description": "分别检查从左侧和右侧靠近时，函数是否趋向该点的实际取值。关注区间端点只需检查区间内部一侧的连续性。",
+    "topics": [
+      "连续与间断",
+      "左连续与右连续"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "左连续与右连续",
+      "hm-03-02",
+      "hm 03 02"
+    ],
+    "strongPhrases": [
+      "分别检查从左侧和右侧靠近时，函数是否趋向该点的实际取值。关注区间端点只需检查区间内部一侧的连续性。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "左连续与右连续",
+      "hm 03 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-03",
+    "title": "区间连续",
+    "path": "/demo/hm-03-03",
+    "knowledgePointId": "hm-03-03",
+    "description": "把一点连续推广到整个区间，检查内部各点及包含的端点。关注局部出现的孔洞或跳跃如何破坏区间连续。",
+    "topics": [
+      "连续与间断",
+      "区间连续"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "区间连续",
+      "hm-03-03",
+      "hm 03 03"
+    ],
+    "strongPhrases": [
+      "把一点连续推广到整个区间，检查内部各点及包含的端点。关注局部出现的孔洞或跳跃如何破坏区间连续。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "区间连续",
+      "hm 03 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-04",
+    "title": "可去间断点",
+    "path": "/demo/hm-03-04",
+    "knowledgePointId": "hm-03-04",
+    "description": "附近函数趋向同一有限值，但该点未定义或取值不同。只修改这个点的取值就能补上图像中的洞。",
+    "topics": [
+      "连续与间断",
+      "可去间断点"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "可去间断点",
+      "hm-03-04",
+      "hm 03 04"
+    ],
+    "strongPhrases": [
+      "附近函数趋向同一有限值，但该点未定义或取值不同。只修改这个点的取值就能补上图像中的洞。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "可去间断点",
+      "hm 03 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-05",
+    "title": "跳跃间断点",
+    "path": "/demo/hm-03-05",
+    "knowledgePointId": "hm-03-05",
+    "description": "从左右靠近得到两个不同的有限值。关注跳跃高度，单独修改分界点的函数值不能消除左右极限的差异。",
+    "topics": [
+      "连续与间断",
+      "跳跃间断点"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "跳跃间断点",
+      "hm-03-05",
+      "hm 03 05"
+    ],
+    "strongPhrases": [
+      "从左右靠近得到两个不同的有限值。关注跳跃高度，单独修改分界点的函数值不能消除左右极限的差异。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "跳跃间断点",
+      "hm 03 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-06",
+    "title": "无穷间断点",
+    "path": "/demo/hm-03-06",
+    "knowledgePointId": "hm-03-06",
+    "description": "靠近某点时函数绝对值无限增大，形成竖直渐近行为。关注两侧正负方向以及不能跨过奇点把曲线连起来。",
+    "topics": [
+      "连续与间断",
+      "无穷间断点"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "无穷间断点",
+      "hm-03-06",
+      "hm 03 06"
+    ],
+    "strongPhrases": [
+      "靠近某点时函数绝对值无限增大，形成竖直渐近行为。关注两侧正负方向以及不能跨过奇点把曲线连起来。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "无穷间断点",
+      "hm 03 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-07",
+    "title": "振荡间断点",
+    "path": "/demo/hm-03-07",
+    "knowledgePointId": "hm-03-07",
+    "description": "如 sin(1/(x-x₀)) 在靠近 x₀ 时持续振荡，输出不能稳定到一个值。即使函数有界，也不保证极限存在。",
+    "topics": [
+      "连续与间断",
+      "振荡间断点"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "振荡间断点",
+      "hm-03-07",
+      "hm 03 07"
+    ],
+    "strongPhrases": [
+      "如 sin(1/(x-x₀)) 在靠近 x₀ 时持续振荡，输出不能稳定到一个值。即使函数有界，也不保证极限存在。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "振荡间断点",
+      "hm 03 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-08",
+    "title": "连续函数的性质",
+    "path": "/demo/hm-03-08",
+    "knowledgePointId": "hm-03-08",
+    "description": "研究连续函数进行加法、乘法及复合后连续性的保持。商需要分母非零，复合需要内层的值落入外层的连续区域。",
+    "topics": [
+      "连续与间断",
+      "连续函数的性质"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "连续函数的性质",
+      "hm-03-08",
+      "hm 03 08",
+      "连续性质"
+    ],
+    "strongPhrases": [
+      "研究连续函数进行加法、乘法及复合后连续性的保持。商需要分母非零，复合需要内层的值落入外层的连续区域。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "连续函数的性质",
+      "hm 03 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-09",
+    "title": "零点定理",
+    "path": "/demo/hm-03-09",
+    "knowledgePointId": "hm-03-09",
+    "description": "连续函数在闭区间两端异号时，中间至少有一个零点。关注连续和端点异号两个条件，不能据此断定零点唯一。",
+    "topics": [
+      "连续与间断",
+      "零点定理"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "零点定理",
+      "hm-03-09",
+      "hm 03 09"
+    ],
+    "strongPhrases": [
+      "连续函数在闭区间两端异号时，中间至少有一个零点。关注连续和端点异号两个条件，不能据此断定零点唯一。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "零点定理",
+      "hm 03 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-10",
+    "title": "介值定理",
+    "path": "/demo/hm-03-10",
+    "knowledgePointId": "hm-03-10",
+    "description": "连续函数在区间两端取值之间的任意高度都能达到。关注目标高度与端点值的关系，以及发生跳跃时遗漏中间值的情形。",
+    "topics": [
+      "连续与间断",
+      "介值定理"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "介值定理",
+      "hm-03-10",
+      "hm 03 10"
+    ],
+    "strongPhrases": [
+      "连续函数在区间两端取值之间的任意高度都能达到。关注目标高度与端点值的关系，以及发生跳跃时遗漏中间值的情形。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "介值定理",
+      "hm 03 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-03-11",
+    "title": "最大值与最小值定理",
+    "path": "/demo/hm-03-11",
+    "knowledgePointId": "hm-03-11",
+    "description": "闭区间上的连续函数一定能取得最大值和最小值。关注闭、有界、连续这些条件，以及存在上界和实际取得最大值的区别。",
+    "topics": [
+      "连续与间断",
+      "最大值与最小值定理"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "最大值与最小值定理",
+      "hm-03-11",
+      "hm 03 11"
+    ],
+    "strongPhrases": [
+      "闭区间上的连续函数一定能取得最大值和最小值。关注闭、有界、连续这些条件，以及存在上界和实际取得最大值的区别。"
+    ],
+    "keywords": [
+      "连续与间断",
+      "最大值与最小值定理",
+      "hm 03 11"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-01",
+    "title": "导数的定义",
+    "path": "/demo/hm-04-01",
+    "knowledgePointId": "hm-04-01",
+    "description": "用输出增量除以输入增量得到平均变化率，再让输入增量趋零。关注差商能否趋向唯一有限值，而非只看函数值变化。",
+    "topics": [
+      "导数与微分",
+      "导数的定义"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "导数的定义",
+      "hm-04-01",
+      "hm 04 01",
+      "导数概念"
+    ],
+    "strongPhrases": [
+      "用输出增量除以输入增量得到平均变化率，再让输入增量趋零。关注差商能否趋向唯一有限值，而非只看函数值变化。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "导数的定义",
+      "hm 04 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-02",
+    "title": "割线与切线",
+    "path": "/demo/hm-04-02",
+    "knowledgePointId": "hm-04-02",
+    "description": "固定曲线上的一点，让另一个点靠近，比较两点割线与切线。关注割线斜率随间距缩小趋向瞬时斜率的过程。",
+    "topics": [
+      "导数与微分",
+      "割线与切线"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "割线与切线",
+      "hm-04-02",
+      "hm 04 02"
+    ],
+    "strongPhrases": [
+      "固定曲线上的一点，让另一个点靠近，比较两点割线与切线。关注割线斜率随间距缩小趋向瞬时斜率的过程。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "割线与切线",
+      "hm 04 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-03",
+    "title": "左导数与右导数",
+    "path": "/demo/hm-04-03",
+    "knowledgePointId": "hm-04-03",
+    "description": "分别使用正、负增量计算差商极限。左右导数都存在且相等才可导，尖点处两侧斜率可能不同。",
+    "topics": [
+      "导数与微分",
+      "左导数与右导数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "左导数与右导数",
+      "hm-04-03",
+      "hm 04 03"
+    ],
+    "strongPhrases": [
+      "分别使用正、负增量计算差商极限。左右导数都存在且相等才可导，尖点处两侧斜率可能不同。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "左导数与右导数",
+      "hm 04 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-04",
+    "title": "函数的可导性",
+    "path": "/demo/hm-04-04",
+    "knowledgePointId": "hm-04-04",
+    "description": "判断局部是否存在唯一有限的导数。可导必连续，但连续曲线也可能有尖角，不能把不断裂等同于可导。",
+    "topics": [
+      "导数与微分",
+      "函数的可导性"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数的可导性",
+      "hm-04-04",
+      "hm 04 04"
+    ],
+    "strongPhrases": [
+      "判断局部是否存在唯一有限的导数。可导必连续，但连续曲线也可能有尖角，不能把不断裂等同于可导。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "函数的可导性",
+      "hm 04 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-05",
+    "title": "导数的几何意义",
+    "path": "/demo/hm-04-05",
+    "knowledgePointId": "hm-04-05",
+    "description": "导数表示曲线在一点的切线斜率。关注切点移动时局部上升、下降及水平切线与导数正负、零值的对应。",
+    "topics": [
+      "导数与微分",
+      "导数的几何意义"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "导数的几何意义",
+      "hm-04-05",
+      "hm 04 05",
+      "导数",
+      "切线斜率",
+      "瞬时变化率"
+    ],
+    "strongPhrases": [
+      "导数表示曲线在一点的切线斜率。关注切点移动时局部上升、下降及水平切线与导数正负、零值的对应。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "导数的几何意义",
+      "hm 04 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-06",
+    "title": "导数的物理意义",
+    "path": "/demo/hm-04-06",
+    "knowledgePointId": "hm-04-06",
+    "description": "以位移随时间变化理解速度，用速度的变化理解加速度。区分一段时间内的平均变化率与某一时刻的瞬时变化率。",
+    "topics": [
+      "导数与微分",
+      "导数的物理意义"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "导数的物理意义",
+      "hm-04-06",
+      "hm 04 06"
+    ],
+    "strongPhrases": [
+      "以位移随时间变化理解速度，用速度的变化理解加速度。区分一段时间内的平均变化率与某一时刻的瞬时变化率。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "导数的物理意义",
+      "hm 04 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-07",
+    "title": "基本求导公式",
+    "path": "/demo/hm-04-07",
+    "knowledgePointId": "hm-04-07",
+    "description": "研究常见函数的导数及和、积、商的求导规则。关注乘积求导需要两项，商的求导需要分母非零。",
+    "topics": [
+      "导数与微分",
+      "基本求导公式"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "基本求导公式",
+      "hm-04-07",
+      "hm 04 07"
+    ],
+    "strongPhrases": [
+      "研究常见函数的导数及和、积、商的求导规则。关注乘积求导需要两项，商的求导需要分母非零。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "基本求导公式",
+      "hm 04 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-08",
+    "title": "复合函数求导",
+    "path": "/demo/hm-04-08",
+    "knowledgePointId": "hm-04-08",
+    "description": "外层变化率乘以内层变化率得到总变化率，即链式法则。关注内层输入如何传到外层，避免漏乘内层导数。",
+    "topics": [
+      "导数与微分",
+      "复合函数求导"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "复合函数求导",
+      "hm-04-08",
+      "hm 04 08"
+    ],
+    "strongPhrases": [
+      "外层变化率乘以内层变化率得到总变化率，即链式法则。关注内层输入如何传到外层，避免漏乘内层导数。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "复合函数求导",
+      "hm 04 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-09",
+    "title": "隐函数求导",
+    "path": "/demo/hm-04-09",
+    "knowledgePointId": "hm-04-09",
+    "description": "函数由 F(x,y)=0 间接确定时，对关系式求导。关注 y 随 x 变化，局部可解条件下 y′=-Fₓ/Fᵧ 且 Fᵧ 不能为零。",
+    "topics": [
+      "导数与微分",
+      "隐函数求导"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "隐函数求导",
+      "hm-04-09",
+      "hm 04 09"
+    ],
+    "strongPhrases": [
+      "函数由 F(x,y)=0 间接确定时，对关系式求导。关注 y 随 x 变化，局部可解条件下 y′=-Fₓ/Fᵧ 且 Fᵧ 不能为零。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "隐函数求导",
+      "hm 04 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-10",
+    "title": "参数方程求导",
+    "path": "/demo/hm-04-10",
+    "knowledgePointId": "hm-04-10",
+    "description": "曲线由 x(t)、y(t) 描述时，用二者对参数的变化率之比求斜率。关注 dx/dt=0 时不能直接相除。",
+    "topics": [
+      "导数与微分",
+      "参数方程求导"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "参数方程求导",
+      "hm-04-10",
+      "hm 04 10"
+    ],
+    "strongPhrases": [
+      "曲线由 x(t)、y(t) 描述时，用二者对参数的变化率之比求斜率。关注 dx/dt=0 时不能直接相除。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "参数方程求导",
+      "hm 04 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-11",
+    "title": "高阶导数",
+    "path": "/demo/hm-04-11",
+    "knowledgePointId": "hm-04-11",
+    "description": "对导数继续求导，研究变化率自身如何变化。关注一阶与二阶等不同阶数的含义，以及位置、速度、加速度的联系。",
+    "topics": [
+      "导数与微分",
+      "高阶导数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "高阶导数",
+      "hm-04-11",
+      "hm 04 11"
+    ],
+    "strongPhrases": [
+      "对导数继续求导，研究变化率自身如何变化。关注一阶与二阶等不同阶数的含义，以及位置、速度、加速度的联系。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "高阶导数",
+      "hm 04 11"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-12",
+    "title": "微分的定义",
+    "path": "/demo/hm-04-12",
+    "knowledgePointId": "hm-04-12",
+    "description": "把函数增量中关于输入增量的线性部分记为 dy=f′(x)dx。关注 dx 的作用及微分与完整函数增量的区别。",
+    "topics": [
+      "导数与微分",
+      "微分的定义"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "微分的定义",
+      "hm-04-12",
+      "hm 04 12",
+      "微分"
+    ],
+    "strongPhrases": [
+      "把函数增量中关于输入增量的线性部分记为 dy=f′(x)dx。关注 dx 的作用及微分与完整函数增量的区别。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "微分的定义",
+      "hm 04 12"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-13",
+    "title": "局部线性化",
+    "path": "/demo/hm-04-13",
+    "knowledgePointId": "hm-04-13",
+    "description": "在展开点附近用切线替代原曲线，得到 f(x₀)+f′(x₀)(x-x₀)。关注近似依赖展开位置和离该点的距离。",
+    "topics": [
+      "导数与微分",
+      "局部线性化"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "局部线性化",
+      "hm-04-13",
+      "hm 04 13"
+    ],
+    "strongPhrases": [
+      "在展开点附近用切线替代原曲线，得到 f(x₀)+f′(x₀)(x-x₀)。关注近似依赖展开位置和离该点的距离。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "局部线性化",
+      "hm 04 13"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-04-14",
+    "title": "微分近似",
+    "path": "/demo/hm-04-14",
+    "knowledgePointId": "hm-04-14",
+    "description": "利用 Δy≈dy 估算输入小幅改变造成的输出变化。比较真实增量与线性估计的误差，理解增量过大时近似会变差。",
+    "topics": [
+      "导数与微分",
+      "微分近似"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "微分近似",
+      "hm-04-14",
+      "hm 04 14",
+      "线性近似",
+      "函数增量"
+    ],
+    "strongPhrases": [
+      "利用 Δy≈dy 估算输入小幅改变造成的输出变化。比较真实增量与线性估计的误差，理解增量过大时近似会变差。"
+    ],
+    "keywords": [
+      "导数与微分",
+      "微分近似",
+      "hm 04 14"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-01",
+    "title": "罗尔定理",
+    "path": "/demo/hm-05-01",
+    "knowledgePointId": "hm-05-01",
+    "description": "闭区间连续、内部可导且两端等高时，内部至少有一处水平切线。关注缺少可导性或端点等值时结论为何不能保证。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "罗尔定理"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "罗尔定理",
+      "hm-05-01",
+      "hm 05 01"
+    ],
+    "strongPhrases": [
+      "闭区间连续、内部可导且两端等高时，内部至少有一处水平切线。关注缺少可导性或端点等值时结论为何不能保证。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "罗尔定理",
+      "hm 05 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-02",
+    "title": "拉格朗日中值定理",
+    "path": "/demo/hm-05-02",
+    "knowledgePointId": "hm-05-02",
+    "description": "闭区间连续且内部可导时，某处瞬时变化率等于全区间平均变化率。几何上对应一条平行于端点连线的切线。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "拉格朗日中值定理"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "拉格朗日中值定理",
+      "hm-05-02",
+      "hm 05 02"
+    ],
+    "strongPhrases": [
+      "闭区间连续且内部可导时，某处瞬时变化率等于全区间平均变化率。几何上对应一条平行于端点连线的切线。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "拉格朗日中值定理",
+      "hm 05 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-03",
+    "title": "柯西中值定理",
+    "path": "/demo/hm-05-03",
+    "knowledgePointId": "hm-05-03",
+    "description": "比较两个函数的区间增量与内部导数，理解 f′(ξ)Δg=g′(ξ)Δf。写成比值时要额外检查分母是否为零。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "柯西中值定理"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "柯西中值定理",
+      "hm-05-03",
+      "hm 05 03"
+    ],
+    "strongPhrases": [
+      "比较两个函数的区间增量与内部导数，理解 f′(ξ)Δg=g′(ξ)Δf。写成比值时要额外检查分母是否为零。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "柯西中值定理",
+      "hm 05 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-04",
+    "title": "洛必达法则",
+    "path": "/demo/hm-05-04",
+    "knowledgePointId": "hm-05-04",
+    "description": "对满足条件的 0/0 或无穷比无穷型极限，研究导数之比的极限。关注未定式、可导性、分母导数及导数比极限的条件。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "洛必达法则"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "洛必达法则",
+      "hm-05-04",
+      "hm 05 04"
+    ],
+    "strongPhrases": [
+      "对满足条件的 0/0 或无穷比无穷型极限，研究导数之比的极限。关注未定式、可导性、分母导数及导数比极限的条件。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "洛必达法则",
+      "hm 05 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-05",
+    "title": "函数单调性",
+    "path": "/demo/hm-05-05",
+    "knowledgePointId": "hm-05-05",
+    "description": "通过区间内导数的正负判断函数增减。关注导数符号保持的区间，以及个别点导数为零不一定破坏严格单调性。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "函数单调性"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数单调性",
+      "hm-05-05",
+      "hm 05 05"
+    ],
+    "strongPhrases": [
+      "通过区间内导数的正负判断函数增减。关注导数符号保持的区间，以及个别点导数为零不一定破坏严格单调性。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "函数单调性",
+      "hm 05 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-06",
+    "title": "极值",
+    "path": "/demo/hm-05-06",
+    "knowledgePointId": "hm-05-06",
+    "description": "研究某点附近函数值是否都不大于或不小于该点。驻点只是候选，需结合导数变号等判别，局部极值不等于全局最值。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "极值"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "极值",
+      "hm-05-06",
+      "hm 05 06"
+    ],
+    "strongPhrases": [
+      "研究某点附近函数值是否都不大于或不小于该点。驻点只是候选，需结合导数变号等判别，局部极值不等于全局最值。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "极值",
+      "hm 05 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-07",
+    "title": "最大值与最小值",
+    "path": "/demo/hm-05-07",
+    "knowledgePointId": "hm-05-07",
+    "description": "在给定区间比较端点、内部驻点及不可导候选点的函数值。关注搜索范围改变后全局最值如何变化。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "最大值与最小值"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "最大值与最小值",
+      "hm-05-07",
+      "hm 05 07"
+    ],
+    "strongPhrases": [
+      "在给定区间比较端点、内部驻点及不可导候选点的函数值。关注搜索范围改变后全局最值如何变化。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "最大值与最小值",
+      "hm 05 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-08",
+    "title": "凹凸性",
+    "path": "/demo/hm-05-08",
+    "knowledgePointId": "hm-05-08",
+    "description": "用斜率增减及二阶导数研究曲线弯曲方向。联系图像相对弦线或切线的位置，避免把曲线升降与弯曲方向混淆。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "凹凸性"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "凹凸性",
+      "hm-05-08",
+      "hm 05 08"
+    ],
+    "strongPhrases": [
+      "用斜率增减及二阶导数研究曲线弯曲方向。联系图像相对弦线或切线的位置，避免把曲线升降与弯曲方向混淆。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "凹凸性",
+      "hm 05 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-09",
+    "title": "拐点",
+    "path": "/demo/hm-05-09",
+    "knowledgePointId": "hm-05-09",
+    "description": "寻找曲线凹凸性发生改变的位置。二阶导数为零只给出候选，还需检查两侧弯曲方向是否真正改变。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "拐点"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "拐点",
+      "hm-05-09",
+      "hm 05 09"
+    ],
+    "strongPhrases": [
+      "寻找曲线凹凸性发生改变的位置。二阶导数为零只给出候选，还需检查两侧弯曲方向是否真正改变。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "拐点",
+      "hm 05 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-10",
+    "title": "渐近线",
+    "path": "/demo/hm-05-10",
+    "knowledgePointId": "hm-05-10",
+    "description": "研究曲线在靠近奇点或远离原点时接近的直线。区分竖直、水平和斜渐近线，渐近并不意味着曲线绝不能与直线相交。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "渐近线"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "渐近线",
+      "hm-05-10",
+      "hm 05 10"
+    ],
+    "strongPhrases": [
+      "研究曲线在靠近奇点或远离原点时接近的直线。区分竖直、水平和斜渐近线，渐近并不意味着曲线绝不能与直线相交。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "渐近线",
+      "hm 05 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-11",
+    "title": "函数图像描绘",
+    "path": "/demo/hm-05-11",
+    "knowledgePointId": "hm-05-11",
+    "description": "综合定义域、截距、单调区间、极值、凹凸和渐近线理解曲线形状。关注代数信息如何逐步约束整幅函数图像。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "函数图像描绘"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数图像描绘",
+      "hm-05-11",
+      "hm 05 11",
+      "函数图形描绘",
+      "函数作图",
+      "导数作图"
+    ],
+    "strongPhrases": [
+      "综合定义域、截距、单调区间、极值、凹凸和渐近线理解曲线形状。关注代数信息如何逐步约束整幅函数图像。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "函数图像描绘",
+      "hm 05 11"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-12",
+    "title": "曲率",
+    "path": "/demo/hm-05-12",
+    "knowledgePointId": "hm-05-12",
+    "description": "用 κ=|y″|/(1+y′²)^(3/2) 衡量平面曲线局部弯曲程度。关注斜率与弯曲程度的区别，以及直线曲率为零。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "曲率"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "曲率",
+      "hm-05-12",
+      "hm 05 12"
+    ],
+    "strongPhrases": [
+      "用 κ=|y″|/(1+y′²)^(3/2) 衡量平面曲线局部弯曲程度。关注斜率与弯曲程度的区别，以及直线曲率为零。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "曲率",
+      "hm 05 12"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-13",
+    "title": "曲率圆",
+    "path": "/demo/hm-05-13",
+    "knowledgePointId": "hm-05-13",
+    "description": "在曲率非零的点，用半径 R=1/κ 的密切圆表达局部弯曲。关注圆心沿法线方向，以及半径越小弯曲越强。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "曲率圆"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "曲率圆",
+      "hm-05-13",
+      "hm 05 13"
+    ],
+    "strongPhrases": [
+      "在曲率非零的点，用半径 R=1/κ 的密切圆表达局部弯曲。关注圆心沿法线方向，以及半径越小弯曲越强。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "曲率圆",
+      "hm 05 13"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-05-14",
+    "title": "最优化问题",
+    "path": "/demo/hm-05-14",
+    "knowledgePointId": "hm-05-14",
+    "description": "在尺寸、成本或资源约束下寻找目标函数最优值。关注可行范围、驻点和边界，不能忽略约束直接选择导数零点。",
+    "topics": [
+      "微分中值定理与导数应用",
+      "最优化问题"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "最优化问题",
+      "hm-05-14",
+      "hm 05 14"
+    ],
+    "strongPhrases": [
+      "在尺寸、成本或资源约束下寻找目标函数最优值。关注可行范围、驻点和边界，不能忽略约束直接选择导数零点。"
+    ],
+    "keywords": [
+      "微分中值定理与导数应用",
+      "最优化问题",
+      "hm 05 14"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-06-01",
+    "title": "原函数",
+    "path": "/demo/hm-06-01",
+    "knowledgePointId": "hm-06-01",
+    "description": "寻找导数等于给定函数的函数 F，即 F′=f。关注同一区间内不同原函数只相差常数，以及通过求导反向检查结果。",
+    "topics": [
+      "不定积分",
+      "原函数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "原函数",
+      "hm-06-01",
+      "hm 06 01"
+    ],
+    "strongPhrases": [
+      "寻找导数等于给定函数的函数 F，即 F′=f。关注同一区间内不同原函数只相差常数，以及通过求导反向检查结果。"
+    ],
+    "keywords": [
+      "不定积分",
+      "原函数",
+      "hm 06 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-06-02",
+    "title": "不定积分",
+    "path": "/demo/hm-06-02",
+    "knowledgePointId": "hm-06-02",
+    "description": "不定积分表示全部原函数 F(x)+C。改变积分常数会使原函数图像上下移动，但导数保持相同；它不是一个固定面积数值。",
+    "topics": [
+      "不定积分",
+      "不定积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "不定积分",
+      "hm-06-02",
+      "hm 06 02"
+    ],
+    "strongPhrases": [
+      "不定积分表示全部原函数 F(x)+C。改变积分常数会使原函数图像上下移动，但导数保持相同；它不是一个固定面积数值。"
+    ],
+    "keywords": [
+      "不定积分",
+      "hm 06 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-06-03",
+    "title": "基本积分公式",
+    "path": "/demo/hm-06-03",
+    "knowledgePointId": "hm-06-03",
+    "description": "把基本求导公式反向使用以求原函数。关注幂函数积分 n=-1 的例外，需要使用 ln|x| 并考虑定义区间。",
+    "topics": [
+      "不定积分",
+      "基本积分公式"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "基本积分公式",
+      "hm-06-03",
+      "hm 06 03"
+    ],
+    "strongPhrases": [
+      "把基本求导公式反向使用以求原函数。关注幂函数积分 n=-1 的例外，需要使用 ln|x| 并考虑定义区间。"
+    ],
+    "keywords": [
+      "不定积分",
+      "基本积分公式",
+      "hm 06 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-06-04",
+    "title": "换元积分法",
+    "path": "/demo/hm-06-04",
+    "knowledgePointId": "hm-06-04",
+    "description": "选择中间变量 u=g(x)，同时把 g′(x)dx 改写为 du。关注代换的微分因子，使复杂的复合表达式化为熟悉的积分。",
+    "topics": [
+      "不定积分",
+      "换元积分法"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "换元积分法",
+      "hm-06-04",
+      "hm 06 04"
+    ],
+    "strongPhrases": [
+      "选择中间变量 u=g(x)，同时把 g′(x)dx 改写为 du。关注代换的微分因子，使复杂的复合表达式化为熟悉的积分。"
+    ],
+    "keywords": [
+      "不定积分",
+      "换元积分法",
+      "hm 06 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-06-05",
+    "title": "分部积分法",
+    "path": "/demo/hm-06-05",
+    "knowledgePointId": "hm-06-05",
+    "description": "利用乘积求导的逆过程 ∫u dv=uv-∫v du。关注选择哪部分求导、哪部分积分，使剩余积分更容易处理。",
+    "topics": [
+      "不定积分",
+      "分部积分法"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "分部积分法",
+      "hm-06-05",
+      "hm 06 05"
+    ],
+    "strongPhrases": [
+      "利用乘积求导的逆过程 ∫u dv=uv-∫v du。关注选择哪部分求导、哪部分积分，使剩余积分更容易处理。"
+    ],
+    "keywords": [
+      "不定积分",
+      "分部积分法",
+      "hm 06 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-06-06",
+    "title": "有理函数积分",
+    "path": "/demo/hm-06-06",
+    "knowledgePointId": "hm-06-06",
+    "description": "对多项式之比先进行除法或部分分式分解，再求原函数。关注分母因式结构、实数定义区间与不可跨越的零点。",
+    "topics": [
+      "不定积分",
+      "有理函数积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "有理函数积分",
+      "hm-06-06",
+      "hm 06 06"
+    ],
+    "strongPhrases": [
+      "对多项式之比先进行除法或部分分式分解，再求原函数。关注分母因式结构、实数定义区间与不可跨越的零点。"
+    ],
+    "keywords": [
+      "不定积分",
+      "有理函数积分",
+      "hm 06 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-06-07",
+    "title": "三角函数积分",
+    "path": "/demo/hm-06-07",
+    "knowledgePointId": "hm-06-07",
+    "description": "利用三角恒等式变换幂次或乘积，再选择合适的代换。关注角度频率导致的系数，以及化简前后表达式的等价性。",
+    "topics": [
+      "不定积分",
+      "三角函数积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "三角函数积分",
+      "hm-06-07",
+      "hm 06 07"
+    ],
+    "strongPhrases": [
+      "利用三角恒等式变换幂次或乘积，再选择合适的代换。关注角度频率导致的系数，以及化简前后表达式的等价性。"
+    ],
+    "keywords": [
+      "不定积分",
+      "三角函数积分",
+      "hm 06 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-06-08",
+    "title": "三角换元",
+    "path": "/demo/hm-06-08",
+    "knowledgePointId": "hm-06-08",
+    "description": "通过 x=a sinθ、a tanθ 等代换处理根式。关注角度取值区间、根号对应的绝对值，以及最终换回原变量。",
+    "topics": [
+      "不定积分",
+      "三角换元"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "三角换元",
+      "hm-06-08",
+      "hm 06 08"
+    ],
+    "strongPhrases": [
+      "通过 x=a sinθ、a tanθ 等代换处理根式。关注角度取值区间、根号对应的绝对值，以及最终换回原变量。"
+    ],
+    "keywords": [
+      "不定积分",
+      "三角换元",
+      "hm 06 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-01",
+    "title": "定积分定义",
+    "path": "/demo/hm-07-01",
+    "knowledgePointId": "hm-07-01",
+    "description": "把区间分割、取函数值与小段宽度的乘积并求和，再让最大分段长度趋零。关注带符号的累积量与几何面积的区别。",
+    "topics": [
+      "定积分",
+      "定积分定义"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "定积分定义",
+      "hm-07-01",
+      "hm 07 01",
+      "定积分"
+    ],
+    "strongPhrases": [
+      "把区间分割、取函数值与小段宽度的乘积并求和，再让最大分段长度趋零。关注带符号的累积量与几何面积的区别。"
+    ],
+    "keywords": [
+      "定积分",
+      "定积分定义",
+      "hm 07 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-02",
+    "title": "黎曼和",
+    "path": "/demo/hm-07-02",
+    "knowledgePointId": "hm-07-02",
+    "description": "把曲线下方切成很多细长小矩形，将每块的高度乘宽度后累加。研究分割越来越细时近似总量与积分的关系。",
+    "topics": [
+      "定积分",
+      "黎曼和"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "黎曼和",
+      "hm-07-02",
+      "hm 07 02"
+    ],
+    "strongPhrases": [
+      "把曲线下方切成很多细长小矩形，将每块的高度乘宽度后累加。研究分割越来越细时近似总量与积分的关系。"
+    ],
+    "keywords": [
+      "定积分",
+      "黎曼和",
+      "hm 07 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-03",
+    "title": "可积性",
+    "path": "/demo/hm-07-03",
+    "knowledgePointId": "hm-07-03",
+    "description": "利用上和与下和的差考察有界函数是否黎曼可积。关注分割变细后差能否任意小，连续是充分条件但不是必要条件。",
+    "topics": [
+      "定积分",
+      "可积性"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "可积性",
+      "hm-07-03",
+      "hm 07 03"
+    ],
+    "strongPhrases": [
+      "利用上和与下和的差考察有界函数是否黎曼可积。关注分割变细后差能否任意小，连续是充分条件但不是必要条件。"
+    ],
+    "keywords": [
+      "定积分",
+      "可积性",
+      "hm 07 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-04",
+    "title": "定积分性质",
+    "path": "/demo/hm-07-04",
+    "knowledgePointId": "hm-07-04",
+    "description": "研究积分对加法和常数倍的线性、区间拼接的可加性以及函数大小关系的保持。关注交换积分上下限会改变符号。",
+    "topics": [
+      "定积分",
+      "定积分性质"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "定积分性质",
+      "hm-07-04",
+      "hm 07 04"
+    ],
+    "strongPhrases": [
+      "研究积分对加法和常数倍的线性、区间拼接的可加性以及函数大小关系的保持。关注交换积分上下限会改变符号。"
+    ],
+    "keywords": [
+      "定积分",
+      "定积分性质",
+      "hm 07 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-05",
+    "title": "积分中值定理",
+    "path": "/demo/hm-07-05",
+    "knowledgePointId": "hm-07-05",
+    "description": "连续函数在区间上的积分等于某一实际高度乘区间宽度。理解平均高度为何能在曲线上取得，并检查连续性条件。",
+    "topics": [
+      "定积分",
+      "积分中值定理"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "积分中值定理",
+      "hm-07-05",
+      "hm 07 05"
+    ],
+    "strongPhrases": [
+      "连续函数在区间上的积分等于某一实际高度乘区间宽度。理解平均高度为何能在曲线上取得，并检查连续性条件。"
+    ],
+    "keywords": [
+      "定积分",
+      "积分中值定理",
+      "hm 07 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-06",
+    "title": "微积分基本公式",
+    "path": "/demo/hm-07-06",
+    "knowledgePointId": "hm-07-06",
+    "description": "让积分上限随 x 移动，累积函数 Φ(x)=∫ₐˣf(t)dt 的变化率在连续点等于 f(x)。连接面积累积与局部变化率。",
+    "topics": [
+      "定积分",
+      "微积分基本公式"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "微积分基本公式",
+      "hm-07-06",
+      "hm 07 06"
+    ],
+    "strongPhrases": [
+      "让积分上限随 x 移动，累积函数 Φ(x)=∫ₐˣf(t)dt 的变化率在连续点等于 f(x)。连接面积累积与局部变化率。"
+    ],
+    "keywords": [
+      "定积分",
+      "微积分基本公式",
+      "hm 07 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-07",
+    "title": "牛顿—莱布尼茨公式",
+    "path": "/demo/hm-07-07",
+    "knowledgePointId": "hm-07-07",
+    "description": "在适用条件下用原函数两端的差 F(b)-F(a) 计算定积分。关注找到原函数、代入上下限，以及不跨越未处理的奇点。",
+    "topics": [
+      "定积分",
+      "牛顿—莱布尼茨公式"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "牛顿—莱布尼茨公式",
+      "hm-07-07",
+      "hm 07 07"
+    ],
+    "strongPhrases": [
+      "在适用条件下用原函数两端的差 F(b)-F(a) 计算定积分。关注找到原函数、代入上下限，以及不跨越未处理的奇点。"
+    ],
+    "keywords": [
+      "定积分",
+      "牛顿—莱布尼茨公式",
+      "hm 07 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-08",
+    "title": "定积分换元法",
+    "path": "/demo/hm-07-08",
+    "knowledgePointId": "hm-07-08",
+    "description": "对定积分更换变量时，表达式、微分和上下限必须同步变换。关注代换方向和新旧区间的对应。",
+    "topics": [
+      "定积分",
+      "定积分换元法"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "定积分换元法",
+      "hm-07-08",
+      "hm 07 08"
+    ],
+    "strongPhrases": [
+      "对定积分更换变量时，表达式、微分和上下限必须同步变换。关注代换方向和新旧区间的对应。"
+    ],
+    "keywords": [
+      "定积分",
+      "定积分换元法",
+      "hm 07 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-09",
+    "title": "定积分分部积分法",
+    "path": "/demo/hm-07-09",
+    "knowledgePointId": "hm-07-09",
+    "description": "把乘积积分分解为边界项 [uv]ₐᵇ 与另一项积分。关注上下限代入，不能漏掉由端点贡献的差值。",
+    "topics": [
+      "定积分",
+      "定积分分部积分法"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "定积分分部积分法",
+      "hm-07-09",
+      "hm 07 09"
+    ],
+    "strongPhrases": [
+      "把乘积积分分解为边界项 [uv]ₐᵇ 与另一项积分。关注上下限代入，不能漏掉由端点贡献的差值。"
+    ],
+    "keywords": [
+      "定积分",
+      "定积分分部积分法",
+      "hm 07 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-07-10",
+    "title": "反常积分",
+    "path": "/demo/hm-07-10",
+    "knowledgePointId": "hm-07-10",
+    "description": "把无限区间或被积函数无界处的积分定义为截断积分的极限。关注收敛与发散，存在内部奇点时应分别检查两侧。",
+    "topics": [
+      "定积分",
+      "反常积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "反常积分",
+      "hm-07-10",
+      "hm 07 10"
+    ],
+    "strongPhrases": [
+      "把无限区间或被积函数无界处的积分定义为截断积分的极限。关注收敛与发散，存在内部奇点时应分别检查两侧。"
+    ],
+    "keywords": [
+      "定积分",
+      "反常积分",
+      "hm 07 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-01",
+    "title": "平面图形面积",
+    "path": "/demo/hm-08-01",
+    "knowledgePointId": "hm-08-01",
+    "description": "用上边界减下边界后积分求两条曲线之间的面积。关注交点和上下关系改变的位置，面积需分段且应为非负量。",
+    "topics": [
+      "定积分的应用",
+      "平面图形面积"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "平面图形面积",
+      "hm-08-01",
+      "hm 08 01"
+    ],
+    "strongPhrases": [
+      "用上边界减下边界后积分求两条曲线之间的面积。关注交点和上下关系改变的位置，面积需分段且应为非负量。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "平面图形面积",
+      "hm 08 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-02",
+    "title": "极坐标面积",
+    "path": "/demo/hm-08-02",
+    "knowledgePointId": "hm-08-02",
+    "description": "把极坐标区域分解成小扇形，用 1/2∫r²dθ 求面积。关注角度范围及曲线重复描绘造成的重复计数。",
+    "topics": [
+      "定积分的应用",
+      "极坐标面积"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "极坐标面积",
+      "hm-08-02",
+      "hm 08 02"
+    ],
+    "strongPhrases": [
+      "把极坐标区域分解成小扇形，用 1/2∫r²dθ 求面积。关注角度范围及曲线重复描绘造成的重复计数。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "极坐标面积",
+      "hm 08 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-03",
+    "title": "旋转体体积",
+    "path": "/demo/hm-08-03",
+    "knowledgePointId": "hm-08-03",
+    "description": "把平面区域绕轴旋转，用圆盘或圆环截面积累积体积。关注外半径平方减内半径平方，以及旋转轴的位置。",
+    "topics": [
+      "定积分的应用",
+      "旋转体体积"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "旋转体体积",
+      "hm-08-03",
+      "hm 08 03"
+    ],
+    "strongPhrases": [
+      "把平面区域绕轴旋转，用圆盘或圆环截面积累积体积。关注外半径平方减内半径平方，以及旋转轴的位置。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "旋转体体积",
+      "hm 08 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-04",
+    "title": "平行截面面积已知的立体体积",
+    "path": "/demo/hm-08-04",
+    "knowledgePointId": "hm-08-04",
+    "description": "知道每个位置的平行截面积 A(x) 后，用 ∫A(x)dx 累积体积。关注切片厚度与截面形状，而非只适用于旋转体。",
+    "topics": [
+      "定积分的应用",
+      "平行截面面积已知的立体体积"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "平行截面面积已知的立体体积",
+      "hm-08-04",
+      "hm 08 04"
+    ],
+    "strongPhrases": [
+      "知道每个位置的平行截面积 A(x) 后，用 ∫A(x)dx 累积体积。关注切片厚度与截面形状，而非只适用于旋转体。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "平行截面面积已知的立体体积",
+      "hm 08 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-05",
+    "title": "平面曲线弧长",
+    "path": "/demo/hm-08-05",
+    "knowledgePointId": "hm-08-05",
+    "description": "把曲线分成短线段并累积长度，理解 ∫√(1+y′²)dx。关注水平增量和竖直增量共同决定微小弧长。",
+    "topics": [
+      "定积分的应用",
+      "平面曲线弧长"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "平面曲线弧长",
+      "hm-08-05",
+      "hm 08 05"
+    ],
+    "strongPhrases": [
+      "把曲线分成短线段并累积长度，理解 ∫√(1+y′²)dx。关注水平增量和竖直增量共同决定微小弧长。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "平面曲线弧长",
+      "hm 08 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-06",
+    "title": "功",
+    "path": "/demo/hm-08-06",
+    "knowledgePointId": "hm-08-06",
+    "description": "当力随位置改变时，用力沿运动方向的分量对位移积分。关注力的方向、位移区间及做正功或负功的区别。",
+    "topics": [
+      "定积分的应用",
+      "功"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "功",
+      "hm-08-06",
+      "hm 08 06"
+    ],
+    "strongPhrases": [
+      "当力随位置改变时，用力沿运动方向的分量对位移积分。关注力的方向、位移区间及做正功或负功的区别。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "功",
+      "hm 08 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-07",
+    "title": "水压力",
+    "path": "/demo/hm-08-07",
+    "knowledgePointId": "hm-08-07",
+    "description": "液体压强随深度增加，将压强乘以水平窄条面积后累加得到总压力。关注水深、容器宽度与液体密度的作用。",
+    "topics": [
+      "定积分的应用",
+      "水压力"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "水压力",
+      "hm-08-07",
+      "hm 08 07"
+    ],
+    "strongPhrases": [
+      "液体压强随深度增加，将压强乘以水平窄条面积后累加得到总压力。关注水深、容器宽度与液体密度的作用。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "水压力",
+      "hm 08 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-08",
+    "title": "引力",
+    "path": "/demo/hm-08-08",
+    "knowledgePointId": "hm-08-08",
+    "description": "将连续物体分成质量微元，用万有引力定律累积各微元的贡献。关注距离平方、密度和受力方向的分量。",
+    "topics": [
+      "定积分的应用",
+      "引力"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "引力",
+      "hm-08-08",
+      "hm 08 08"
+    ],
+    "strongPhrases": [
+      "将连续物体分成质量微元，用万有引力定律累积各微元的贡献。关注距离平方、密度和受力方向的分量。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "引力",
+      "hm 08 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-08-09",
+    "title": "函数平均值",
+    "path": "/demo/hm-08-09",
+    "knowledgePointId": "hm-08-09",
+    "description": "将区间内的积分除以区间长度，得到整个区间的平均高度。它一般不等于两个端点值的平均，也不等于中点函数值。",
+    "topics": [
+      "定积分的应用",
+      "函数平均值"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数平均值",
+      "hm-08-09",
+      "hm 08 09"
+    ],
+    "strongPhrases": [
+      "将区间内的积分除以区间长度，得到整个区间的平均高度。它一般不等于两个端点值的平均，也不等于中点函数值。"
+    ],
+    "keywords": [
+      "定积分的应用",
+      "函数平均值",
+      "hm 08 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-01",
+    "title": "微分方程基本概念",
+    "path": "/demo/hm-09-01",
+    "knowledgePointId": "hm-09-01",
+    "description": "方程把未知函数与它的导数联系起来。关注阶数、解的含义，以及把候选函数代回方程检验是否满足关系。",
+    "topics": [
+      "微分方程",
+      "微分方程基本概念"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "微分方程基本概念",
+      "hm-09-01",
+      "hm 09 01"
+    ],
+    "strongPhrases": [
+      "方程把未知函数与它的导数联系起来。关注阶数、解的含义，以及把候选函数代回方程检验是否满足关系。"
+    ],
+    "keywords": [
+      "微分方程",
+      "微分方程基本概念",
+      "hm 09 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-02",
+    "title": "可分离变量微分方程",
+    "path": "/demo/hm-09-02",
+    "knowledgePointId": "hm-09-02",
+    "description": "对 y′=g(x)h(y) 将两种变量分离后积分。除以 h(y) 前需检查其零点，避免丢失常数平衡解。",
+    "topics": [
+      "微分方程",
+      "可分离变量微分方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "可分离变量微分方程",
+      "hm-09-02",
+      "hm 09 02"
+    ],
+    "strongPhrases": [
+      "对 y′=g(x)h(y) 将两种变量分离后积分。除以 h(y) 前需检查其零点，避免丢失常数平衡解。"
+    ],
+    "keywords": [
+      "微分方程",
+      "可分离变量微分方程",
+      "hm 09 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-03",
+    "title": "齐次微分方程",
+    "path": "/demo/hm-09-03",
+    "knowledgePointId": "hm-09-03",
+    "description": "对一阶形式 y′=F(y/x) 使用 u=y/x 化为可分离变量形式。关注 x 非零的区间，与齐次线性方程的概念不同。",
+    "topics": [
+      "微分方程",
+      "齐次微分方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "齐次微分方程",
+      "hm-09-03",
+      "hm 09 03"
+    ],
+    "strongPhrases": [
+      "对一阶形式 y′=F(y/x) 使用 u=y/x 化为可分离变量形式。关注 x 非零的区间，与齐次线性方程的概念不同。"
+    ],
+    "keywords": [
+      "微分方程",
+      "齐次微分方程",
+      "hm 09 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-04",
+    "title": "一阶线性微分方程",
+    "path": "/demo/hm-09-04",
+    "knowledgePointId": "hm-09-04",
+    "description": "研究 y′+P(x)y=Q(x)，通过积分因子把左边变成乘积的导数。关注外部输入与初始值分别对解的作用。",
+    "topics": [
+      "微分方程",
+      "一阶线性微分方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "一阶线性微分方程",
+      "hm-09-04",
+      "hm 09 04"
+    ],
+    "strongPhrases": [
+      "研究 y′+P(x)y=Q(x)，通过积分因子把左边变成乘积的导数。关注外部输入与初始值分别对解的作用。"
+    ],
+    "keywords": [
+      "微分方程",
+      "一阶线性微分方程",
+      "hm 09 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-05",
+    "title": "伯努利方程",
+    "path": "/demo/hm-09-05",
+    "knowledgePointId": "hm-09-05",
+    "description": "对 y′+Py=Qyⁿ 使用幂代换转为线性方程。关注 n 不等于 0、1 的非线性情形及代换可能排除的零解。",
+    "topics": [
+      "微分方程",
+      "伯努利方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "伯努利方程",
+      "hm-09-05",
+      "hm 09 05"
+    ],
+    "strongPhrases": [
+      "对 y′+Py=Qyⁿ 使用幂代换转为线性方程。关注 n 不等于 0、1 的非线性情形及代换可能排除的零解。"
+    ],
+    "keywords": [
+      "微分方程",
+      "伯努利方程",
+      "hm 09 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-06",
+    "title": "可降阶高阶微分方程",
+    "path": "/demo/hm-09-06",
+    "knowledgePointId": "hm-09-06",
+    "description": "在只含高阶导数、缺少 y 或缺少 x 等结构下，通过积分或引入新变量降低方程阶数。关注积分常数的数量。",
+    "topics": [
+      "微分方程",
+      "可降阶高阶微分方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "可降阶高阶微分方程",
+      "hm-09-06",
+      "hm 09 06"
+    ],
+    "strongPhrases": [
+      "在只含高阶导数、缺少 y 或缺少 x 等结构下，通过积分或引入新变量降低方程阶数。关注积分常数的数量。"
+    ],
+    "keywords": [
+      "微分方程",
+      "可降阶高阶微分方程",
+      "hm 09 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-07",
+    "title": "二阶常系数线性微分方程",
+    "path": "/demo/hm-09-07",
+    "knowledgePointId": "hm-09-07",
+    "description": "通过特征方程研究 y″+py′+qy=0。区分不同实根、重根及共轭复根对应的指数或振荡解。",
+    "topics": [
+      "微分方程",
+      "二阶常系数线性微分方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "二阶常系数线性微分方程",
+      "hm-09-07",
+      "hm 09 07"
+    ],
+    "strongPhrases": [
+      "通过特征方程研究 y″+py′+qy=0。区分不同实根、重根及共轭复根对应的指数或振荡解。"
+    ],
+    "keywords": [
+      "微分方程",
+      "二阶常系数线性微分方程",
+      "hm 09 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-08",
+    "title": "方程通解与特解",
+    "path": "/demo/hm-09-08",
+    "knowledgePointId": "hm-09-08",
+    "description": "通解含任意常数，附加条件选出其中某个解。在线性非齐次方程中，总解可写成齐次通解加一个非齐次特解。",
+    "topics": [
+      "微分方程",
+      "方程通解与特解"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "方程通解与特解",
+      "hm-09-08",
+      "hm 09 08"
+    ],
+    "strongPhrases": [
+      "通解含任意常数，附加条件选出其中某个解。在线性非齐次方程中，总解可写成齐次通解加一个非齐次特解。"
+    ],
+    "keywords": [
+      "微分方程",
+      "方程通解与特解",
+      "hm 09 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-09",
+    "title": "初值问题",
+    "path": "/demo/hm-09-09",
+    "knowledgePointId": "hm-09-09",
+    "description": "在给定位置指定函数值或导数值，从解族中确定符合条件的轨迹。关注初值改变后的解，以及存在唯一性的适用条件。",
+    "topics": [
+      "微分方程",
+      "初值问题"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "初值问题",
+      "hm-09-09",
+      "hm 09 09"
+    ],
+    "strongPhrases": [
+      "在给定位置指定函数值或导数值，从解族中确定符合条件的轨迹。关注初值改变后的解，以及存在唯一性的适用条件。"
+    ],
+    "keywords": [
+      "微分方程",
+      "初值问题",
+      "hm 09 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-09-10",
+    "title": "微分方程实际应用模型",
+    "path": "/demo/hm-09-10",
+    "knowledgePointId": "hm-09-10",
+    "description": "用变化率关系描述增长、冷却或振动等过程。关注模型系数、初始状态与实际量之间的联系，以及建模假设的限制。",
+    "topics": [
+      "微分方程",
+      "微分方程实际应用模型"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "微分方程实际应用模型",
+      "hm-09-10",
+      "hm 09 10"
+    ],
+    "strongPhrases": [
+      "用变化率关系描述增长、冷却或振动等过程。关注模型系数、初始状态与实际量之间的联系，以及建模假设的限制。"
+    ],
+    "keywords": [
+      "微分方程",
+      "微分方程实际应用模型",
+      "hm 09 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-01",
+    "title": "空间直角坐标系",
+    "path": "/demo/hm-10-01",
+    "knowledgePointId": "hm-10-01",
+    "description": "用三个互相垂直的坐标轴确定空间点的位置。关注坐标、向坐标平面的投影和观察视角之间的区别。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "空间直角坐标系"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "空间直角坐标系",
+      "hm-10-01",
+      "hm 10 01"
+    ],
+    "strongPhrases": [
+      "用三个互相垂直的坐标轴确定空间点的位置。关注坐标、向坐标平面的投影和观察视角之间的区别。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "空间直角坐标系",
+      "hm 10 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-02",
+    "title": "向量及其运算",
+    "path": "/demo/hm-10-02",
+    "knowledgePointId": "hm-10-02",
+    "description": "向量同时具有大小和方向，通过首尾相接理解加法，通过数乘理解缩放与反向。关注向量运算与单纯长度相加的差别。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "向量及其运算"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "向量及其运算",
+      "hm-10-02",
+      "hm 10 02"
+    ],
+    "strongPhrases": [
+      "向量同时具有大小和方向，通过首尾相接理解加法，通过数乘理解缩放与反向。关注向量运算与单纯长度相加的差别。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "向量及其运算",
+      "hm 10 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-03",
+    "title": "数量积",
+    "path": "/demo/hm-10-03",
+    "knowledgePointId": "hm-10-03",
+    "description": "用 a·b=|a||b|cosθ 描述向量在另一个方向上的投影。关注夹角、正交时为零以及运算结果是一个数。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "数量积"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "数量积",
+      "hm-10-03",
+      "hm 10 03"
+    ],
+    "strongPhrases": [
+      "用 a·b=|a||b|cosθ 描述向量在另一个方向上的投影。关注夹角、正交时为零以及运算结果是一个数。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "数量积",
+      "hm 10 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-04",
+    "title": "向量积",
+    "path": "/demo/hm-10-04",
+    "knowledgePointId": "hm-10-04",
+    "description": "叉积 a×b 垂直于两向量张成的平面，大小为平行四边形面积。关注右手定则、方向以及交换顺序后反号。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "向量积"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "向量积",
+      "hm-10-04",
+      "hm 10 04"
+    ],
+    "strongPhrases": [
+      "叉积 a×b 垂直于两向量张成的平面，大小为平行四边形面积。关注右手定则、方向以及交换顺序后反号。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "向量积",
+      "hm 10 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-05",
+    "title": "混合积",
+    "path": "/demo/hm-10-05",
+    "knowledgePointId": "hm-10-05",
+    "description": "用 a·(b×c) 描述三向量张成的有向体积，绝对值为平行六面体体积。混合积为零对应三向量共面。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "混合积"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "混合积",
+      "hm-10-05",
+      "hm 10 05"
+    ],
+    "strongPhrases": [
+      "用 a·(b×c) 描述三向量张成的有向体积，绝对值为平行六面体体积。混合积为零对应三向量共面。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "混合积",
+      "hm 10 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-06",
+    "title": "平面方程",
+    "path": "/demo/hm-10-06",
+    "knowledgePointId": "hm-10-06",
+    "description": "通过法向量和一个点确定平面，理解 Ax+By+Cz+D=0。关注法向量决定朝向、常数项影响位置。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "平面方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "平面方程",
+      "hm-10-06",
+      "hm 10 06"
+    ],
+    "strongPhrases": [
+      "通过法向量和一个点确定平面，理解 Ax+By+Cz+D=0。关注法向量决定朝向、常数项影响位置。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "平面方程",
+      "hm 10 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-07",
+    "title": "空间直线方程",
+    "path": "/demo/hm-10-07",
+    "knowledgePointId": "hm-10-07",
+    "description": "用经过的一点与方向向量描述空间直线。关注参数形式、方向比，以及方向分量为零时不能直接写相应分式。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "空间直线方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "空间直线方程",
+      "hm-10-07",
+      "hm 10 07"
+    ],
+    "strongPhrases": [
+      "用经过的一点与方向向量描述空间直线。关注参数形式、方向比，以及方向分量为零时不能直接写相应分式。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "空间直线方程",
+      "hm 10 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-08",
+    "title": "直线与平面的位置关系",
+    "path": "/demo/hm-10-08",
+    "knowledgePointId": "hm-10-08",
+    "description": "借助方向向量和法向量的数量积判断平行或垂直，再结合位置区分相交与包含。关注方向条件不能替代位置条件。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "直线与平面的位置关系"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "直线与平面的位置关系",
+      "hm-10-08",
+      "hm 10 08"
+    ],
+    "strongPhrases": [
+      "借助方向向量和法向量的数量积判断平行或垂直，再结合位置区分相交与包含。关注方向条件不能替代位置条件。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "直线与平面的位置关系",
+      "hm 10 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-09",
+    "title": "曲面方程",
+    "path": "/demo/hm-10-09",
+    "knowledgePointId": "hm-10-09",
+    "description": "用三元方程 F(x,y,z)=0 描述空间中的点集。通过与坐标平面的截线理解曲面，而非把二维投影当作完整形状。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "曲面方程"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "曲面方程",
+      "hm-10-09",
+      "hm 10 09"
+    ],
+    "strongPhrases": [
+      "用三元方程 F(x,y,z)=0 描述空间中的点集。通过与坐标平面的截线理解曲面，而非把二维投影当作完整形状。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "曲面方程",
+      "hm 10 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-10",
+    "title": "空间曲线",
+    "path": "/demo/hm-10-10",
+    "knowledgePointId": "hm-10-10",
+    "description": "用参数向量 r(t) 或两个曲面的交线描述空间轨迹。关注参数方向、空间位置和投影曲线之间的联系。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "空间曲线"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "空间曲线",
+      "hm-10-10",
+      "hm 10 10"
+    ],
+    "strongPhrases": [
+      "用参数向量 r(t) 或两个曲面的交线描述空间轨迹。关注参数方向、空间位置和投影曲线之间的联系。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "空间曲线",
+      "hm 10 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-10-11",
+    "title": "二次曲面",
+    "path": "/demo/hm-10-11",
+    "knowledgePointId": "hm-10-11",
+    "description": "依据二次方程及截面识别椭球面、锥面和双曲面等类型。关注系数符号和截面变化所决定的空间形状。",
+    "topics": [
+      "空间解析几何与向量代数",
+      "二次曲面"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "二次曲面",
+      "hm-10-11",
+      "hm 10 11"
+    ],
+    "strongPhrases": [
+      "依据二次方程及截面识别椭球面、锥面和双曲面等类型。关注系数符号和截面变化所决定的空间形状。"
+    ],
+    "keywords": [
+      "空间解析几何与向量代数",
+      "二次曲面",
+      "hm 10 11"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-01",
+    "title": "多元函数",
+    "path": "/demo/hm-11-01",
+    "knowledgePointId": "hm-11-01",
+    "description": "一个输出同时取决于多个输入，例如 z=f(x,y)。用曲面与等高线理解输入组合如何影响输出，区分定义域与值域。",
+    "topics": [
+      "多元函数微分学",
+      "多元函数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "多元函数",
+      "hm-11-01",
+      "hm 11 01"
+    ],
+    "strongPhrases": [
+      "一个输出同时取决于多个输入，例如 z=f(x,y)。用曲面与等高线理解输入组合如何影响输出，区分定义域与值域。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "多元函数",
+      "hm 11 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-02",
+    "title": "二元函数的极限",
+    "path": "/demo/hm-11-02",
+    "knowledgePointId": "hm-11-02",
+    "description": "沿不同路径接近平面中的一点，研究函数是否趋于同一值。两条路径结果不同可否定极限，有限条路径相同不能证明极限。",
+    "topics": [
+      "多元函数微分学",
+      "二元函数的极限"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "二元函数的极限",
+      "hm-11-02",
+      "hm 11 02"
+    ],
+    "strongPhrases": [
+      "沿不同路径接近平面中的一点，研究函数是否趋于同一值。两条路径结果不同可否定极限，有限条路径相同不能证明极限。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "二元函数的极限",
+      "hm 11 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-03",
+    "title": "二元函数的连续性",
+    "path": "/demo/hm-11-03",
+    "knowledgePointId": "hm-11-03",
+    "description": "比较二元函数在一点的实际值与从所有方向趋近的极限。关注仅沿坐标轴连续不足以保证联合连续。",
+    "topics": [
+      "多元函数微分学",
+      "二元函数的连续性"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "二元函数的连续性",
+      "hm-11-03",
+      "hm 11 03"
+    ],
+    "strongPhrases": [
+      "比较二元函数在一点的实际值与从所有方向趋近的极限。关注仅沿坐标轴连续不足以保证联合连续。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "二元函数的连续性",
+      "hm 11 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-04",
+    "title": "偏导数",
+    "path": "/demo/hm-11-04",
+    "knowledgePointId": "hm-11-04",
+    "description": "固定其余变量，只改变一个变量来求变化率。理解曲面沿坐标方向切片的斜率，并区分偏导存在与全微分存在。",
+    "topics": [
+      "多元函数微分学",
+      "偏导数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "偏导数",
+      "hm-11-04",
+      "hm 11 04"
+    ],
+    "strongPhrases": [
+      "固定其余变量，只改变一个变量来求变化率。理解曲面沿坐标方向切片的斜率，并区分偏导存在与全微分存在。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "偏导数",
+      "hm 11 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-05",
+    "title": "全微分",
+    "path": "/demo/hm-11-05",
+    "knowledgePointId": "hm-11-05",
+    "description": "用 dz=fₓdx+fᵧdy 近似多变量共同变化引起的增量。关注线性近似误差必须比输入变化距离更高阶。",
+    "topics": [
+      "多元函数微分学",
+      "全微分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "全微分",
+      "hm-11-05",
+      "hm 11 05"
+    ],
+    "strongPhrases": [
+      "用 dz=fₓdx+fᵧdy 近似多变量共同变化引起的增量。关注线性近似误差必须比输入变化距离更高阶。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "全微分",
+      "hm 11 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-06",
+    "title": "多元复合函数求导",
+    "path": "/demo/hm-11-06",
+    "knowledgePointId": "hm-11-06",
+    "description": "沿变量依赖关系的每条路径相乘，再汇总不同路径的贡献。关注直接依赖与间接依赖，避免漏掉某条链式法则路径。",
+    "topics": [
+      "多元函数微分学",
+      "多元复合函数求导"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "多元复合函数求导",
+      "hm-11-06",
+      "hm 11 06"
+    ],
+    "strongPhrases": [
+      "沿变量依赖关系的每条路径相乘，再汇总不同路径的贡献。关注直接依赖与间接依赖，避免漏掉某条链式法则路径。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "多元复合函数求导",
+      "hm 11 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-07",
+    "title": "多元隐函数求导",
+    "path": "/demo/hm-11-07",
+    "knowledgePointId": "hm-11-07",
+    "description": "从 F(x,y,z)=0 等约束关系求隐式偏导。关注其余自变量保持不变，以及使用分式公式时相应偏导分母不能为零。",
+    "topics": [
+      "多元函数微分学",
+      "多元隐函数求导"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "多元隐函数求导",
+      "hm-11-07",
+      "hm 11 07"
+    ],
+    "strongPhrases": [
+      "从 F(x,y,z)=0 等约束关系求隐式偏导。关注其余自变量保持不变，以及使用分式公式时相应偏导分母不能为零。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "多元隐函数求导",
+      "hm 11 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-08",
+    "title": "方向导数",
+    "path": "/demo/hm-11-08",
+    "knowledgePointId": "hm-11-08",
+    "description": "沿任意单位方向求函数的变化率，可微时 Dᵤf=∇f·u。关注方向必须单位化，以及不同方向的变化率不同。",
+    "topics": [
+      "多元函数微分学",
+      "方向导数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "方向导数",
+      "hm-11-08",
+      "hm 11 08"
+    ],
+    "strongPhrases": [
+      "沿任意单位方向求函数的变化率，可微时 Dᵤf=∇f·u。关注方向必须单位化，以及不同方向的变化率不同。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "方向导数",
+      "hm 11 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-09",
+    "title": "梯度",
+    "path": "/demo/hm-11-09",
+    "knowledgePointId": "hm-11-09",
+    "description": "把各偏导组成向量，指向函数上升最快的方向。关注梯度大小、等高线法向与方向导数之间的关系。",
+    "topics": [
+      "多元函数微分学",
+      "梯度"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "梯度",
+      "hm-11-09",
+      "hm 11 09"
+    ],
+    "strongPhrases": [
+      "把各偏导组成向量，指向函数上升最快的方向。关注梯度大小、等高线法向与方向导数之间的关系。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "梯度",
+      "hm 11 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-10",
+    "title": "多元函数极值",
+    "path": "/demo/hm-11-10",
+    "knowledgePointId": "hm-11-10",
+    "description": "寻找曲面上的局部山顶、谷底或鞍点。梯度为零只给出候选，需要进一步判断邻域中的函数变化。",
+    "topics": [
+      "多元函数微分学",
+      "多元函数极值"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "多元函数极值",
+      "hm-11-10",
+      "hm 11 10"
+    ],
+    "strongPhrases": [
+      "寻找曲面上的局部山顶、谷底或鞍点。梯度为零只给出候选，需要进一步判断邻域中的函数变化。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "多元函数极值",
+      "hm 11 10"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-11",
+    "title": "条件极值",
+    "path": "/demo/hm-11-11",
+    "knowledgePointId": "hm-11-11",
+    "description": "只在满足约束的曲线或曲面上寻找最优值。关注可行方向与边界，受约束最优点未必是无约束驻点。",
+    "topics": [
+      "多元函数微分学",
+      "条件极值"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "条件极值",
+      "hm-11-11",
+      "hm 11 11"
+    ],
+    "strongPhrases": [
+      "只在满足约束的曲线或曲面上寻找最优值。关注可行方向与边界，受约束最优点未必是无约束驻点。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "条件极值",
+      "hm 11 11"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-11-12",
+    "title": "拉格朗日乘数法",
+    "path": "/demo/hm-11-12",
+    "knowledgePointId": "hm-11-12",
+    "description": "在正则约束下，用 ∇f=λ∇g 和约束方程共同寻找极值候选。关注梯度平行的几何含义及奇异点、边界的额外检查。",
+    "topics": [
+      "多元函数微分学",
+      "拉格朗日乘数法"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "拉格朗日乘数法",
+      "hm-11-12",
+      "hm 11 12"
+    ],
+    "strongPhrases": [
+      "在正则约束下，用 ∇f=λ∇g 和约束方程共同寻找极值候选。关注梯度平行的几何含义及奇异点、边界的额外检查。"
+    ],
+    "keywords": [
+      "多元函数微分学",
+      "拉格朗日乘数法",
+      "hm 11 12"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-12-01",
+    "title": "二重积分定义",
+    "path": "/demo/hm-12-01",
+    "knowledgePointId": "hm-12-01",
+    "description": "将平面区域分成小块，用函数值乘小块面积再累加。理解曲面下的累积体积或变密度薄片质量。",
+    "topics": [
+      "重积分",
+      "二重积分定义"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "二重积分定义",
+      "hm-12-01",
+      "hm 12 01"
+    ],
+    "strongPhrases": [
+      "将平面区域分成小块，用函数值乘小块面积再累加。理解曲面下的累积体积或变密度薄片质量。"
+    ],
+    "keywords": [
+      "重积分",
+      "二重积分定义",
+      "hm 12 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-12-02",
+    "title": "直角坐标下的二重积分",
+    "path": "/demo/hm-12-02",
+    "knowledgePointId": "hm-12-02",
+    "description": "把区域写成纵向或横向切片，用累次积分计算。关注内部积分上下限随外部变量变化，以及更换积分次序时重写边界。",
+    "topics": [
+      "重积分",
+      "直角坐标下的二重积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "直角坐标下的二重积分",
+      "hm-12-02",
+      "hm 12 02"
+    ],
+    "strongPhrases": [
+      "把区域写成纵向或横向切片，用累次积分计算。关注内部积分上下限随外部变量变化，以及更换积分次序时重写边界。"
+    ],
+    "keywords": [
+      "重积分",
+      "直角坐标下的二重积分",
+      "hm 12 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-12-03",
+    "title": "极坐标下的二重积分",
+    "path": "/demo/hm-12-03",
+    "knowledgePointId": "hm-12-03",
+    "description": "对圆形或扇形区域用半径与角度描述，面积元为 r dr dθ。关注额外因子 r，不能把面积元直接替成 dr dθ。",
+    "topics": [
+      "重积分",
+      "极坐标下的二重积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "极坐标下的二重积分",
+      "hm-12-03",
+      "hm 12 03"
+    ],
+    "strongPhrases": [
+      "对圆形或扇形区域用半径与角度描述，面积元为 r dr dθ。关注额外因子 r，不能把面积元直接替成 dr dθ。"
+    ],
+    "keywords": [
+      "重积分",
+      "极坐标下的二重积分",
+      "hm 12 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-12-04",
+    "title": "三重积分",
+    "path": "/demo/hm-12-04",
+    "knowledgePointId": "hm-12-04",
+    "description": "把空间区域分成体积小块，累积函数值与体积元的乘积。关注三个变量的范围与空间区域几何形状的对应。",
+    "topics": [
+      "重积分",
+      "三重积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "三重积分",
+      "hm-12-04",
+      "hm 12 04"
+    ],
+    "strongPhrases": [
+      "把空间区域分成体积小块，累积函数值与体积元的乘积。关注三个变量的范围与空间区域几何形状的对应。"
+    ],
+    "keywords": [
+      "重积分",
+      "三重积分",
+      "hm 12 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-12-05",
+    "title": "柱面坐标",
+    "path": "/demo/hm-12-05",
+    "knowledgePointId": "hm-12-05",
+    "description": "用平面极坐标加高度描述空间点，体积元为 r dr dθ dz。适合围绕轴分布的区域，关注半径因子和高度边界。",
+    "topics": [
+      "重积分",
+      "柱面坐标"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "柱面坐标",
+      "hm-12-05",
+      "hm 12 05"
+    ],
+    "strongPhrases": [
+      "用平面极坐标加高度描述空间点，体积元为 r dr dθ dz。适合围绕轴分布的区域，关注半径因子和高度边界。"
+    ],
+    "keywords": [
+      "重积分",
+      "柱面坐标",
+      "hm 12 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-12-06",
+    "title": "球面坐标",
+    "path": "/demo/hm-12-06",
+    "knowledgePointId": "hm-12-06",
+    "description": "用到原点的距离、极角和方位角描述空间点。取极角从正 z 轴量起时，体积元为 ρ²sinφ dρdφdθ。",
+    "topics": [
+      "重积分",
+      "球面坐标"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "球面坐标",
+      "hm-12-06",
+      "hm 12 06"
+    ],
+    "strongPhrases": [
+      "用到原点的距离、极角和方位角描述空间点。取极角从正 z 轴量起时，体积元为 ρ²sinφ dρdφdθ。"
+    ],
+    "keywords": [
+      "重积分",
+      "球面坐标",
+      "hm 12 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-12-07",
+    "title": "重积分应用",
+    "path": "/demo/hm-12-07",
+    "knowledgePointId": "hm-12-07",
+    "description": "通过密度加权的二重或三重积分求质量、质心和转动惯量。关注同一几何区域在不同密度分布下的累积量差异。",
+    "topics": [
+      "重积分",
+      "重积分应用"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "重积分应用",
+      "hm-12-07",
+      "hm 12 07"
+    ],
+    "strongPhrases": [
+      "通过密度加权的二重或三重积分求质量、质心和转动惯量。关注同一几何区域在不同密度分布下的累积量差异。"
+    ],
+    "keywords": [
+      "重积分",
+      "重积分应用",
+      "hm 12 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-01",
+    "title": "第一类曲线积分",
+    "path": "/demo/hm-13-01",
+    "knowledgePointId": "hm-13-01",
+    "description": "沿曲线按弧长累积标量密度，形式为 ∫f ds。理解细线质量等问题，关注弧长元以及反转方向不改变积分值。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "第一类曲线积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "第一类曲线积分",
+      "hm-13-01",
+      "hm 13 01"
+    ],
+    "strongPhrases": [
+      "沿曲线按弧长累积标量密度，形式为 ∫f ds。理解细线质量等问题，关注弧长元以及反转方向不改变积分值。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "第一类曲线积分",
+      "hm 13 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-02",
+    "title": "第二类曲线积分",
+    "path": "/demo/hm-13-02",
+    "knowledgePointId": "hm-13-02",
+    "description": "沿有向路径累积向量场在运动方向上的分量，形式为 ∫Pdx+Qdy。关注做功、路径方向及反向后积分变号。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "第二类曲线积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "第二类曲线积分",
+      "hm-13-02",
+      "hm 13 02"
+    ],
+    "strongPhrases": [
+      "沿有向路径累积向量场在运动方向上的分量，形式为 ∫Pdx+Qdy。关注做功、路径方向及反向后积分变号。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "第二类曲线积分",
+      "hm 13 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-03",
+    "title": "第一类曲面积分",
+    "path": "/demo/hm-13-03",
+    "knowledgePointId": "hm-13-03",
+    "description": "按曲面面积累积标量密度，形式为 ∬f dS。关注曲面倾斜导致的面积元变化，以及它不依赖法向取向。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "第一类曲面积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "第一类曲面积分",
+      "hm-13-03",
+      "hm 13 03"
+    ],
+    "strongPhrases": [
+      "按曲面面积累积标量密度，形式为 ∬f dS。关注曲面倾斜导致的面积元变化，以及它不依赖法向取向。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "第一类曲面积分",
+      "hm 13 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-04",
+    "title": "第二类曲面积分",
+    "path": "/demo/hm-13-04",
+    "knowledgePointId": "hm-13-04",
+    "description": "累积向量场穿过有向曲面的通量，形式为 ∬F·n dS。关注法向选择和正负，反转法向会使通量变号。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "第二类曲面积分"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "第二类曲面积分",
+      "hm-13-04",
+      "hm 13 04"
+    ],
+    "strongPhrases": [
+      "累积向量场穿过有向曲面的通量，形式为 ∬F·n dS。关注法向选择和正负，反转法向会使通量变号。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "第二类曲面积分",
+      "hm 13 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-05",
+    "title": "格林公式",
+    "path": "/demo/hm-13-05",
+    "knowledgePointId": "hm-13-05",
+    "description": "在适当光滑条件下，将平面闭曲线的环流转为内部区域的二重积分。关注边界正向和 Qₓ-Pᵧ 的局部旋转量。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "格林公式"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "格林公式",
+      "hm-13-05",
+      "hm 13 05"
+    ],
+    "strongPhrases": [
+      "在适当光滑条件下，将平面闭曲线的环流转为内部区域的二重积分。关注边界正向和 Qₓ-Pᵧ 的局部旋转量。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "格林公式",
+      "hm 13 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-06",
+    "title": "高斯公式",
+    "path": "/demo/hm-13-06",
+    "knowledgePointId": "hm-13-06",
+    "description": "将闭曲面的外向通量转为内部散度的三重积分。关注封闭边界、外法向和向量场在区域内的光滑性。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "高斯公式"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "高斯公式",
+      "hm-13-06",
+      "hm 13 06"
+    ],
+    "strongPhrases": [
+      "将闭曲面的外向通量转为内部散度的三重积分。关注封闭边界、外法向和向量场在区域内的光滑性。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "高斯公式",
+      "hm 13 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-07",
+    "title": "斯托克斯公式",
+    "path": "/demo/hm-13-07",
+    "knowledgePointId": "hm-13-07",
+    "description": "将空间闭曲线的环流转为所围曲面上旋度的通量。关注边界方向与曲面法向按右手规则匹配。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "斯托克斯公式"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "斯托克斯公式",
+      "hm-13-07",
+      "hm 13 07"
+    ],
+    "strongPhrases": [
+      "将空间闭曲线的环流转为所围曲面上旋度的通量。关注边界方向与曲面法向按右手规则匹配。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "斯托克斯公式",
+      "hm 13 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-08",
+    "title": "曲线积分与路径无关",
+    "path": "/demo/hm-13-08",
+    "knowledgePointId": "hm-13-08",
+    "description": "比较相同起终点、不同路径的做功。关注保守场、闭路积分为零，以及区域存在孔洞时局部偏导条件可能不足。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "曲线积分与路径无关"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "曲线积分与路径无关",
+      "hm-13-08",
+      "hm 13 08"
+    ],
+    "strongPhrases": [
+      "比较相同起终点、不同路径的做功。关注保守场、闭路积分为零，以及区域存在孔洞时局部偏导条件可能不足。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "曲线积分与路径无关",
+      "hm 13 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-13-09",
+    "title": "保守场与势函数",
+    "path": "/demo/hm-13-09",
+    "knowledgePointId": "hm-13-09",
+    "description": "研究向量场能否写成标量势函数的梯度 F=∇φ。此时路径积分由端点势差决定，关注定义区域及势函数的存在条件。",
+    "topics": [
+      "曲线积分与曲面积分",
+      "保守场与势函数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "保守场与势函数",
+      "hm-13-09",
+      "hm 13 09"
+    ],
+    "strongPhrases": [
+      "研究向量场能否写成标量势函数的梯度 F=∇φ。此时路径积分由端点势差决定，关注定义区域及势函数的存在条件。"
+    ],
+    "keywords": [
+      "曲线积分与曲面积分",
+      "保守场与势函数",
+      "hm 13 09"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-01",
+    "title": "常数项级数",
+    "path": "/demo/hm-14-01",
+    "knowledgePointId": "hm-14-01",
+    "description": "通过部分和研究无限多个数相加是否趋向有限结果。通项趋零是收敛的必要条件，但调和级数说明它并不充分。",
+    "topics": [
+      "无穷级数",
+      "常数项级数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "常数项级数",
+      "hm-14-01",
+      "hm 14 01"
+    ],
+    "strongPhrases": [
+      "通过部分和研究无限多个数相加是否趋向有限结果。通项趋零是收敛的必要条件，但调和级数说明它并不充分。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "常数项级数",
+      "hm 14 01"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-02",
+    "title": "正项级数",
+    "path": "/demo/hm-14-02",
+    "knowledgePointId": "hm-14-02",
+    "description": "对非负项的无穷和，利用部分和单调性与比较等方法判断收敛。关注 p 级数的阈值以及项小不代表总和有限。",
+    "topics": [
+      "无穷级数",
+      "正项级数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "正项级数",
+      "hm-14-02",
+      "hm 14 02"
+    ],
+    "strongPhrases": [
+      "对非负项的无穷和，利用部分和单调性与比较等方法判断收敛。关注 p 级数的阈值以及项小不代表总和有限。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "正项级数",
+      "hm 14 02"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-03",
+    "title": "交错级数",
+    "path": "/demo/hm-14-03",
+    "knowledgePointId": "hm-14-03",
+    "description": "正负交替的项相加时，若项的绝对值单调趋零，可用莱布尼茨判别。关注余项大小与第一个被略去项的关系。",
+    "topics": [
+      "无穷级数",
+      "交错级数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "交错级数",
+      "hm-14-03",
+      "hm 14 03"
+    ],
+    "strongPhrases": [
+      "正负交替的项相加时，若项的绝对值单调趋零，可用莱布尼茨判别。关注余项大小与第一个被略去项的关系。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "交错级数",
+      "hm 14 03"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-04",
+    "title": "绝对收敛与条件收敛",
+    "path": "/demo/hm-14-04",
+    "knowledgePointId": "hm-14-04",
+    "description": "分别考察原级数与各项绝对值组成的级数。绝对收敛必收敛，条件收敛依赖正负抵消，任意重排可能改变结果。",
+    "topics": [
+      "无穷级数",
+      "绝对收敛与条件收敛"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "绝对收敛与条件收敛",
+      "hm-14-04",
+      "hm 14 04"
+    ],
+    "strongPhrases": [
+      "分别考察原级数与各项绝对值组成的级数。绝对收敛必收敛，条件收敛依赖正负抵消，任意重排可能改变结果。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "绝对收敛与条件收敛",
+      "hm 14 04"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-05",
+    "title": "幂级数",
+    "path": "/demo/hm-14-05",
+    "knowledgePointId": "hm-14-05",
+    "description": "将变量的不同次幂按系数相加，研究自变量变化时级数是否收敛。关注展开中心与收敛区间，边界需要单独判断。",
+    "topics": [
+      "无穷级数",
+      "幂级数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "幂级数",
+      "hm-14-05",
+      "hm 14 05"
+    ],
+    "strongPhrases": [
+      "将变量的不同次幂按系数相加，研究自变量变化时级数是否收敛。关注展开中心与收敛区间，边界需要单独判断。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "幂级数",
+      "hm 14 05"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-06",
+    "title": "收敛半径",
+    "path": "/demo/hm-14-06",
+    "knowledgePointId": "hm-14-06",
+    "description": "确定幂级数围绕展开中心能够绝对收敛的距离范围。可用系数的根值或适用时的比值求半径，端点不由半径直接决定。",
+    "topics": [
+      "无穷级数",
+      "收敛半径"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "收敛半径",
+      "hm-14-06",
+      "hm 14 06"
+    ],
+    "strongPhrases": [
+      "确定幂级数围绕展开中心能够绝对收敛的距离范围。可用系数的根值或适用时的比值求半径，端点不由半径直接决定。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "收敛半径",
+      "hm 14 06"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-07",
+    "title": "函数展开成幂级数",
+    "path": "/demo/hm-14-07",
+    "knowledgePointId": "hm-14-07",
+    "description": "利用已知展开及逐项运算，把函数表达为幂的无穷和。关注展开成立的区间以及逐项求导、积分的适用范围。",
+    "topics": [
+      "无穷级数",
+      "函数展开成幂级数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "函数展开成幂级数",
+      "hm-14-07",
+      "hm 14 07"
+    ],
+    "strongPhrases": [
+      "利用已知展开及逐项运算，把函数表达为幂的无穷和。关注展开成立的区间以及逐项求导、积分的适用范围。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "函数展开成幂级数",
+      "hm 14 07"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-08",
+    "title": "泰勒级数",
+    "path": "/demo/hm-14-08",
+    "knowledgePointId": "hm-14-08",
+    "description": "用展开点处各阶导数构造多项式与无穷级数。关注阶数、展开中心和余项；无穷次可导并不自动保证级数等于原函数。",
+    "topics": [
+      "无穷级数",
+      "泰勒级数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "泰勒级数",
+      "hm-14-08",
+      "hm 14 08",
+      "泰勒公式",
+      "麦克劳林公式"
+    ],
+    "strongPhrases": [
+      "用展开点处各阶导数构造多项式与无穷级数。关注阶数、展开中心和余项；无穷次可导并不自动保证级数等于原函数。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "泰勒级数",
+      "hm 14 08"
+    ],
+    "supportedIntents": [
+      "visualize",
+      "explain",
+      "compare",
+      "find-experiment"
+    ]
+  },
+  {
+    "id": "hm-14-09",
+    "title": "傅里叶级数",
+    "path": "/demo/hm-14-09",
+    "knowledgePointId": "hm-14-09",
+    "description": "用常数项及不同频率的正弦、余弦叠加表达周期函数。关注谐波数、部分和及间断点附近的振荡和收敛含义。",
+    "topics": [
+      "无穷级数",
+      "傅里叶级数"
+    ],
+    "ownership": "self-developed",
+    "semanticEnabled": true,
+    "aliases": [
+      "傅里叶级数",
+      "hm-14-09",
+      "hm 14 09"
+    ],
+    "strongPhrases": [
+      "用常数项及不同频率的正弦、余弦叠加表达周期函数。关注谐波数、部分和及间断点附近的振荡和收敛含义。"
+    ],
+    "keywords": [
+      "无穷级数",
+      "傅里叶级数",
+      "hm 14 09"
     ],
     "supportedIntents": [
       "visualize",

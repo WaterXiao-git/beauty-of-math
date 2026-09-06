@@ -4,6 +4,7 @@ import { OWNED_EXPERIMENT_CATALOG } from '../owned-experiments/catalog.generated
 
 export function getHighMathExperimentCards() {
   return OWNED_EXPERIMENT_CATALOG.map((experiment) => ({
+    id: experiment.id,
     title: experiment.title,
     description: experiment.description,
     knowledgePoint: experiment.knowledgePointId,

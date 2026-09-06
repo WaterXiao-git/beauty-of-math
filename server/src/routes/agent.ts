@@ -13,6 +13,11 @@ import {
 } from '../agent/ai/config.js'
 
 import {
+  loadEmbeddingConfig,
+} from '../agent/embedding/config.js'
+import { getSemanticIndexStatus } from '../agent/semanticQuestionRouter.js'
+
+import {
   DynamicExperimentGenerationError,
   generateDynamicExperiment,
 } from '../agent/dynamicExperiment/generator.js'
@@ -76,6 +81,10 @@ router.post('/route', async (req, res) => {
     return res.status(400).json({
       error: '问题不能为空',
     })
+  }
+
+  if (question.length > 500) {
+    return res.status(400).json({ error: '问题过长，请控制在 500 个字符以内' })
   }
 
   try {
@@ -174,13 +183,26 @@ router.post('/generate', async (req, res) => {
  */
 router.get('/status', (_req, res) => {
   const config = loadAgentAIConfig()
+  const embeddingConfig = loadEmbeddingConfig()
 
   return res.json({
     enabled: config.enabled,
     primaryModel: config.primary?.model ?? null,
     reviewerModel: config.reviewer?.model ?? null,
+    semanticRouting: {
+      enabled: embeddingConfig.enabled,
+      index: getSemanticIndexStatus(),
+      model: embeddingConfig.enabled
+        ? embeddingConfig.model
+        : null,
+      dimensions: embeddingConfig.enabled
+        ? embeddingConfig.dimensions
+        : null,
+    },
     tools: {
-      searchExperiments: 'planned',
+      searchExperiments: embeddingConfig.enabled
+        ? 'semantic-and-rule'
+        : 'rule-fallback',
       createExperiment: 'available-preview-approval-required',
     },
   })

@@ -23,6 +23,8 @@ import {
   type StructuralExperimentHint,
 } from './structuralExperimentHints.js'
 
+import { pinyin } from 'pinyin-pro'
+
 export const EXPERIMENT_MATCH_QUALITIES = [
   'exact',
   'strong',
@@ -72,6 +74,26 @@ const GENERIC_SEARCH_WORDS =
   /(?:数学|知识点|相关内容|相关|内容|概念|原理|实验页面|实验|页面|模块|可视化|动态图|动画|动态|演示|展示|模拟|打开|查找|搜索|推荐|学习|介绍|讲解|解释|计算|比较|观察|看看|想学|想看|我想|如何|怎么|怎样|什么是|请|帮我|一下)/g
 
 const MIN_SEMANTIC_TERM_LENGTH = 2
+
+const PINYIN_TERM_CACHE = new Map<string, string>()
+
+function compactPinyin(value: string): string {
+  const cached = PINYIN_TERM_CACHE.get(value)
+
+  if (cached !== undefined) {
+    return cached
+  }
+
+  const result = normalizeQuestion(
+    pinyin(value, {
+      toneType: 'none',
+      separator: '',
+    }),
+  ).replace(/[^a-z0-9]/g, '')
+
+  PINYIN_TERM_CACHE.set(value, result)
+  return result
+}
 
 function escapeRegularExpression(
   value: string,
@@ -290,7 +312,19 @@ function scoreSemanticTerms(
     for (const queryCore of queryCores) {
       let score = 0
 
-      if (queryCore === termCore) {
+      const asciiQuery = /^[a-z0-9]+$/.test(queryCore)
+      const termPinyin = asciiQuery
+        ? compactPinyin(term.value)
+        : ''
+
+      if (
+        asciiQuery &&
+        queryCore.length >= 4 &&
+        queryCore === termPinyin
+      ) {
+        // 拼音只负责召回候选，不获得标题/别名的高置信分。
+        score = 16
+      } else if (queryCore === termCore) {
         score = term.exactScore
       } else if (queryCore.includes(termCore)) {
         const containmentRatio =

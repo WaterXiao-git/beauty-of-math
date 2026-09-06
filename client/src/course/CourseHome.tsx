@@ -1,4 +1,4 @@
-// 课程主界面：八门课程共享同一套知识目录、知识地图与详情工作区。
+// 课程主界面：高等数学十四模块共享同一套知识目录、知识地图与详情工作区。
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 

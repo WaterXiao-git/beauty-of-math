@@ -6,14 +6,14 @@ import {
 } from './structuralExperimentHints.js'
 
 const cases = [
-  ['用 ε 和 δ 的误差带解释函数极限', 'epsilon-delta'],
-  ['比较极限的和差积商', 'limit-laws'],
-  ['观察两个重要极限的收敛过程', 'two-important-limits'],
-  ['无穷小量如何趋近于零', 'infinitesimal'],
-  ['用割线逼近切线理解导数', 'derivative'],
-  ['用线性近似比较函数增量和微分', 'differential'],
-  ['验证罗尔定理的水平切线', 'rolle'],
-  ['根据单调性、极值和凹凸性描绘函数图形', 'graphing'],
+  ['用 ε 和 δ 的误差带解释函数极限', 'hm-02-02'],
+  ['比较极限的和差积商', 'hm-02-07'],
+  ['观察两个重要极限的收敛过程', 'hm-02-08'],
+  ['无穷小量如何趋近于零', 'hm-02-05'],
+  ['用割线逼近切线理解导数', 'hm-04-05'],
+  ['用线性近似比较函数增量和微分', 'hm-04-14'],
+  ['验证罗尔定理的水平切线', 'hm-05-01'],
+  ['根据单调性、极值和凹凸性描绘函数图形', 'hm-05-11'],
 ] as const
 
 for (const [question, expectedId] of cases) {

@@ -4,13 +4,25 @@ import assert from 'node:assert/strict'
 import {
   parseAgentAIProposal,
   parseMathExplanation,
-  routeQuestionWithAI,
+  routeQuestionWithAI as routeQuestionWithAIProduction,
 } from './agentCoordinator.js'
 
 import type {
   AgentModelProvider,
   AgentModelRequest,
 } from './types.js'
+
+function routeQuestionWithAI(
+  question: string,
+  options: NonNullable<
+    Parameters<typeof routeQuestionWithAIProduction>[1]
+  >,
+) {
+  return routeQuestionWithAIProduction(question, {
+    semanticRetriever: null,
+    ...options,
+  })
+}
 
 class FakeProvider
 implements AgentModelProvider {
@@ -56,7 +68,7 @@ function proposal(
 ) {
   return {
     action: 'suggest',
-    candidateIds: ['derivative'],
+    candidateIds: ['hm-04-05'],
     rewrittenQuery: null,
     confidence: 0.92,
     reason: '导数实验与问题含义最接近。',
@@ -80,7 +92,7 @@ test('明确规则路由不调用模型', async () => {
 
   assert.equal(result.ai.status, 'skipped')
   assert.equal(primary.calls, 0)
-  assert.equal(result.routeDecision.target?.id, 'derivative')
+  assert.equal(result.routeDecision.target?.id, 'hm-04-05')
 })
 
 test('模型改写查询只在自研白名单内重新检索', async () => {
@@ -100,7 +112,7 @@ test('模型改写查询只在自研白名单内重新检索', async () => {
 
   assert.equal(result.ai.status, 'enhanced')
   assert.equal(result.routeDecision.decision, 'suggest')
-  assert.equal(result.routeDecision.target?.id, 'derivative')
+  assert.equal(result.routeDecision.target?.id, 'hm-04-05')
 })
 
 test('无候选时拒绝模型改写产生的弱相关实验', async () => {
@@ -170,7 +182,7 @@ test('可靠候选上的低置信度方案由 reviewer 复核', async () => {
   )
 
   assert.equal(result.ai.reviewed, true)
-  assert.equal(result.routeDecision.target?.id, 'derivative')
+  assert.equal(result.routeDecision.target?.id, 'hm-04-05')
   assert.equal(result.routeDecision.decision, 'suggest')
 })
 
@@ -202,12 +214,12 @@ test('创建实验请求只进入人工确认，不执行工具', async () => {
 test('模型伪造的候选 ID 会被过滤', () => {
   const parsed = parseAgentAIProposal(
     proposal({
-      candidateIds: ['four' + 'ier', 'derivative'],
+      candidateIds: ['four' + 'ier', 'hm-04-05'],
     }),
-    new Set(['derivative']),
+    new Set(['hm-04-05']),
   )
 
-  assert.deepEqual(parsed?.candidateIds, ['derivative'])
+  assert.deepEqual(parsed?.candidateIds, ['hm-04-05'])
 })
 
 test('未列入策略的工具请求会被拒绝', () => {
@@ -219,7 +231,7 @@ test('未列入策略的工具请求会被拒绝', () => {
         input: {},
       },
     }),
-    new Set(['derivative']),
+    new Set(['hm-04-05']),
   )
 
   assert.equal(parsed?.toolRequest, null)
@@ -271,6 +283,47 @@ test('非数学问题直接跳过两个模型', async () => {
   assert.equal(result.ai.status, 'skipped')
   assert.equal(primary.calls, 0)
   assert.equal(reviewer.calls, 0)
+})
+
+test('AI 认可原问题的语义候选后仍保留推荐实验', async () => {
+  const primary = new FakeProvider('deepseek', 'test-model', proposal({
+    action: 'suggest',
+    candidateIds: ['hm-07-02'],
+    rewrittenQuery: null,
+    confidence: 0.99,
+  }))
+  const result = await routeQuestionWithAI(
+    '把曲线切成越来越细的小片，再把它们累加起来',
+    {
+      enabled: true, primary, reviewer: null,
+      semanticRetriever: {
+        async retrieve() { return [{ id: 'hm-07-02', similarity: 0.91 }] },
+      },
+    },
+  )
+  assert.equal(result.ai.status, 'enhanced')
+  assert.equal(result.routeDecision.decision, 'suggest')
+  assert.equal(result.routeDecision.target?.id, 'hm-07-02')
+  assert.equal(result.routeDecision.target?.matchQuality, 'related')
+})
+
+test('AI 路由入口先使用 Embedding 补充语义候选', async () => {
+  const result = await routeQuestionWithAI(
+    '把曲线切成越来越细的小片，再把它们累加起来',
+    {
+      enabled: false,
+      primary: null,
+      reviewer: null,
+      semanticRetriever: {
+        async retrieve() {
+          return [{ id: 'hm-07-02', similarity: 0.91 }]
+        },
+      },
+    } as never,
+  )
+
+  assert.equal(result.experiments[0]?.id, 'hm-07-02')
+  assert.equal(result.routeDecision.decision, 'suggest')
 })
 
 test('数学解释主模型失败时由 reviewer 回答', async () => {

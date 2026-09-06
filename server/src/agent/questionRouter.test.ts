@@ -11,7 +11,7 @@ test('组合识别解释意图和导数模块', () => {
   )
 
   assert.equal(result.intent.primaryIntent, 'explain')
-  assert.equal(result.experiments[0]?.id, 'derivative')
+  assert.equal(result.experiments[0]?.id, 'hm-04-05')
 })
 
 test('组合识别可视化意图和极限运算法则模块', () => {
@@ -20,7 +20,7 @@ test('组合识别可视化意图和极限运算法则模块', () => {
   )
 
   assert.equal(result.intent.primaryIntent, 'visualize')
-  assert.equal(result.experiments[0]?.id, 'limit-laws')
+  assert.equal(result.experiments[0]?.id, 'hm-02-07')
 })
 
 test('只有知识点名称时仍然可以匹配实验', () => {
@@ -28,7 +28,7 @@ test('只有知识点名称时仍然可以匹配实验', () => {
 
   assert.equal(result.intent.primaryIntent, 'unknown')
   assert.equal(result.intent.needsAI, true)
-  assert.equal(result.experiments[0]?.id, 'rolle')
+  assert.equal(result.experiments[0]?.id, 'hm-05-01')
 })
 
 test('无关问题没有实验候选', () => {
@@ -58,7 +58,7 @@ test('明确问题产生 direct 决策', () => {
   )
 
   assert.equal(result.routeDecision.decision, 'direct')
-  assert.equal(result.routeDecision.target?.id, 'derivative')
+  assert.equal(result.routeDecision.target?.id, 'hm-04-05')
 })
 
 test('返回去除实验标题干扰后的操作意图', () => {
@@ -84,7 +84,7 @@ test('无关问题产生 no-match 决策', () => {
 test('函数图形核心词产生作图实验建议', () => {
   const result = routeQuestion('函数图形')
 
-  assert.equal(result.experiments[0]?.id, 'graphing')
+  assert.equal(result.experiments[0]?.id, 'hm-05-11')
   assert.equal(result.routeDecision.decision, 'suggest')
 })
 
@@ -99,8 +99,8 @@ test('路由结果返回拆分后的知识文本', () => {
     (candidate) => candidate.id,
   )
 
-  assert.ok(candidateIds.includes('derivative'))
-  assert.ok(candidateIds.includes('differential'))
+  assert.ok(candidateIds.includes('hm-04-05'))
+  assert.ok(candidateIds.includes('hm-04-12'))
 })
 
 test('自研实验不从路由注入初始参数', () => {
@@ -108,7 +108,7 @@ test('自研实验不从路由注入初始参数', () => {
     '打开导数实验，用割线逼近切线，令 h=0.1',
   )
 
-  assert.equal(result.routeDecision.target?.id, 'derivative')
+  assert.equal(result.routeDecision.target?.id, 'hm-04-05')
   assert.deepEqual(
     result.routeDecision.target?.initialParameters,
     {},
@@ -120,9 +120,28 @@ test('微分实验不从路由注入初始参数', () => {
     '打开微分实验，展示函数增量和线性近似',
   )
 
-  assert.equal(result.routeDecision.target?.id, 'differential')
+  assert.equal(result.routeDecision.target?.id, 'hm-04-14')
   assert.deepEqual(
     result.routeDecision.target?.initialParameters,
     {},
   )
+})
+
+test('关系解释问题不会直接跳进单一知识点实验', () => {
+  const result = routeQuestion(
+    '函数在一点连续但不可导为什么',
+  )
+
+  assert.equal(result.routeDecision.decision, 'ai')
+  assert.equal(result.routeDecision.reason, 'mixed-intent')
+})
+
+test('定积分计算问题进入回答分支而不是错误打开实验', () => {
+  const result = routeQuestion(
+    '定积分怎么计算面积',
+  )
+
+  assert.equal(result.intent.primaryIntent, 'calculate')
+  assert.equal(result.routeDecision.decision, 'answer')
+  assert.equal(result.routeDecision.target?.id, 'hm-08-01')
 })

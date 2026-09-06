@@ -194,6 +194,10 @@ const INTENT_RULES: IntentRule[] = [
         pattern: /求(?:定|不定)?积分/,
       },
       {
+        label: '求表达式结果',
+        pattern: /求.{1,48}(?:定积分|不定积分|导数|极限|方程|函数值)/,
+      },
+      {
         label: '解方程',
         pattern: /解.{0,8}方程/,
       },
@@ -233,6 +237,14 @@ const INTENT_RULES: IntentRule[] = [
       {
         label: '分别有什么',
         pattern: /分别有(?:什么|何)/,
+      },
+      {
+        label: '转折关系',
+        pattern: /(?:但|却|然而)(?:不|未|没有|并非)/,
+      },
+      {
+        label: '蕴含关系',
+        pattern: /(?:是否|一定)?意味着|是否一定|能否推出/,
       },
     ],
     keywords: [

@@ -3,7 +3,8 @@
 import { OWNED_EXPERIMENT_CATALOG } from '../src/owned-experiments/catalog.generated'
 import { collectCoursePoints, courses } from '../src/course/courseCatalog'
 
-const EXPECTED_CHAPTER_COUNT = 4
+const EXPECTED_CHAPTER_COUNT = 14
+const EXPECTED_POINT_COUNT = 150
 const EXPECTED_RENDERER_COUNT = OWNED_EXPERIMENT_CATALOG.length
 
 function fail(message: string): never {
@@ -12,8 +13,8 @@ function fail(message: string): never {
 
 function main() {
   const courseIds = courses.map((course) => course.id)
-  if (courseIds.length !== 1 || courseIds[0] !== 'higher-mathematics-1') {
-    fail('应只发布高等数学（上册）。')
+  if (courseIds.length !== 1 || courseIds[0] !== 'higher-mathematics') {
+    fail('应只发布高等数学。')
   }
 
   const [course] = courses
@@ -21,7 +22,12 @@ function main() {
     fail(`应发布 ${EXPECTED_CHAPTER_COUNT} 章，实际为 ${course.chapters.length} 章。`)
   }
 
-  const rendererIds = collectCoursePoints(course)
+  const points = collectCoursePoints(course)
+  if (points.length !== EXPECTED_POINT_COUNT) {
+    fail(`应发布 ${EXPECTED_POINT_COUNT} 个知识点，实际为 ${points.length} 个。`)
+  }
+
+  const rendererIds = points
     .map((point) => point.rendererId)
     .filter((rendererId): rendererId is NonNullable<typeof rendererId> => Boolean(rendererId))
 
@@ -39,7 +45,7 @@ function main() {
     fail(`rendererId 不在自研清单中：${unknownRendererIds.join(', ')}。`)
   }
 
-  console.log(`课程完整性检查通过：1 门课程、${course.chapters.length} 章、${rendererIds.length} 个 renderer 绑定。`)
+  console.log(`课程完整性检查通过：1 门课程、${course.chapters.length} 个模块、${points.length} 个知识点、${rendererIds.length} 个 renderer 绑定。`)
 }
 
 main()

@@ -63,6 +63,8 @@ export interface ExperimentPlayerConfig {
   onTogglePlay: () => void
 
   onReset: () => void
+
+  onStepSelect?: (step: number) => void
 }
 
 interface ExperimentShellProps {
@@ -549,6 +551,9 @@ export default function ExperimentShell({
             }
             onReset={
               resolvedPlayer.onReset
+            }
+            onStepSelect={
+              resolvedPlayer.onStepSelect
             }
             stepDesc={
               currentStep

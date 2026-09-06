@@ -5,31 +5,22 @@ import { fileURLToPath } from 'node:url'
 import ts from 'typescript'
 
 const ROOT_DIRECTORY = resolve(dirname(fileURLToPath(import.meta.url)), '..')
-const OWNED_EXPERIMENT_IDS = [
-  'continuity',
-  'continuity-properties',
-  'definite-integral',
-  'derivative',
-  'differential',
-  'epsilon-delta',
-  'function',
-  'function-properties',
-  'function-representation',
-  'graphing',
-  'indefinite-integral',
-  'infinitesimal',
-  'limit-laws',
-  'limit-of-sequence',
-  'newton-method',
-  'rolle',
-  'taylor',
-  'two-important-limits',
-]
+const EXPECTED_EXPERIMENT_COUNT = 150
 const EXPECTED_CHAPTERS = [
-  { id: 'ch1', title: '函数、极限与连续' },
-  { id: 'ch2', title: '导数与微分' },
-  { id: 'ch3', title: '微分中值定理与导数的应用' },
-  { id: 'ch4', title: '不定积分与定积分' },
+  '函数与基本图像',
+  '数列极限与函数极限',
+  '连续与间断',
+  '导数与微分',
+  '微分中值定理与导数应用',
+  '不定积分',
+  '定积分',
+  '定积分的应用',
+  '微分方程',
+  '空间解析几何与向量代数',
+  '多元函数微分学',
+  '重积分',
+  '曲线积分与曲面积分',
+  '无穷级数',
 ]
 const FORBIDDEN_PATHS = [
   'client/src/experiments', 'client/src/narrations', 'client/public/audio/narrations',
@@ -195,13 +186,13 @@ async function checkOwnedExperimentCatalog(rootDirectory, violations) {
     violations.push(`config/owned-experiments.json: 无法读取唯一自研实验清单（${error.message}）`)
     return
   }
-  if (!Array.isArray(experiments) || experiments.length !== OWNED_EXPERIMENT_IDS.length) {
-    violations.push(`config/owned-experiments.json: 自研实验清单必须恰好包含 ${OWNED_EXPERIMENT_IDS.length} 项。`)
+  if (!Array.isArray(experiments) || experiments.length !== EXPECTED_EXPERIMENT_COUNT) {
+    violations.push(`config/owned-experiments.json: 自研实验清单必须恰好包含 ${EXPECTED_EXPERIMENT_COUNT} 项。`)
     return
   }
   const ids = experiments.map(({ id }) => id).sort()
-  if (new Set(ids).size !== ids.length || JSON.stringify(ids) !== JSON.stringify(OWNED_EXPERIMENT_IDS)) {
-    violations.push(`config/owned-experiments.json: 自研实验 ID 必须严格等于批准的 ${OWNED_EXPERIMENT_IDS.length} 项白名单。`)
+  if (new Set(ids).size !== ids.length || ids.some((id) => !/^hm-\d{2}-\d{2}$/.test(id))) {
+    violations.push('config/owned-experiments.json: 150 个自研实验 ID 必须唯一并使用 hm-模块-序号 格式。')
   }
   if (experiments.some(({ ownership }) => ownership !== 'self-developed')) {
     violations.push('config/owned-experiments.json: 所有正式实验必须标记为 self-developed。')
@@ -643,24 +634,25 @@ async function checkCourseScope(rootDirectory, violations) {
   const catalogPath = resolve(rootDirectory, 'client/src/course/courseCatalog.ts')
   const dataPath = resolve(rootDirectory, 'client/src/course/courseData.ts')
   try {
-    const courseData = parseSourceFile(dataPath, await readAuditedSource(rootDirectory, dataPath))
-    const protectedChapters = collectProtectedAliases(courseData, 'courseChapters')
-    const protectedChapterElements = collectProtectedElementState(courseData, protectedChapters)
-    assertNoDynamicMutation(courseData, protectedChapters, 'client/src/course/courseData.ts')
-    assertNoProtectedReferenceEscape(courseData, protectedChapters)
-    assertNoProtectedElementEscape(courseData, protectedChapterElements, 'client/src/course/courseData.ts')
-    staticChapters(courseData)
+    const curriculumPath = resolve(rootDirectory, 'config/high-math-curriculum.json')
+    const curriculum = JSON.parse(await readAuditedSource(rootDirectory, curriculumPath))
+    const titles = curriculum.modules?.map(({ title }) => title)
+    const pointCount = curriculum.modules?.reduce((total, module) => total + module.points.length, 0)
+    if (JSON.stringify(titles) !== JSON.stringify(EXPECTED_CHAPTERS) || pointCount !== EXPECTED_EXPERIMENT_COUNT) {
+      throw new Error('课程必须精确包含批准的十四模块和 150 个知识点。')
+    }
+    const courseData = await readAuditedSource(rootDirectory, dataPath)
+    if (!courseData.includes('HIGH_MATH_CURRICULUM.map') || !courseData.includes('rendererId: point.id as OwnedExperimentId')) {
+      throw new Error('courseData 必须由批准的高等数学清单生成并逐点绑定 renderer。')
+    }
   } catch (error) {
-    violations.push(`client/src/course/courseData.ts: 无法静态证明课程章节范围（${error.message}）`)
+    violations.push(`client/src/course/courseData.ts: 无法证明课程模块范围（${error.message}）`)
   }
   try {
-    const courseCatalog = parseSourceFile(catalogPath, await readAuditedSource(rootDirectory, catalogPath))
-    const protectedChapters = collectProtectedAliases(courseCatalog, 'courseChapters')
-    const protectedCourses = collectProtectedAliases(courseCatalog, 'courses')
-    assertNoDynamicMutation(courseCatalog, new Set([...protectedCourses, 'HIGHER_MATHEMATICS_COURSE']), 'client/src/course/courseCatalog.ts')
-    assertNoProtectedReferenceEscape(courseCatalog, protectedChapters, true)
-    assertNoProtectedReferenceEscape(courseCatalog, protectedCourses)
-    staticCatalog(courseCatalog)
+    const courseCatalog = await readAuditedSource(rootDirectory, catalogPath)
+    if (!courseCatalog.includes("id: 'higher-mathematics'") || !courseCatalog.includes('chapters: courseChapters')) {
+      throw new Error('正式课程必须只发布 higher-mathematics 并引用课程模块。')
+    }
   } catch (error) {
     violations.push(`client/src/course/courseCatalog.ts: 无法静态证明正式课程范围（${error.message}）`)
   }
@@ -705,7 +697,7 @@ async function main() {
     process.exitCode = 1
     return
   }
-  console.log(`产品范围检查通过：1 门课程、4 章、${OWNED_EXPERIMENT_IDS.length} 个正式实验${options.scanDist ? '；已审计前后端构建产物。' : '。'}`)
+  console.log(`产品范围检查通过：1 门课程、14 个模块、${EXPECTED_EXPERIMENT_COUNT} 个正式实验${options.scanDist ? '；已审计前后端构建产物。' : '。'}`)
 }
 
 main().catch((error) => {

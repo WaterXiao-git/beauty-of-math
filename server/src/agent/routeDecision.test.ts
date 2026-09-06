@@ -29,14 +29,14 @@ test('意图和实验明确时直接路由', () => {
 
   assert.equal(result.decision, 'direct')
   assert.equal(result.reason, 'clear-route')
-  assert.equal(result.target?.id, 'derivative')
+  assert.equal(result.target?.id, 'hm-04-05')
 })
 
 test('查找实验意图明确时直接路由', () => {
   const result = decide('打开两个重要极限实验页面')
 
   assert.equal(result.decision, 'direct')
-  assert.equal(result.target?.id, 'two-important-limits')
+  assert.equal(result.target?.id, 'hm-02-08')
 })
 
 test('打开并展示同一实验不是需要拆分的复合意图', () => {
@@ -46,7 +46,7 @@ test('打开并展示同一实验不是需要拆分的复合意图', () => {
 
   assert.equal(result.decision, 'direct')
   assert.equal(result.reason, 'clear-route')
-  assert.equal(result.target?.id, 'differential')
+  assert.equal(result.target?.id, 'hm-04-14')
 })
 
 test('实验标题中的意图词不会制造复合意图', () => {
@@ -67,7 +67,7 @@ test('完整标题优先于宽泛关键词', () => {
   const result = decide('打开两个重要极限实验')
 
   assert.equal(result.decision, 'direct')
-  assert.equal(result.target?.id, 'two-important-limits')
+  assert.equal(result.target?.id, 'hm-02-08')
 })
 
 test('标题之外的真实复合意图仍然进入 AI', () => {
@@ -84,7 +84,7 @@ test('只有知识点名称时展示建议', () => {
 
   assert.equal(result.decision, 'suggest')
   assert.equal(result.reason, 'clear-experiment-unclear-intent')
-  assert.equal(result.target?.id, 'rolle')
+  assert.equal(result.target?.id, 'hm-05-01')
 })
 
 test('复合意图进入 AI 判断', () => {
@@ -94,7 +94,7 @@ test('复合意图进入 AI 判断', () => {
 
   assert.equal(result.decision, 'ai')
   assert.equal(result.reason, 'mixed-intent')
-  assert.equal(result.target?.id, 'derivative')
+  assert.equal(result.target?.id, 'hm-04-05')
 })
 
 test('有操作意图但没有实验时进入 AI', () => {
@@ -114,7 +114,7 @@ test('无关问题返回 no-match', () => {
 })
 
 test('相近但不唯一的实验候选也作为建议返回', () => {
-  const result = decide('极限')
+  const result = decide('打开函数图')
 
   assert.equal(result.decision, 'suggest')
   assert.equal(
@@ -125,10 +125,10 @@ test('相近但不唯一的实验候选也作为建议返回', () => {
 })
 
 test('完整标题仍允许直接路由', () => {
-  const result = decide('打开 ε–δ 极限定义实验')
+  const result = decide('打开函数在某一点的极限实验')
 
   assert.equal(result.decision, 'direct')
-  assert.equal(result.target?.id, 'epsilon-delta')
+  assert.equal(result.target?.id, 'hm-02-02')
   assert.equal(result.target?.matchQuality, 'exact')
 })
 
@@ -141,4 +141,12 @@ test('只有相近文本命中时禁止自动跳转', () => {
     'ambiguous-experiment',
   )
   assert.equal(result.target?.matchQuality, 'related')
+})
+
+test('计算请求进入回答分支并保留相关实验', () => {
+  const result = decide('求 x^2 从 0 到 1 的定积分')
+
+  assert.equal(result.decision, 'answer')
+  assert.equal(result.reason, 'calculation-request')
+  assert.equal(result.target?.id, 'hm-07-01')
 })

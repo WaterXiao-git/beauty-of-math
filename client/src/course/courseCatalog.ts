@@ -15,7 +15,7 @@ export interface UniversityCourse {
 }
 
 export const HIGHER_MATHEMATICS_COURSE: UniversityCourse = {
-  id: 'higher-mathematics-1',
+  id: 'higher-mathematics',
   title: COURSE_TITLE,
   subtitle: COURSE_SUBTITLE,
   chapters: courseChapters,
